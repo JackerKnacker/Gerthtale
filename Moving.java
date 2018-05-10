@@ -55,12 +55,12 @@ class GamePanel extends JPanel implements KeyListener {
 		keys = new boolean[KeyEvent.KEY_LAST + 1];
 		player = new Image[8];
 		for (int i = 0; i < 8; i++) {
-			player[i] = new ImageIcon("sprDown" + i + ".png").getImage().getScaledInstance(50, 50,
+			player[i] = new ImageIcon("sprDown" + i + ".png").getImage().getScaledInstance(64, 64,
 					Image.SCALE_DEFAULT);
 		}
 
-		mapx = 250;
-		mapy = 250;
+		mapx = 256;
+		mapy = 256;
 		playerFrame = 0;
 
 		setSize(800,600);
@@ -81,33 +81,32 @@ class GamePanel extends JPanel implements KeyListener {
 	public void move() {
 		requestFocus();
 		if (keys[KeyEvent.VK_LEFT]) {
-			if (mapx < 375)
-				mapx += 5;
+			if (mapx < 368)
+				mapx += 4;
 		}
 		if (keys[KeyEvent.VK_RIGHT]) {
-			if (mapx+1024 > 375+50) //if mapx + map width > 375 + player sprite width
-				mapx -= 5;
+			if (mapx+1024 > 368+64) //if mapx + map width > 368 + player sprite width
+				mapx -= 4;
 		}
 		if (keys[KeyEvent.VK_DOWN]) {
-			if (mapy+768 > 275+50){ //if mapy + map length > 275 + player sprite length
+			if (mapy+768 > 268+64){ //if mapy + map length > 268 + player sprite length
 				playerFrame += 0.15;
 				if (playerFrame >= 7.75) {
 					playerFrame = 0;
 				}
-				mapy -= 5;
+				mapy -= 4;
 			}
 			//System.out.println(mapx + " " + mapy);
 		}
 		if (keys[KeyEvent.VK_UP]) {
-			if (mapy < 275)
-				mapy += 5;
+			if (mapy < 268)
+				mapy += 4;
 		}
 	}
 
 	public void displayPlayer(Graphics g) {
 		requestFocus();
-		g.drawImage(player[(int) Math.floor(playerFrame)], 375, 275, this); //375, 275 = IN THE MIDDLE OF SCREEN
-
+		g.drawImage(player[(int) Math.floor(playerFrame)], 368, 268, this); //368, 268 = IN THE MIDDLE OF SCREEN
 	}
 
 	public void paintComponent(Graphics g) {
