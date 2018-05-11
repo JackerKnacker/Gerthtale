@@ -49,13 +49,16 @@ class GamePanel extends JPanel implements KeyListener {
 	Image map = new ImageIcon("map1.png").getImage();
 
 	//Player sprites
-	Image[] player;
+	Image[] playerDown;
+	Image[] playerUp;
+	Image[] playerLeft;
+	Image[] playerRight;
 
 	public GamePanel() {
 		keys = new boolean[KeyEvent.KEY_LAST + 1];
-		player = new Image[8];
-		for (int i = 0; i < 8; i++) {
-			player[i] = new ImageIcon("sprDown" + i + ".png").getImage().getScaledInstance(64, 64,
+		playerDown = new Image[8];
+		for (int i = 0; i < 4; i++) {
+			playerDown[i] = new ImageIcon("char1sprites/char1-" + (i+1) + ".png").getImage().getScaledInstance(48, 64,
 					Image.SCALE_DEFAULT);
 		}
 
@@ -81,17 +84,17 @@ class GamePanel extends JPanel implements KeyListener {
 	public void move() {
 		requestFocus();
 		if (keys[KeyEvent.VK_LEFT]) {
-			if (mapx < 368)
+			if (mapx < 376)
 				mapx += 4;
 		}
 		if (keys[KeyEvent.VK_RIGHT]) {
-			if (mapx+1024 > 368+64) //if mapx + map width > 368 + player sprite width
+			if (mapx+1024 > 376+64) //if mapx + map width > 368 + player sprite width
 				mapx -= 4;
 		}
 		if (keys[KeyEvent.VK_DOWN]) {
 			if (mapy+768 > 268+64){ //if mapy + map length > 268 + player sprite length
 				playerFrame += 0.15;
-				if (playerFrame >= 7.75) {
+				if (playerFrame >= 3.75) {
 					playerFrame = 0;
 				}
 				mapy -= 4;
@@ -106,7 +109,7 @@ class GamePanel extends JPanel implements KeyListener {
 
 	public void displayPlayer(Graphics g) {
 		requestFocus();
-		g.drawImage(player[(int) Math.floor(playerFrame)], 368, 268, this); //368, 268 = IN THE MIDDLE OF SCREEN
+		g.drawImage(playerDown[(int) Math.floor(playerFrame)], 376, 268, this); //368, 268 = IN THE MIDDLE OF SCREEN
 	}
 
 	public void paintComponent(Graphics g) {
