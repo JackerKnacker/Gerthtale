@@ -3,6 +3,7 @@ package Gerthtale;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -47,8 +48,10 @@ class GamePanel extends JPanel implements KeyListener {
 	private int mapx, mapy;
 	private double playerFrame;
 	private String lastDirection = "down";
-	Image map = new ImageIcon("src\\Gerthtale\\map1.png").getImage();
-	//Image mask = new ImageIcon("src\\Gerthtale\\map1mask.png").getImage();;
+	private Rectangle playerHitbox = new Rectangle(382,276,36,48);
+	private ArrayList<Rectangle> map1Rects = new ArrayList<Rectangle>();
+	Image map = new ImageIcon("map1.png").getImage();
+	//Image mask = new ImageIcon("src\\Gerthtale\\map1mask.png").getImage();
 
 	//Player sprites
 	Image[] playerDown, playerUp, playerLeft, playerRight;
@@ -60,13 +63,13 @@ class GamePanel extends JPanel implements KeyListener {
 		playerLeft = new Image[4];
 		playerRight = new Image[4];
 		for (int i = 0; i < 4; i++) {
-			playerDown[i] = new ImageIcon("src\\Gerthtale\\char1sprites\\char1-" + (i+1) + ".png").getImage().getScaledInstance(48, 64,
+			playerDown[i] = new ImageIcon("char1sprites/char1-" + (i+1) + ".png").getImage().getScaledInstance(36, 48,
 					Image.SCALE_DEFAULT);
-			playerLeft[i] = new ImageIcon("src\\Gerthtale\\char1sprites\\char1-" + (i+5) + ".png").getImage().getScaledInstance(48, 64,
+			playerLeft[i] = new ImageIcon("char1sprites/char1-" + (i+5) + ".png").getImage().getScaledInstance(36, 48,
 					Image.SCALE_DEFAULT);
-			playerRight[i] = new ImageIcon("src\\Gerthtale\\char1sprites\\char1-" + (i+9) + ".png").getImage().getScaledInstance(48, 64,
+			playerRight[i] = new ImageIcon("char1sprites/char1-" + (i+9) + ".png").getImage().getScaledInstance(36, 48,
 					Image.SCALE_DEFAULT);
-			playerUp[i] = new ImageIcon("src\\Gerthtale\\char1sprites\\char1-" + (i+13) + ".png").getImage().getScaledInstance(48, 64,
+			playerUp[i] = new ImageIcon("char1sprites/char1-" + (i+13) + ".png").getImage().getScaledInstance(36, 48,
 					Image.SCALE_DEFAULT);
 		}
 		mapx = 256;
@@ -88,6 +91,10 @@ class GamePanel extends JPanel implements KeyListener {
 		keys[e.getKeyCode()] = false;
 		playerFrame = 0; //Restarts frame if user stops pressing key and starts again
 	}
+
+	public void loadRects(int mapNum) {
+
+	}
 	public void move() {
 		requestFocus();
 		if (keys[KeyEvent.VK_LEFT]) {
@@ -95,7 +102,7 @@ class GamePanel extends JPanel implements KeyListener {
 			playerFrame += 0.2;
 			if (playerFrame > 3.8)
 				playerFrame = 0;
-			if (mapx < 376)
+			if (mapx < 382)
 				mapx += 4;
 		}
 		else if (keys[KeyEvent.VK_RIGHT]) {
@@ -103,15 +110,15 @@ class GamePanel extends JPanel implements KeyListener {
 			playerFrame += 0.2;
 			if (playerFrame > 3.8)
 				playerFrame = 0;
-			if (mapx+1024 > 376+48) //if mapx + map width > 376 + player sprite width
+			if (mapx+1024 > 382+36) //if mapx + map width > 382 + player sprite width
 				mapx -= 4;
 		}
 		else if (keys[KeyEvent.VK_DOWN]) {
 			lastDirection = "down";
 			playerFrame += 0.2;
-			if (playerFrame > 3.8) 
+			if (playerFrame > 3.8)
 				playerFrame = 0;
-			if (mapy+768 > 268+64){ //if mapy + map length > 268 + player sprite length
+			if (mapy+768 > 276+48){ //if mapy + map length > 276 + player sprite length
 				mapy -= 4;
 			}
 		}
@@ -120,7 +127,7 @@ class GamePanel extends JPanel implements KeyListener {
 			playerFrame += 0.2;
 			if (playerFrame > 3.8)
 				playerFrame = 0;
-			if (mapy < 268)
+			if (mapy < 276)
 				mapy += 4;
 		}
 	}
@@ -128,26 +135,26 @@ class GamePanel extends JPanel implements KeyListener {
 	public void displayPlayer(Graphics g) {
 		requestFocus();
 		if (keys[KeyEvent.VK_LEFT]) {
-			g.drawImage(playerLeft[(int) Math.floor(playerFrame)], 376, 268, this);
+			g.drawImage(playerLeft[(int) Math.floor(playerFrame)], 382, 276, this);
 		}
 		else if (keys[KeyEvent.VK_RIGHT]) {
-			g.drawImage(playerRight[(int) Math.floor(playerFrame)], 376, 268, this);
+			g.drawImage(playerRight[(int) Math.floor(playerFrame)], 382, 276, this);
 		}
 		else if (keys[KeyEvent.VK_UP]) {
-			g.drawImage(playerUp[(int) Math.floor(playerFrame)], 376, 268, this);
+			g.drawImage(playerUp[(int) Math.floor(playerFrame)], 382, 276, this);
 		}
 		else if (keys[KeyEvent.VK_DOWN]) {
-			g.drawImage(playerDown[(int) Math.floor(playerFrame)], 376, 268, this); //368, 268 = IN THE MIDDLE OF SCREEN
+			g.drawImage(playerDown[(int) Math.floor(playerFrame)], 382, 276, this);
 		}
 		else { //When player is not moving
 			if (lastDirection.equals("down"))
-				g.drawImage(playerDown[0], 376, 268, this);
+				g.drawImage(playerDown[0], 382, 276, this);
 			else if (lastDirection.equals("up"))
-				g.drawImage(playerUp[0], 376, 268, this);
+				g.drawImage(playerUp[0], 382, 276, this);
 			else if (lastDirection.equals("left"))
-				g.drawImage(playerLeft[0], 376, 268, this);
+				g.drawImage(playerLeft[0], 382, 276, this);
 			else if (lastDirection.equals("right"))
-				g.drawImage(playerRight[0], 376, 268, this);
+				g.drawImage(playerRight[0], 382, 276, this);
 		}
 	}
 
