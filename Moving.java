@@ -1,5 +1,7 @@
 package Gerthtale;
 
+import java.util.ArrayList;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -27,6 +29,7 @@ public class Moving extends JFrame implements ActionListener {
 		setVisible(true);
 		game = new GamePanel();
 		add(game);
+		game.loadRects();
 
 		myTimer = new Timer(20, this);
 		myTimer.start();
@@ -52,6 +55,7 @@ class GamePanel extends JPanel implements KeyListener {
 	private ArrayList<Rectangle> map1Rects = new ArrayList<Rectangle>();
 	Image map = new ImageIcon("map1.png").getImage();
 	//Image mask = new ImageIcon("src\\Gerthtale\\map1mask.png").getImage();
+	//Image duzzi = new ImageIcon("profile.jpg").getImage().getScaledInstance(96,96,Image.SCALE_DEFAULT);
 
 	//Player sprites
 	Image[] playerDown, playerUp, playerLeft, playerRight;
@@ -92,43 +96,85 @@ class GamePanel extends JPanel implements KeyListener {
 		playerFrame = 0; //Restarts frame if user stops pressing key and starts again
 	}
 
-	public void loadRects(int mapNum) {
+	public void loadRects() {
+		map1Rects.add(new Rectangle(32+mapx,32+mapy,96,96));
+		map1Rects.add(new Rectangle(0+mapx, 192+mapy, 128, 128));
+		map1Rects.add(new Rectangle(256+mapx, 96+mapy, 64, 96));
+	}
 
+	public boolean checkCollision(String dir, ArrayList<Rectangle> rectList) {
+		boolean flag = false;
+		for (Rectangle r : rectList) {
+			if (dir == "l")
+				r.translate(4,0);
+			else if (dir == "r")
+				r.translate(-4,0);
+			else if (dir == "u")
+				r.translate(0,4);
+			else if (dir == "d")
+				r.translate(0,-4);
+			if (playerHitbox.intersects(r)) {
+				for (Rectangle s : rectList) {
+					if (dir == "l")
+						s.translate(-4,0);
+					else if (dir == "r")
+						s.translate(4,0);
+					else if (dir == "u")
+						s.translate(0,-4);
+					else if (dir == "d")
+						s.translate(0,4);
+				}
+				flag = true;
+			}
+		}
+		return flag;
 	}
 	public void move() {
 		requestFocus();
 		if (keys[KeyEvent.VK_LEFT]) {
 			lastDirection = "left";
-			playerFrame += 0.2;
-			if (playerFrame > 3.8)
-				playerFrame = 0;
-			if (mapx < 382)
-				mapx += 4;
+			if (mapx < 382) {
+				if (checkCollision("l",map1Rects) == false) {
+						playerFrame += 0.2;
+						if (playerFrame > 3.8)
+							playerFrame = 0;
+						mapx += 4;
+				}
+			}
+
 		}
 		else if (keys[KeyEvent.VK_RIGHT]) {
 			lastDirection = "right";
-			playerFrame += 0.2;
-			if (playerFrame > 3.8)
-				playerFrame = 0;
-			if (mapx+1024 > 382+36) //if mapx + map width > 382 + player sprite width
-				mapx -= 4;
+			if (mapx+1024 > 382+36) { //if mapx + map width > 382 + player sprite width
+				if (checkCollision("r",map1Rects) == false) {
+					playerFrame += 0.2;
+					if (playerFrame > 3.8)
+						playerFrame = 0;
+					mapx -= 4;
+				}
+			}
 		}
 		else if (keys[KeyEvent.VK_DOWN]) {
 			lastDirection = "down";
-			playerFrame += 0.2;
-			if (playerFrame > 3.8)
-				playerFrame = 0;
 			if (mapy+768 > 276+48){ //if mapy + map length > 276 + player sprite length
-				mapy -= 4;
+				if (checkCollision("d",map1Rects) == false) {
+					playerFrame += 0.2;
+					if (playerFrame > 3.8)
+						playerFrame = 0;
+					mapy -= 4;
+				}
 			}
 		}
 		else if (keys[KeyEvent.VK_UP]) {
 			lastDirection = "up";
-			playerFrame += 0.2;
-			if (playerFrame > 3.8)
-				playerFrame = 0;
-			if (mapy < 276)
-				mapy += 4;
+			if (mapy < 276) {
+				if (checkCollision("u",map1Rects) == false) {
+					playerFrame += 0.2;
+					if (playerFrame > 3.8)
+						playerFrame = 0;
+					mapy += 4;
+				}
+			}
 		}
 	}
 
@@ -164,6 +210,11 @@ class GamePanel extends JPanel implements KeyListener {
 		g.fillRect(0, 0, getWidth(), getHeight());
 		//g.drawImage(mask, mapx, mapy, this);
 		g.drawImage(map, mapx, mapy, this);
+		g.setColor(Color.RED);
+		for (Rectangle r : map1Rects) {
+			g.fillRect((int)r.getX(), (int)r.getY(), (int)r.getWidth(), (int)r.getHeight());
+			//g.drawImage(duzzi, (int)r.getX(), (int)r.getY(), this);
+		}
 		displayPlayer(g);
 	}
 }
