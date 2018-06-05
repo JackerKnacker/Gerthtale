@@ -1,7 +1,7 @@
 //Gerthtale - A Turn-Based Rhythmic RPG inspired by Undertale & Final Fantasy
 //By Alex Shi, Jakir Ansari, Jason Wong
 
-package Gerthtale;
+//package Gerthtale;
 
 import javax.swing.*;
 import java.awt.*;
@@ -448,7 +448,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 	private JLabel menuLabel3;
 	private JLabel menuLabel4;
 	private JLabel nameLabel;
-	
+
 	private Toolkit toolkit = Toolkit.getDefaultToolkit();
 	private Image clickCursor = toolkit.getImage("Pictures/clickCursor.png");
 
@@ -467,12 +467,15 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 	Image currentMap;
 	Image shopBack = new ImageIcon("Pictures/shopBack.jpg").getImage().getScaledInstance(800, 600,
 			Image.SCALE_DEFAULT);
-	Image panel = new ImageIcon("Pictures/panelbox.jpg").getImage().getScaledInstance(455, 205, 
+	Image panel = new ImageIcon("Pictures/panelbox.jpg").getImage().getScaledInstance(455, 205,
 			Image.SCALE_DEFAULT);
-	Image panel2 = new ImageIcon("Pictures/panelbox.jpg").getImage().getScaledInstance(300, 550, 
+	Image panel2 = new ImageIcon("Pictures/panelbox.jpg").getImage().getScaledInstance(300, 550,
+			Image.SCALE_DEFAULT);
+	Image longPanel = new ImageIcon("Pictures/panelbox.jpg").getImage().getScaledInstance(765, 205,
 			Image.SCALE_DEFAULT);
 	Font shopFont = new Font("Comic Sans MS", Font.BOLD, 20);
 	String[] shopItems = {"Health Potion", "Greater Health Potion", "Iron Potion", "Wrath Potion", "Exit Shop"};
+	boolean shop = false;
 
 	private int character;
 	private String charName;
@@ -591,7 +594,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 						Image.SCALE_DEFAULT);
 			}
 
-		} 
+		}
 		//OG COORDINATES: -908, -320 [any other coords used are for testing purposes only]
 		//testing entrance [map 1 to 2] : -1984, -104
 		//testing map 3 : -80, -404
@@ -628,7 +631,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 	}
 
 	public void loadRects() {
-		
+
 		//-------MAP 1 RECTS-------//
 		map1Rects.add(new Rectangle(mapx,mapy,432,1728));
 		map1Rects.add(new Rectangle(432+mapx, mapy, 1600, 456));
@@ -658,10 +661,10 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 
 		//Rocks
 		map1Rects.add(new Rectangle(1984+mapx, mapy, 336, 432));
-		map1Rects.add(new Rectangle(2016+mapx, 412+mapy, 288, 32)); 
+		map1Rects.add(new Rectangle(2016+mapx, 412+mapy, 288, 32));
 		map1Rects.add(new Rectangle(2448+mapx, mapy, 360, 432));
 		map1Rects.add(new Rectangle(2464+mapx, 412+mapy, 608, 32));
-		
+
 		//-------MAP 2 RECTS-------//
 		int x2 = -716;
 		int y2 = -768;
@@ -680,7 +683,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 		map2Rects.add(new Rectangle(160+x2, 224+y2, 16, 736));
 		map2Rects.add(new Rectangle(160+x2, 960+y2, 32, 32));
 		map2Rects.add(new Rectangle(192+x2, 976+y2, 800, 16));
-		
+
 		map2Rects.add(new Rectangle(800+x2, 864+y2, 96, 128));
 		map2Rects.add(new Rectangle(608+x2, 864+y2, 96, 128));
 		map2Rects.add(new Rectangle(416+x2, 800+y2, 96, 128));
@@ -731,12 +734,12 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 		map3Rects.add(new Rectangle(672+x3, 800+y3, 32, 32));
 		map3Rects.add(new Rectangle(704+x3, 816+y3, 16, 320));
 		map3Rects.add(new Rectangle(x3, 784+y3, 704, 16));
-		
+
 		//Trees
 		map3Rects.add(new Rectangle(992+x3, 736+y3, 96, 128));
 		map3Rects.add(new Rectangle(1024+x3, 384+y3, 96, 128));
 		map3Rects.add(new Rectangle(1472+x3, 864+y3, 96, 128));
-		
+
 		//Rocks
 		map3Rects.add(new Rectangle(1472+x3, 1184+y3, 32, 64));
 		map3Rects.add(new Rectangle(1504+x3, 1216+y3, 32, 64));
@@ -775,7 +778,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 		}
 		return flag;
 	}
-	
+
 	public void move() {
 		if (screen == "moving") {
 			requestFocus();
@@ -788,7 +791,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 					mapx += 4;
 				}
 			}
-			
+
 			else if (keys[KeyEvent.VK_RIGHT]) {
 				lastDirection = "right";
 				if (checkCollision("r",currentRects) == false) {
@@ -809,7 +812,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 					mapy -= 4;
 				}
 			}
-			
+
 			else if (keys[KeyEvent.VK_UP]) {
 				lastDirection = "up";
 				if (checkCollision("u",currentRects) == false) {
@@ -820,15 +823,15 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 					mapy += 4;
 				}
 			}
-			
+
 			//Switching maps
 			//MAP 1 TO 2
-			if (currentMap.equals(map1) && mapx <= -1940 && mapx >= -2028 && mapy == 0) { //If the player is at the coordinates of the map 
+			if (currentMap.equals(map1) && mapx <= -1940 && mapx >= -2028 && mapy == 0) { //If the player is at the coordinates of the map
 																						  //where the map will switch
 				//When the player switches maps, they enter a path with walls on the left and right of them that remain constant
 				//in the second map as well. The distance that the player is away from the right wall must also remain constant from
 				//the first map to the second map.
-				
+
 				int wallDist = 2028+mapx; //The distance from the player and the right wall; used for properly translating the map and rects
 										  //according to what x-coordinate the player enters from.
 				for (Rectangle r : map1Rects) {
@@ -842,12 +845,12 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 				//Switching the map image and rectangles
 				currentRects = map2Rects;
 				currentMap = map2;
-				
+
 				mapx = -716+wallDist; //Putting the player at the entrance in map 2
 				mapy = -768; //The player spawns on the next map 64 units above the entrance back to map 2 to avoid infinitely looping in maps
-				
+
 			}
-			
+
 			//MAP 2 TO 1
 			if (currentMap.equals(map2) && mapx <= -628 && mapx >= -716 && mapy == -832) {
 				int wallDist = 716+mapx;
@@ -862,7 +865,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 				mapx = -2028+wallDist;
 				mapy = -64;
 			}
-			
+
 			//MAP 2 TO 3
 			if (currentMap.equals(map2) && mapx == -1692 && mapy <= -12 && mapy >= -140) {
 				int wallDist = 140+mapy;
@@ -877,7 +880,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 				mapx = -84;
 				mapy = -460+wallDist;
 			}
-			
+
 			//MAP 3 TO 2
 			if (currentMap.equals(map3) && mapx == -20 && mapy <= -332 && mapy >= -460) {
 				int wallDist = 460+mapy;
@@ -894,7 +897,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 			}
 		}
 	}
-	
+
 	public void shopControls() { //starting value of boxy = 75
 		if (screen == "shop") {
 			requestFocus();
@@ -912,6 +915,11 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 				}
 				else {
 					boxy += 100;
+				}
+			}
+			else if (keys[KeyEvent.VK_ENTER] && keypress) {
+				if (shop == false) {
+					shop = true;
 				}
 			}
 			keypress = false;
@@ -943,31 +951,41 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 				g.drawImage(playerRight[0], 382, 276, this);
 		}
 	}
-	
+
 	public void drawMap(Graphics g) {
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, getWidth(), getHeight());
 		g.drawImage(currentMap, mapx, mapy, this);
 		g.setColor(Color.RED);
-		
+
 		//Drawing collision rectangles (for experimental purposes only)
 		for (Rectangle r : currentRects) {
 			g.fillRect((int)r.getX(), (int)r.getY(), (int)r.getWidth(), (int)r.getHeight());
-		}	
-	}
-	
-	public void drawShop(Graphics g) {
-		g.drawImage(shopBack, 0, 0, this);
-		g.drawImage(panel, 15, 355, this);
-		g.drawImage(panel2, 485, 10, this);
-		g.setFont(shopFont);
-		for (int i = 0; i < 5; i++) {
-			g.drawString(shopItems[i], 500, (i+1)*100);
 		}
-		
-		g.setColor(Color.RED);
-		g.drawRect(495, boxy, 280, 40);
-		
+	}
+
+	public void drawShop(Graphics g) {
+		if (shop == false) {
+			g.drawImage(shopBack, 0, 0, this);
+			g.drawImage(longPanel, 15, 355, this);
+			g.setFont(shopFont);
+			g.drawString("Welcome to the shop!", 30, 400);
+			g.drawString("Here, you can purchase potions to", 30, 430);
+			g.drawString("aid you in battles.", 30, 460);
+		}
+		if (shop == true) {
+			g.drawImage(shopBack, 0, 0, this);
+			g.drawImage(panel, 15, 355, this);
+			g.drawImage(panel2, 485, 10, this);
+			g.setFont(shopFont);
+			for (int i = 0; i < 5; i++) {
+				g.drawString(shopItems[i], 500, (i+1)*100);
+			}
+
+			g.setColor(Color.RED);
+			g.drawRect(495, boxy, 280, 40);
+		}
+
 	}
 
 /*	public void drawDialogue(Graphics g) {
@@ -1050,7 +1068,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 		super.paintComponent(g);
 		if (screen == "moving") {
 			drawMap(g);
-			displayPlayer(g);	
+			displayPlayer(g);
 		}
 		else if (screen == "shop") {
 			drawShop(g);
