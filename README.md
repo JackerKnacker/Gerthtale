@@ -1,20 +1,12 @@
 # Gerthtale - an RPG game inspired by Final Fantasy, Undertale & Griffin Salad
 
-Work Division
+Downloading Instructions
 -------------
-Alex Shi
-- Main menu (including character selection, options, etc.)
-- In-game menu (panel that allows player to access inventory, options & saving in the actual game)
-- Music
-- Sprites / graphics (alongside Jakir Ansari)
-
-Jason Wong
-- Battle interface (showing characters dueling each other, HP bars, displaying moves, etc.)
-- Actual combat (damage meter system, enemy obstacle dodging system, dealing damage, items, status effects, etc.) 
-- NPCs & dialogue
-
-Jakir Ansari
-- Creating maps & overall area layout
-- Character/map movement (scrolling map as user moves, static rooms, unit collision)
-- File saving system
-- Sprites / graphics (alongside Alex Shi)
+1. Download all of the stuff in a ZIP folder.
+2. Extract it all into a folder that you want the game to be in.
+3. All images that are NOT in a folder must be placed in a separate folder called 'Pictures'.
+   --> Sprites and maps should already be in their own respective folders.
+4. Convert all music from MP3 to WAV.
+5. Gerthtale.java should now be runnable.
+   --> You may have to remove the line "package Gerthtale;" from Gerthtale.java if you don't
+       have a package for the game.
