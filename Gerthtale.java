@@ -1,6 +1,7 @@
-//Gerthtale.java
-//Alex S, Jakir A, Jason W
-///To be announced...
+//Gerthtale - A Turn-Based Rhythmic RPG inspired by Undertale & Final Fantasy
+//By Alex Shi, Jakir Ansari, Jason Wong
+
+package Gerthtale;
 
 import javax.swing.*;
 import java.awt.*;
@@ -425,6 +426,7 @@ public class Gerthtale extends JFrame implements ActionListener, KeyListener {
         	game.toggleMenu();
         	if(game.getMenuPause() == false) {
 				game.move();
+				game.shopControls();
         	}
         	game.repaint();
 		}
@@ -451,14 +453,26 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 	private Image clickCursor = toolkit.getImage("Pictures/clickCursor.png");
 
 	private boolean[] keys;
-	private int mapx, mapy;
+	private int mapx, mapy, map1x = 2028, map2x = 716, boxy = 75;
 	private double playerFrame;
-	private String screen = "moving", lastDirection = "down";
+	private String screen = "shop", lastDirection = "down";
 	private Rectangle playerHitbox = new Rectangle(382,276,36,48);
 	private ArrayList<Rectangle> map1Rects = new ArrayList<Rectangle>();
 	private ArrayList<Rectangle> map2Rects = new ArrayList<Rectangle>();
 	private ArrayList<Rectangle> map3Rects = new ArrayList<Rectangle>();
-	Image map = new ImageIcon("Maps/map1.png").getImage();
+	private ArrayList<Rectangle> currentRects;
+	Image map1 = new ImageIcon("Maps/map1.png").getImage();
+	Image map2 = new ImageIcon("Maps/map2.png").getImage();
+	Image map3 = new ImageIcon("Maps/map3.png").getImage();
+	Image currentMap;
+	Image shopBack = new ImageIcon("Pictures/shopBack.jpg").getImage().getScaledInstance(800, 600,
+			Image.SCALE_DEFAULT);
+	Image panel = new ImageIcon("Pictures/panelbox.jpg").getImage().getScaledInstance(455, 205, 
+			Image.SCALE_DEFAULT);
+	Image panel2 = new ImageIcon("Pictures/panelbox.jpg").getImage().getScaledInstance(300, 550, 
+			Image.SCALE_DEFAULT);
+	Font shopFont = new Font("Comic Sans MS", Font.BOLD, 20);
+	String[] shopItems = {"Health Potion", "Greater Health Potion", "Iron Potion", "Wrath Potion", "Exit Shop"};
 
 	private int character;
 	private String charName;
@@ -468,6 +482,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 
 	private boolean back = false;
 	private boolean menuPause = false;
+	private boolean keypress;
 
 	private Sound gameTheme;
 
@@ -576,9 +591,14 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 						Image.SCALE_DEFAULT);
 			}
 
-		}
-		mapx = -908;
-		mapy = -320;
+		} 
+		//OG COORDINATES: -908, -320 [any other coords used are for testing purposes only]
+		//testing entrance [map 1 to 2] : -1984, -104
+		//testing map 3 : -80, -404
+		mapx = -716;
+		mapy = -768;
+		currentMap = map2;
+		currentRects = map2Rects;
 		playerFrame = 0;
 
 		setSize(800,600);
@@ -599,6 +619,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 
 	public void keyPressed(KeyEvent e) {
 		keys[e.getKeyCode()] = true;
+		keypress = true;
 	}
 
 	public void keyReleased(KeyEvent e) {
@@ -607,6 +628,8 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 	}
 
 	public void loadRects() {
+		
+		//-------MAP 1 RECTS-------//
 		map1Rects.add(new Rectangle(mapx,mapy,432,1728));
 		map1Rects.add(new Rectangle(432+mapx, mapy, 1600, 456));
 		map1Rects.add(new Rectangle(688+mapx, 440+mapy, 736, 48));
@@ -634,10 +657,95 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 		map1Rects.add(new Rectangle(1952+mapx, 1312+mapy, 352, 96));
 
 		//Rocks
-		map1Rects.add(new Rectangle(1984+mapx, mapy, 328, 432));
-		map1Rects.add(new Rectangle(2016+mapx, 412+mapy, 288, 32));
-		map1Rects.add(new Rectangle(2456+mapx, mapy, 352, 432));
+		map1Rects.add(new Rectangle(1984+mapx, mapy, 336, 432));
+		map1Rects.add(new Rectangle(2016+mapx, 412+mapy, 288, 32)); 
+		map1Rects.add(new Rectangle(2448+mapx, mapy, 360, 432));
 		map1Rects.add(new Rectangle(2464+mapx, 412+mapy, 608, 32));
+		
+		//-------MAP 2 RECTS-------//
+		int x2 = -716;
+		int y2 = -768;
+		//Walls
+		map2Rects.add(new Rectangle(1152+x2, 992+y2, 320, 416));
+		map2Rects.add(new Rectangle(1136+x2, 992+y2, 32, 416));
+		map2Rects.add(new Rectangle(992+x2, 992+y2, 16, 416));
+		map2Rects.add(new Rectangle(1168+x2, 976+y2, 672, 32));
+		map2Rects.add(new Rectangle(1808+x2, 496+y2, 32, 512));
+		map2Rects.add(new Rectangle(1824+x2, 480+y2, 672, 32));
+		map2Rects.add(new Rectangle(1856+x2, 464+y2, 672, 32));
+		map2Rects.add(new Rectangle(1824+x2, 256+y2, 672, 32));
+		map2Rects.add(new Rectangle(1792+x2, 176+y2, 32, 64));
+		map2Rects.add(new Rectangle(1760+x2, 192+y2, 32, 32));
+		map2Rects.add(new Rectangle(192+x2, 192+y2, 1568, 32));
+		map2Rects.add(new Rectangle(160+x2, 224+y2, 16, 736));
+		map2Rects.add(new Rectangle(160+x2, 960+y2, 32, 32));
+		map2Rects.add(new Rectangle(192+x2, 976+y2, 800, 16));
+		
+		map2Rects.add(new Rectangle(800+x2, 864+y2, 96, 128));
+		map2Rects.add(new Rectangle(608+x2, 864+y2, 96, 128));
+		map2Rects.add(new Rectangle(416+x2, 800+y2, 96, 128));
+		map2Rects.add(new Rectangle(224+x2, 800+y2, 96, 128));
+		map2Rects.add(new Rectangle(160+x2, 608+y2, 96, 32));
+		map2Rects.add(new Rectangle(160+x2, 384+y2, 96, 32));
+		map2Rects.add(new Rectangle(256+x2, 352+y2, 24, 256));
+		map2Rects.add(new Rectangle(288+x2, 352+y2, 32, 192));
+		map2Rects.add(new Rectangle(328+x2, 352+y2, 24, 256));
+		map2Rects.add(new Rectangle(352+x2, 352+y2, 160, 256));
+		map2Rects.add(new Rectangle(512+x2, 448+y2, 32, 192));
+		map2Rects.add(new Rectangle(672+x2, 480+y2, 96, 128));
+		map2Rects.add(new Rectangle(992+x2, 576+y2, 32, 64));
+		map2Rects.add(new Rectangle(1248+x2, 576+y2, 32, 64));
+		map2Rects.add(new Rectangle(864+x2, 320+y2, 544, 128));
+		map2Rects.add(new Rectangle(864+x2, 448+y2, 224, 64));
+		map2Rects.add(new Rectangle(896+x2, 512+y2, 160, 32));
+		map2Rects.add(new Rectangle(1088+x2, 448+y2, 24, 96));
+		map2Rects.add(new Rectangle(1160+x2, 448+y2, 24, 96));
+		map2Rects.add(new Rectangle(1184+x2, 448+y2, 224, 64));
+		map2Rects.add(new Rectangle(1216+x2, 512+y2, 160, 32));
+		map2Rects.add(new Rectangle(1696+x2, 544+y2, 96, 128));
+		map2Rects.add(new Rectangle(1568+x2, 800+y2, 64, 64));
+
+		//-------MAP 3 RECTS-------//
+		int x3 = -80;
+		int y3 = -460;
+		map3Rects.add(new Rectangle(x3, 576+y3, 704, 32));
+		map3Rects.add(new Rectangle(704+x3, 320+y3, 16, 288));
+		map3Rects.add(new Rectangle(704+x3, 288+y3, 2240, 32));
+		map3Rects.add(new Rectangle(2928+x3, 320+y3, 16, 576 ));
+		map3Rects.add(new Rectangle(2912+x3, 896+y3, 32, 32));
+		map3Rects.add(new Rectangle(2032+x3, 912+y3, 896, 16));
+		map3Rects.add(new Rectangle(2016+x3, 928+y3, 32, 32));
+		map3Rects.add(new Rectangle(2000+x3, 944+y3, 16, 608));
+		map3Rects.add(new Rectangle(1984+x3, 1536+y3, 32, 32));
+		map3Rects.add(new Rectangle(1472+x3, 1552+y3, 512, 16));
+		map3Rects.add(new Rectangle(1440+x3, 1536+y3, 32, 32));
+		map3Rects.add(new Rectangle(1440+x3, 560+y3, 16, 992));
+		map3Rects.add(new Rectangle(1440+x3, 560+y3, 1088, 16));
+		map3Rects.add(new Rectangle(2496+x3, 576+y3, 32, 32));
+		map3Rects.add(new Rectangle(2528+x3, 592+y3, 16, 96));
+		map3Rects.add(new Rectangle(1440+x3, 704+y3, 1088, 32));
+		map3Rects.add(new Rectangle(1232+x3, 560+y3, 16, 608));
+		map3Rects.add(new Rectangle(1232+x3, 560+y3, 224, 16));
+		map3Rects.add(new Rectangle(704+x3, 1120+y3, 32, 32));
+		map3Rects.add(new Rectangle(736+x3, 1136+y3, 512, 16));
+		map3Rects.add(new Rectangle(672+x3, 800+y3, 32, 32));
+		map3Rects.add(new Rectangle(704+x3, 816+y3, 16, 320));
+		map3Rects.add(new Rectangle(x3, 784+y3, 704, 16));
+		
+		//Trees
+		map3Rects.add(new Rectangle(992+x3, 736+y3, 96, 128));
+		map3Rects.add(new Rectangle(1024+x3, 384+y3, 96, 128));
+		map3Rects.add(new Rectangle(1472+x3, 864+y3, 96, 128));
+		
+		//Rocks
+		map3Rects.add(new Rectangle(1472+x3, 1184+y3, 32, 64));
+		map3Rects.add(new Rectangle(1504+x3, 1216+y3, 32, 64));
+		map3Rects.add(new Rectangle(1568+x3, 1248+y3, 32, 64));
+		map3Rects.add(new Rectangle(1664+x3, 1184+y3, 32, 64));
+		map3Rects.add(new Rectangle(1728+x3, 1248+y3, 32, 64));
+		map3Rects.add(new Rectangle(1856+x3, 1184+y3, 32, 64));
+		map3Rects.add(new Rectangle(1920+x3, 1248+y3, 32, 64));
+		map3Rects.add(new Rectangle(1952+x3, 1184+y3, 32, 64));
 	}
 
 	public boolean checkCollision(String dir, ArrayList<Rectangle> rectList) {
@@ -667,22 +775,23 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 		}
 		return flag;
 	}
+	
 	public void move() {
 		if (screen == "moving") {
 			requestFocus();
 			if (keys[KeyEvent.VK_LEFT]) {
 				lastDirection = "left";
-				if (checkCollision("l",map1Rects) == false) {
+				if (checkCollision("l",currentRects) == false) {
 					playerFrame += 0.2;
 					if (playerFrame > 3.8)
 						playerFrame = 0;
 					mapx += 4;
 				}
 			}
-
+			
 			else if (keys[KeyEvent.VK_RIGHT]) {
 				lastDirection = "right";
-				if (checkCollision("r",map1Rects) == false) {
+				if (checkCollision("r",currentRects) == false) {
 					playerFrame += 0.2;
 					if (playerFrame > 3.8) {
 						playerFrame = 0;
@@ -692,7 +801,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 			}
 			else if (keys[KeyEvent.VK_DOWN]) {
 				lastDirection = "down";
-				if (checkCollision("d",map1Rects) == false) {
+				if (checkCollision("d",currentRects) == false) {
 					playerFrame += 0.2;
 					if (playerFrame > 3.8) {
 						playerFrame = 0;
@@ -700,10 +809,10 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 					mapy -= 4;
 				}
 			}
-
+			
 			else if (keys[KeyEvent.VK_UP]) {
 				lastDirection = "up";
-				if (checkCollision("u",map1Rects) == false) {
+				if (checkCollision("u",currentRects) == false) {
 					playerFrame += 0.2;
 					if (playerFrame > 3.8) {
 						playerFrame = 0;
@@ -711,6 +820,101 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 					mapy += 4;
 				}
 			}
+			
+			//Switching maps
+			//MAP 1 TO 2
+			if (currentMap.equals(map1) && mapx <= -1940 && mapx >= -2028 && mapy == 0) { //If the player is at the coordinates of the map 
+																						  //where the map will switch
+				//When the player switches maps, they enter a path with walls on the left and right of them that remain constant
+				//in the second map as well. The distance that the player is away from the right wall must also remain constant from
+				//the first map to the second map.
+				
+				int wallDist = 2028+mapx; //The distance from the player and the right wall; used for properly translating the map and rects
+										  //according to what x-coordinate the player enters from.
+				for (Rectangle r : map1Rects) {
+					r.translate(-wallDist, -64); //All rectangles in map 1 are moved up 64 units to make up for where the player spawns.
+					    						 //The rectangles are also moved back to their original spots in the x-direction so that
+												 //they can be properly translated when map 1 is entered again.
+				}
+				for (Rectangle r : map2Rects) {
+					r.translate(wallDist, 0); //Moving the rectangles in map 2 to correspond with the walls in map 1
+				}
+				//Switching the map image and rectangles
+				currentRects = map2Rects;
+				currentMap = map2;
+				
+				mapx = -716+wallDist; //Putting the player at the entrance in map 2
+				mapy = -768; //The player spawns on the next map 64 units above the entrance back to map 2 to avoid infinitely looping in maps
+				
+			}
+			
+			//MAP 2 TO 1
+			if (currentMap.equals(map2) && mapx <= -628 && mapx >= -716 && mapy == -832) {
+				int wallDist = 716+mapx;
+				for (Rectangle r : map2Rects) {
+					r.translate(-wallDist, 64);
+				}
+				for (Rectangle r : map1Rects) {
+					r.translate(wallDist, 0);
+				}
+				currentRects = map1Rects;
+				currentMap = map1;
+				mapx = -2028+wallDist;
+				mapy = -64;
+			}
+			
+			//MAP 2 TO 3
+			if (currentMap.equals(map2) && mapx == -1692 && mapy <= -12 && mapy >= -140) {
+				int wallDist = 140+mapy;
+				for (Rectangle r : map2Rects) {
+					r.translate(64, -wallDist);
+				}
+				for (Rectangle r : map3Rects) {
+					r.translate(0, wallDist);
+				}
+				currentRects = map3Rects;
+				currentMap = map3;
+				mapx = -84;
+				mapy = -460+wallDist;
+			}
+			
+			//MAP 3 TO 2
+			if (currentMap.equals(map3) && mapx == -20 && mapy <= -332 && mapy >= -460) {
+				int wallDist = 460+mapy;
+				for (Rectangle r : map3Rects) {
+					r.translate(-64, -wallDist);
+				}
+				for (Rectangle r : map2Rects) {
+					r.translate(0, wallDist);
+				}
+				currentRects = map2Rects;
+				currentMap = map2;
+				mapx = -1628;
+				mapy = -140+wallDist;
+			}
+		}
+	}
+	
+	public void shopControls() { //starting value of boxy = 75
+		if (screen == "shop") {
+			requestFocus();
+			if (keys[KeyEvent.VK_UP] && keypress) {
+				if (boxy == 75) {
+					boxy = 475;
+				}
+				else {
+					boxy -= 100;
+				}
+			}
+			else if (keys[KeyEvent.VK_DOWN] && keypress) {
+				if (boxy == 475) {
+					boxy = 75;
+				}
+				else {
+					boxy += 100;
+				}
+			}
+			keypress = false;
 		}
 	}
 
@@ -739,17 +943,43 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 				g.drawImage(playerRight[0], 382, 276, this);
 		}
 	}
+	
+	public void drawMap(Graphics g) {
+		g.setColor(Color.BLACK);
+		g.fillRect(0, 0, getWidth(), getHeight());
+		g.drawImage(currentMap, mapx, mapy, this);
+		g.setColor(Color.RED);
+		
+		//Drawing collision rectangles (for experimental purposes only)
+		for (Rectangle r : currentRects) {
+			g.fillRect((int)r.getX(), (int)r.getY(), (int)r.getWidth(), (int)r.getHeight());
+		}	
+	}
+	
+	public void drawShop(Graphics g) {
+		g.drawImage(shopBack, 0, 0, this);
+		g.drawImage(panel, 15, 355, this);
+		g.drawImage(panel2, 485, 10, this);
+		g.setFont(shopFont);
+		for (int i = 0; i < 5; i++) {
+			g.drawString(shopItems[i], 500, (i+1)*100);
+		}
+		
+		g.setColor(Color.RED);
+		g.drawRect(495, boxy, 280, 40);
+		
+	}
 
-	public void drawDialogue(Graphics g) {
+/*	public void drawDialogue(Graphics g) {
 		if (screen == "dialogue") {
 			g.setColor(Color.WHITE);
 			g.fillRect(600, 50, 700, 200);
 		}
-	}
+	}*/
 
 	public void toggleMenu() { //toggles if the in game menu shows or not (depending on key pressed)
 		if (keys[KeyEvent.VK_C]) {
-				menuPause = true;
+			menuPause = true;
 		}
 
 		if (keys[KeyEvent.VK_X]) {
@@ -818,25 +1048,19 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		g.setColor(Color.BLACK);
-		g.fillRect(0, 0, getWidth(), getHeight());
-		//g.drawImage(mask, mapx, mapy, this);
-		g.drawImage(map, mapx, mapy, this);
-		g.setColor(Color.RED);
-
-		/*
-		for (Rectangle r : map1Rects) {
-			g.fillRect((int)r.getX(), (int)r.getY(), (int)r.getWidth(), (int)r.getHeight());
+		if (screen == "moving") {
+			drawMap(g);
+			displayPlayer(g);	
 		}
-		*/
-
-		displayPlayer(g);
+		else if (screen == "shop") {
+			drawShop(g);
+		}
 		if(menuPause) {
 			displayMenu(g);
 		}
+		//System.out.println(mapx + ", " + mapy);
 	}
 }
-
 class Inventory {
 	private ArrayList<String> inventory;
 
