@@ -1,7 +1,7 @@
 //Gerthtale - A Turn-Based Rhythmic RPG inspired by Undertale & Final Fantasy
 //By Alex Shi, Jakir Ansari, Jason Wong
 
-package Gerthtale;
+//package Gerthtale;
 
 import javax.swing.*;
 import java.awt.*;
@@ -465,7 +465,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 	Image map2 = new ImageIcon("Maps/map2.png").getImage();
 	Image map3 = new ImageIcon("Maps/map3.png").getImage();
 	Image currentMap;
-	
+
 	//--------|Shop Related Stuff|--------//
 	Image shopBack = new ImageIcon("Pictures/shopBack.jpg").getImage().getScaledInstance(800, 600,
 			Image.SCALE_DEFAULT);
@@ -479,8 +479,10 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 	Font shopFont = new Font("Comic Sans MS", Font.BOLD, 20);
 	Font bigShopFont = new Font("Comic Sans MS", Font.BOLD, 28);
 	String[] shopItems = {"Health Potion", "Greater Health Potion", "Wrath Potion", "Iron Potion", "Exit Shop"};
-	boolean shop = false, itemSelect = false, choice = false;
-	int itemPos = 0;
+	int[] goldCosts = {50, 100, 150, 150};
+	boolean shop = false, itemSelect = false, choice = false, justGotOut = false, notEnoughGold = false;
+	int itemPos = 0, testGold = 500;
+	ArrayList<String> testInv = new ArrayList<String>();
 	//------------------------------------//
 
 	private int character;
@@ -907,6 +909,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 	public void shopControls() { //starting value of boxy = 75
 		if (screen == "shop") {
 			requestFocus();
+			justGotOut = false;
 			if (keys[KeyEvent.VK_UP] && keypress && itemSelect == false && shop) {
 				if (boxy == 75) {
 					itemPos = 4;
@@ -937,7 +940,29 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 			}
 			else if (keys[KeyEvent.VK_ENTER] && keypress) {
 				if (shop) {
-					if (itemSelect == false) {
+					if (itemSelect) {
+						if (notEnoughGold) {
+							notEnoughGold = false;
+							itemSelect = false;
+							justGotOut = true;
+						}
+						if (choice) {
+							if (testGold >= goldCosts[itemPos]) {
+								testInv.add(shopItems[itemPos]);
+								testGold -= goldCosts[itemPos];
+								itemSelect = false;
+								justGotOut = true;
+							}
+							else {
+								notEnoughGold = true;
+							}
+						}
+						if (choice == false) {
+							itemSelect = false;
+							justGotOut = true;
+						}
+					}
+					if (itemSelect == false && justGotOut == false) {
 						itemSelect = true;
 					}
 				}
@@ -1031,10 +1056,16 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 					g.drawImage(arrow, 60, 498, this);
 				if (choice == false)
 					g.drawImage(arrow, 200, 498, this);
-				
+
+			}
+			if (notEnoughGold) {
+				g.drawImage(panel, 15, 355, this);
+				g.drawString("Sorry, you don't have enough gold to buy that.", 30, 400);
 			}
 			g.setColor(Color.RED);
 			g.drawRect(495, boxy, 280, 40);
+			g.setColor(Color.YELLOW);
+			g.drawString("Gold: "+testGold, 15, 340);
 		}
 
 	}
