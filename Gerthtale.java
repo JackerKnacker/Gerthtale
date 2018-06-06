@@ -1,7 +1,7 @@
 //Gerthtale - A Turn-Based Rhythmic RPG inspired by Undertale & Final Fantasy
 //By Alex Shi, Jakir Ansari, Jason Wong
 
-//package Gerthtale;
+package Gerthtale;
 
 import javax.swing.*;
 import java.awt.*;
@@ -453,7 +453,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 	private Image clickCursor = toolkit.getImage("Pictures/clickCursor.png");
 
 	private boolean[] keys;
-	private int mapx, mapy, map1x = 2028, map2x = 716, boxy = 75;
+	private int mapx, mapy, boxy = 75;
 	private double playerFrame;
 	private String screen = "shop", lastDirection = "down";
 	private Rectangle playerHitbox = new Rectangle(382,276,36,48);
@@ -465,6 +465,8 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 	Image map2 = new ImageIcon("Maps/map2.png").getImage();
 	Image map3 = new ImageIcon("Maps/map3.png").getImage();
 	Image currentMap;
+	
+	//--------|Shop Related Stuff|--------//
 	Image shopBack = new ImageIcon("Pictures/shopBack.jpg").getImage().getScaledInstance(800, 600,
 			Image.SCALE_DEFAULT);
 	Image panel = new ImageIcon("Pictures/panelbox.jpg").getImage().getScaledInstance(455, 205,
@@ -473,9 +475,13 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 			Image.SCALE_DEFAULT);
 	Image longPanel = new ImageIcon("Pictures/panelbox.jpg").getImage().getScaledInstance(765, 205,
 			Image.SCALE_DEFAULT);
+	Image arrow = new ImageIcon("Pictures/arrow.png").getImage().getScaledInstance(80, 40, Image.SCALE_DEFAULT);
 	Font shopFont = new Font("Comic Sans MS", Font.BOLD, 20);
-	String[] shopItems = {"Health Potion", "Greater Health Potion", "Iron Potion", "Wrath Potion", "Exit Shop"};
-	boolean shop = false;
+	Font bigShopFont = new Font("Comic Sans MS", Font.BOLD, 28);
+	String[] shopItems = {"Health Potion", "Greater Health Potion", "Wrath Potion", "Iron Potion", "Exit Shop"};
+	boolean shop = false, itemSelect = false, choice = false;
+	int itemPos = 0;
+	//------------------------------------//
 
 	private int character;
 	private String charName;
@@ -901,28 +907,46 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 	public void shopControls() { //starting value of boxy = 75
 		if (screen == "shop") {
 			requestFocus();
-			if (keys[KeyEvent.VK_UP] && keypress) {
+			if (keys[KeyEvent.VK_UP] && keypress && itemSelect == false && shop) {
 				if (boxy == 75) {
+					itemPos = 4;
 					boxy = 475;
 				}
 				else {
 					boxy -= 100;
+					itemPos--;
 				}
 			}
-			else if (keys[KeyEvent.VK_DOWN] && keypress) {
+			else if (keys[KeyEvent.VK_DOWN] && keypress && itemSelect == false && shop) {
 				if (boxy == 475) {
+					itemPos = 0;
 					boxy = 75;
 				}
 				else {
 					boxy += 100;
+					itemPos++;
 				}
 			}
+			else if (keys[KeyEvent.VK_LEFT] && keypress && itemSelect && shop) {
+				if (choice == false)
+					choice = true;
+			}
+			else if (keys[KeyEvent.VK_RIGHT] && keypress && itemSelect && shop) {
+				if (choice)
+					choice = false;
+			}
 			else if (keys[KeyEvent.VK_ENTER] && keypress) {
+				if (shop) {
+					if (itemSelect == false) {
+						itemSelect = true;
+					}
+				}
 				if (shop == false) {
 					shop = true;
 				}
 			}
 			keypress = false;
+			//System.out.println(itemPos);
 		}
 	}
 
@@ -968,20 +992,47 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 		if (shop == false) {
 			g.drawImage(shopBack, 0, 0, this);
 			g.drawImage(longPanel, 15, 355, this);
-			g.setFont(shopFont);
+			g.setFont(bigShopFont);
 			g.drawString("Welcome to the shop!", 30, 400);
-			g.drawString("Here, you can purchase potions to", 30, 430);
-			g.drawString("aid you in battles.", 30, 460);
+			g.drawString("Here, you can purchase potions to aid you in battles.", 30, 470);
+			//g.drawString("in battles.", 30, 480);
 		}
 		if (shop == true) {
 			g.drawImage(shopBack, 0, 0, this);
 			g.drawImage(panel, 15, 355, this);
 			g.drawImage(panel2, 485, 10, this);
+			g.setColor(Color.BLACK);
 			g.setFont(shopFont);
 			for (int i = 0; i < 5; i++) {
 				g.drawString(shopItems[i], 500, (i+1)*100);
 			}
-
+			if (itemSelect == false) {
+				g.drawString("What would you like to purchase?", 30, 400);
+			}
+			if (itemSelect == true) {
+				if (itemPos == 0) {
+					g.drawString("A potion that restores x HP.", 30, 400);
+				}
+				else if (itemPos == 1) {
+					g.drawString("A potion that restores x HP.", 30, 400);
+				}
+				else if (itemPos == 2) {
+					g.drawString("A potion that temporarily increases your", 30, 400);
+					g.drawString("damage dealt to enemies.", 30, 430);
+				}
+				else if (itemPos == 3) {
+					g.drawString("A potion that temporarily decreases", 30, 400);
+					g.drawString("damage dealt to you by enemies.", 30, 430);
+				}
+				g.drawString("Would you like to purchase this item?", 30, 475);
+				g.drawString("YES", 150, 525);
+				g.drawString("NO", 290, 525);
+				if (choice)
+					g.drawImage(arrow, 60, 498, this);
+				if (choice == false)
+					g.drawImage(arrow, 200, 498, this);
+				
+			}
 			g.setColor(Color.RED);
 			g.drawRect(495, boxy, 280, 40);
 		}
