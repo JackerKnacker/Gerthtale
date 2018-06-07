@@ -1,7 +1,7 @@
 //Gerthtale - A Turn-Based Rhythmic RPG inspired by Undertale & Final Fantasy
 //By Alex Shi, Jakir Ansari, Jason Wong
 
-//package Gerthtale;
+package Gerthtale;
 
 import javax.swing.*;
 import java.awt.*;
@@ -453,9 +453,9 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 	private Image clickCursor = toolkit.getImage("Pictures/clickCursor.png");
 
 	private boolean[] keys;
-	private int mapx, mapy, boxy = 75;
+	private int mapx, mapy, boxy = 55;
 	private double playerFrame;
-	private String screen = "shop", lastDirection = "down";
+	private String screen = "moving", lastDirection = "down";
 	private Rectangle playerHitbox = new Rectangle(382,276,36,48);
 	private ArrayList<Rectangle> map1Rects = new ArrayList<Rectangle>();
 	private ArrayList<Rectangle> map2Rects = new ArrayList<Rectangle>();
@@ -475,12 +475,27 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 			Image.SCALE_DEFAULT);
 	Image longPanel = new ImageIcon("Pictures/panelbox.jpg").getImage().getScaledInstance(765, 205,
 			Image.SCALE_DEFAULT);
-	Image arrow = new ImageIcon("Pictures/arrow.png").getImage().getScaledInstance(80, 40, Image.SCALE_DEFAULT);
+	Image iconPanel = new ImageIcon("Pictures/panelbox.jpg").getImage().getScaledInstance(90, 90, 
+			Image.SCALE_DEFAULT);
+	Image arrow = new ImageIcon("Pictures/arrow.png").getImage().getScaledInstance(80, 40, 
+			Image.SCALE_DEFAULT);
+	Image healthPot = new ImageIcon("Pictures/pot.png").getImage().getScaledInstance(80, 80, 
+			Image.SCALE_DEFAULT);
+	Image largePot = new ImageIcon("Pictures/largepot.png").getImage().getScaledInstance(80, 80, 
+			Image.SCALE_DEFAULT);
+	Image gerthPot = new ImageIcon("Pictures/gerthpot.png").getImage().getScaledInstance(80, 80, 
+			Image.SCALE_DEFAULT);
+	Image wrathPot = new ImageIcon("Pictures/wrathpot.png").getImage().getScaledInstance(80, 80, 
+			Image.SCALE_DEFAULT);
+	Image ironPot = new ImageIcon("Pictures/ironpot.png").getImage().getScaledInstance(80, 80, 
+			Image.SCALE_DEFAULT);
+	Image shopExit = new ImageIcon("Pictures/shopExit.png").getImage().getScaledInstance(80, 80, 
+			Image.SCALE_DEFAULT);
 	Font shopFont = new Font("Comic Sans MS", Font.BOLD, 20);
 	Font bigShopFont = new Font("Comic Sans MS", Font.BOLD, 28);
-	String[] shopItems = {"Health Potion", "Greater Health Potion", "Wrath Potion", "Iron Potion", "Exit Shop"};
-	int[] goldCosts = {50, 100, 150, 150};
-	boolean shop = false, itemSelect = false, choice = false, justGotOut = false, notEnoughGold = false;
+	String[] shopItems = {"Health Potion [50g]", "Large Health Potion [100g]", "Gerthy Health Potion [200g]", "Wrath Potion [150g]", "Iron Potion [150g]", "Exit Shop"};
+	int[] goldCosts = {50, 100, 200, 150, 150};
+	boolean shop = false, itemSelect = false, choice = false, notEnoughGold = false;
 	int itemPos = 0, testGold = 500;
 	ArrayList<String> testInv = new ArrayList<String>();
 	//------------------------------------//
@@ -698,9 +713,9 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 		map2Rects.add(new Rectangle(224+x2, 800+y2, 96, 128));
 		map2Rects.add(new Rectangle(160+x2, 608+y2, 96, 32));
 		map2Rects.add(new Rectangle(160+x2, 384+y2, 96, 32));
-		map2Rects.add(new Rectangle(256+x2, 352+y2, 24, 256));
+		map2Rects.add(new Rectangle(256+x2, 352+y2, 28, 256));
 		map2Rects.add(new Rectangle(288+x2, 352+y2, 32, 192));
-		map2Rects.add(new Rectangle(328+x2, 352+y2, 24, 256));
+		map2Rects.add(new Rectangle(324+x2, 352+y2, 28, 256));
 		map2Rects.add(new Rectangle(352+x2, 352+y2, 160, 256));
 		map2Rects.add(new Rectangle(512+x2, 448+y2, 32, 192));
 		map2Rects.add(new Rectangle(672+x2, 480+y2, 96, 128));
@@ -903,30 +918,37 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 				mapx = -1628;
 				mapy = -140+wallDist;
 			}
+			
+			//Accessing the Shop
+			if (currentMap.equals(map2) && mapx == 96 && mapy == -268) {
+				for (Rectangle r : map2Rects) {
+					r.translate(0, -64);
+				}
+				screen = "shop";
+			}
 		}
 	}
 
 	public void shopControls() { //starting value of boxy = 75
 		if (screen == "shop") {
 			requestFocus();
-			justGotOut = false;
 			if (keys[KeyEvent.VK_UP] && keypress && itemSelect == false && shop) {
-				if (boxy == 75) {
-					itemPos = 4;
-					boxy = 475;
+				if (boxy == 55) {
+					itemPos = 5;
+					boxy = 455;
 				}
 				else {
-					boxy -= 100;
+					boxy -= 80;
 					itemPos--;
 				}
 			}
 			else if (keys[KeyEvent.VK_DOWN] && keypress && itemSelect == false && shop) {
-				if (boxy == 475) {
+				if (boxy == 455) {
 					itemPos = 0;
-					boxy = 75;
+					boxy = 55;
 				}
 				else {
-					boxy += 100;
+					boxy += 80;
 					itemPos++;
 				}
 			}
@@ -940,29 +962,32 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 			}
 			else if (keys[KeyEvent.VK_ENTER] && keypress) {
 				if (shop) {
-					if (itemSelect) {
+					if (itemPos == 5) {
+						mapx = 96;
+						mapy = -332;
+						screen = "moving";
+						return;
+					}
+					else if (itemSelect) {
 						if (notEnoughGold) {
 							notEnoughGold = false;
 							itemSelect = false;
-							justGotOut = true;
 						}
-						if (choice) {
+						else if (choice) {
 							if (testGold >= goldCosts[itemPos]) {
 								testInv.add(shopItems[itemPos]);
 								testGold -= goldCosts[itemPos];
 								itemSelect = false;
-								justGotOut = true;
 							}
 							else {
 								notEnoughGold = true;
 							}
 						}
-						if (choice == false) {
+						else if (choice == false) {
 							itemSelect = false;
-							justGotOut = true;
 						}
 					}
-					if (itemSelect == false && justGotOut == false) {
+					else if (itemSelect == false) {
 						itemSelect = true;
 					}
 				}
@@ -1028,9 +1053,35 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 			g.drawImage(panel2, 485, 10, this);
 			g.setColor(Color.BLACK);
 			g.setFont(shopFont);
-			for (int i = 0; i < 5; i++) {
-				g.drawString(shopItems[i], 500, (i+1)*100);
+			for (int i = 0; i < 6; i++) {
+				g.drawString(shopItems[i], 500, (i+1)*80);
 			}
+			//Potion Icons
+			if (itemPos == 0) {
+				g.drawImage(iconPanel, 380, 250, this);
+				g.drawImage(healthPot, 385, 255, this);
+			}
+			else if (itemPos == 1) {
+				g.drawImage(iconPanel, 380, 250, this);
+				g.drawImage(largePot, 385, 255, this);
+			}
+			else if (itemPos == 2) {
+				g.drawImage(iconPanel, 380, 250, this);
+				g.drawImage(gerthPot, 385, 255, this);
+			}
+			else if (itemPos == 3) {
+				g.drawImage(iconPanel, 380, 250, this);
+				g.drawImage(wrathPot, 385, 255, this);
+			}
+			else if (itemPos == 4) {
+				g.drawImage(iconPanel, 380, 250, this);
+				g.drawImage(ironPot, 385, 255, this);
+			}
+			else if (itemPos == 5) {
+				g.drawImage(iconPanel, 380, 250, this);
+				g.drawImage(shopExit, 385, 252, this);
+			}
+			//////////////////
 			if (itemSelect == false) {
 				g.drawString("What would you like to purchase?", 30, 400);
 			}
@@ -1042,12 +1093,17 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 					g.drawString("A potion that restores x HP.", 30, 400);
 				}
 				else if (itemPos == 2) {
-					g.drawString("A potion that temporarily increases your", 30, 400);
-					g.drawString("damage dealt to enemies.", 30, 430);
+					g.drawString("Made of the rarest herbs from across", 30, 400);
+					g.drawString("all of Gerthland, this potion restores", 30, 420);
+					g.drawString("your HP to full capacity.", 30, 440);
 				}
 				else if (itemPos == 3) {
+					g.drawString("A potion that temporarily increases your", 30, 400);
+					g.drawString("damage dealt to enemies.", 30, 420);
+				}
+				else if (itemPos == 4) {
 					g.drawString("A potion that temporarily decreases", 30, 400);
-					g.drawString("damage dealt to you by enemies.", 30, 430);
+					g.drawString("damage dealt to you by enemies.", 30, 420);	
 				}
 				g.drawString("Would you like to purchase this item?", 30, 475);
 				g.drawString("YES", 150, 525);
@@ -1060,7 +1116,8 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 			}
 			if (notEnoughGold) {
 				g.drawImage(panel, 15, 355, this);
-				g.drawString("Sorry, you don't have enough gold to buy that.", 30, 400);
+				g.drawString("Sorry, you don't have enough gold to buy", 30, 400);
+				g.drawString("that.", 30, 430);
 			}
 			g.setColor(Color.RED);
 			g.drawRect(495, boxy, 280, 40);
@@ -1158,7 +1215,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 		if(menuPause) {
 			displayMenu(g);
 		}
-		//System.out.println(mapx + ", " + mapy);
+		System.out.println(mapx + ", " + mapy);
 	}
 }
 class Inventory {
