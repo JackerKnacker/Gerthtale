@@ -455,7 +455,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 	private boolean[] keys;
 	private int mapx, mapy, boxy = 55;
 	private double playerFrame;
-	private String screen = "moving", lastDirection = "down";
+	private String screen = "dialogue", lastDirection = "down";
 	private Rectangle playerHitbox = new Rectangle(382,276,36,48);
 	private ArrayList<Rectangle> map1Rects = new ArrayList<Rectangle>();
 	private ArrayList<Rectangle> map2Rects = new ArrayList<Rectangle>();
@@ -475,21 +475,21 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 			Image.SCALE_DEFAULT);
 	Image longPanel = new ImageIcon("Pictures/panelbox.jpg").getImage().getScaledInstance(765, 205,
 			Image.SCALE_DEFAULT);
-	Image iconPanel = new ImageIcon("Pictures/panelbox.jpg").getImage().getScaledInstance(90, 90, 
+	Image iconPanel = new ImageIcon("Pictures/panelbox.jpg").getImage().getScaledInstance(90, 90,
 			Image.SCALE_DEFAULT);
-	Image arrow = new ImageIcon("Pictures/arrow.png").getImage().getScaledInstance(80, 40, 
+	Image arrow = new ImageIcon("Pictures/arrow.png").getImage().getScaledInstance(80, 40,
 			Image.SCALE_DEFAULT);
-	Image healthPot = new ImageIcon("Pictures/pot.png").getImage().getScaledInstance(80, 80, 
+	Image healthPot = new ImageIcon("Pictures/pot.png").getImage().getScaledInstance(80, 80,
 			Image.SCALE_DEFAULT);
-	Image largePot = new ImageIcon("Pictures/largepot.png").getImage().getScaledInstance(80, 80, 
+	Image largePot = new ImageIcon("Pictures/largepot.png").getImage().getScaledInstance(80, 80,
 			Image.SCALE_DEFAULT);
-	Image gerthPot = new ImageIcon("Pictures/gerthpot.png").getImage().getScaledInstance(80, 80, 
+	Image gerthPot = new ImageIcon("Pictures/gerthpot.png").getImage().getScaledInstance(80, 80,
 			Image.SCALE_DEFAULT);
-	Image wrathPot = new ImageIcon("Pictures/wrathpot.png").getImage().getScaledInstance(80, 80, 
+	Image wrathPot = new ImageIcon("Pictures/wrathpot.png").getImage().getScaledInstance(80, 80,
 			Image.SCALE_DEFAULT);
-	Image ironPot = new ImageIcon("Pictures/ironpot.png").getImage().getScaledInstance(80, 80, 
+	Image ironPot = new ImageIcon("Pictures/ironpot.png").getImage().getScaledInstance(80, 80,
 			Image.SCALE_DEFAULT);
-	Image shopExit = new ImageIcon("Pictures/shopExit.png").getImage().getScaledInstance(80, 80, 
+	Image shopExit = new ImageIcon("Pictures/shopExit.png").getImage().getScaledInstance(80, 80,
 			Image.SCALE_DEFAULT);
 	Font shopFont = new Font("Comic Sans MS", Font.BOLD, 20);
 	Font bigShopFont = new Font("Comic Sans MS", Font.BOLD, 28);
@@ -499,6 +499,11 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 	int itemPos = 0, testGold = 500;
 	ArrayList<String> testInv = new ArrayList<String>();
 	//------------------------------------//
+
+	//---------|Dialogue Stuff|---------//
+	Image dialoguePanel = new ImageIcon("Pictures/panelbox.jpg").getImage().getScaledInstance(760, 200,
+			Image.SCALE_DEFAULT);
+	//----------------------------------//
 
 	private int character;
 	private String charName;
@@ -721,6 +726,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 		map2Rects.add(new Rectangle(672+x2, 480+y2, 96, 128));
 		map2Rects.add(new Rectangle(992+x2, 576+y2, 32, 64));
 		map2Rects.add(new Rectangle(1248+x2, 576+y2, 32, 64));
+		map2Rects.add(new Rectangle(1408+x2, 736+y2, 36, 48)); //NPC
 		map2Rects.add(new Rectangle(864+x2, 320+y2, 544, 128));
 		map2Rects.add(new Rectangle(864+x2, 448+y2, 224, 64));
 		map2Rects.add(new Rectangle(896+x2, 512+y2, 160, 32));
@@ -918,7 +924,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 				mapx = -1628;
 				mapy = -140+wallDist;
 			}
-			
+
 			//Accessing the Shop
 			if (currentMap.equals(map2) && mapx == 96 && mapy == -268) {
 				for (Rectangle r : map2Rects) {
@@ -1002,19 +1008,31 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 
 	public void displayPlayer(Graphics g) {
 		requestFocus();
-		if (keys[KeyEvent.VK_LEFT]) {
-			g.drawImage(playerLeft[(int) Math.floor(playerFrame)], 382, 276, this);
+		if (screen == "moving") {
+			if (keys[KeyEvent.VK_LEFT]) {
+				g.drawImage(playerLeft[(int) Math.floor(playerFrame)], 382, 276, this);
+			}
+			else if (keys[KeyEvent.VK_RIGHT]) {
+				g.drawImage(playerRight[(int) Math.floor(playerFrame)], 382, 276, this);
+			}
+			else if (keys[KeyEvent.VK_UP]) {
+				g.drawImage(playerUp[(int) Math.floor(playerFrame)], 382, 276, this);
+			}
+			else if (keys[KeyEvent.VK_DOWN]) {
+				g.drawImage(playerDown[(int) Math.floor(playerFrame)], 382, 276, this);
+			}
+			else { //When player is not moving
+				if (lastDirection.equals("down"))
+					g.drawImage(playerDown[0], 382, 276, this);
+				else if (lastDirection.equals("up"))
+					g.drawImage(playerUp[0], 382, 276, this);
+				else if (lastDirection.equals("left"))
+					g.drawImage(playerLeft[0], 382, 276, this);
+				else if (lastDirection.equals("right"))
+					g.drawImage(playerRight[0], 382, 276, this);
+			}	
 		}
-		else if (keys[KeyEvent.VK_RIGHT]) {
-			g.drawImage(playerRight[(int) Math.floor(playerFrame)], 382, 276, this);
-		}
-		else if (keys[KeyEvent.VK_UP]) {
-			g.drawImage(playerUp[(int) Math.floor(playerFrame)], 382, 276, this);
-		}
-		else if (keys[KeyEvent.VK_DOWN]) {
-			g.drawImage(playerDown[(int) Math.floor(playerFrame)], 382, 276, this);
-		}
-		else { //When player is not moving
+		if (screen == "dialogue") { //Just display the character (without animations)
 			if (lastDirection.equals("down"))
 				g.drawImage(playerDown[0], 382, 276, this);
 			else if (lastDirection.equals("up"))
@@ -1045,7 +1063,6 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 			g.setFont(bigShopFont);
 			g.drawString("Welcome to the shop!", 30, 400);
 			g.drawString("Here, you can purchase potions to aid you in battles.", 30, 470);
-			//g.drawString("in battles.", 30, 480);
 		}
 		if (shop == true) {
 			g.drawImage(shopBack, 0, 0, this);
@@ -1103,7 +1120,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 				}
 				else if (itemPos == 4) {
 					g.drawString("A potion that temporarily decreases", 30, 400);
-					g.drawString("damage dealt to you by enemies.", 30, 420);	
+					g.drawString("damage dealt to you by enemies.", 30, 420);
 				}
 				g.drawString("Would you like to purchase this item?", 30, 475);
 				g.drawString("YES", 150, 525);
@@ -1127,12 +1144,11 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 
 	}
 
-/*	public void drawDialogue(Graphics g) {
+	public void drawDialogue(Graphics g, int npc) {
 		if (screen == "dialogue") {
-			g.setColor(Color.WHITE);
-			g.fillRect(600, 50, 700, 200);
+			g.drawImage(dialoguePanel, 20, 350, this);
 		}
-	}*/
+	}
 
 	public void toggleMenu() { //toggles if the in game menu shows or not (depending on key pressed)
 		if (keys[KeyEvent.VK_C]) {
@@ -1208,6 +1224,11 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 		if (screen == "moving") {
 			drawMap(g);
 			displayPlayer(g);
+		}
+		else if (screen == "dialogue") {
+			drawMap(g);
+			displayPlayer(g);
+			drawDialogue(g, 1);
 		}
 		else if (screen == "shop") {
 			drawShop(g);
