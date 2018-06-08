@@ -1,7 +1,7 @@
 //Gerthtale - A Turn-Based Rhythmic RPG inspired by Undertale & Final Fantasy
 //By Alex Shi, Jakir Ansari, Jason Wong
 
-package Gerthtale;
+//package Gerthtale;
 
 import javax.swing.*;
 import java.awt.*;
@@ -427,6 +427,7 @@ public class Gerthtale extends JFrame implements ActionListener, KeyListener {
         	if(game.getMenuPause() == false) {
 				game.move();
 				game.shopControls();
+				game.dialogueControls();
         	}
         	game.repaint();
 		}
@@ -501,8 +502,10 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 	//------------------------------------//
 
 	//---------|Dialogue Stuff|---------//
-	Image dialoguePanel = new ImageIcon("Pictures/panelbox.jpg").getImage().getScaledInstance(760, 200,
+	Image dialoguePanel = new ImageIcon("Pictures/panelbox.jpg").getImage().getScaledInstance(755, 200,
 			Image.SCALE_DEFAULT);
+	Font dialogueFont = new Font("Comic Sans MS", Font.BOLD, 24);
+	boolean firstPanel = true, secondPanel = false;
 	//----------------------------------//
 
 	private int character;
@@ -1006,6 +1009,22 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 		}
 	}
 
+	public void dialogueControls() {
+		if (screen == "dialogue") {
+			requestFocus();
+			if (keys[KeyEvent.VK_ENTER] && keypress && firstPanel) {
+				firstPanel = false;
+				secondPanel = true;
+			}
+			else if (keys[KeyEvent.VK_ENTER] && keypress && secondPanel) {
+				firstPanel = true;
+				secondPanel = false;
+				screen = "moving";
+			}
+			keypress = false;
+		}
+	}
+
 	public void displayPlayer(Graphics g) {
 		requestFocus();
 		if (screen == "moving") {
@@ -1030,7 +1049,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 					g.drawImage(playerLeft[0], 382, 276, this);
 				else if (lastDirection.equals("right"))
 					g.drawImage(playerRight[0], 382, 276, this);
-			}	
+			}
 		}
 		if (screen == "dialogue") { //Just display the character (without animations)
 			if (lastDirection.equals("down"))
@@ -1147,6 +1166,26 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 	public void drawDialogue(Graphics g, int npc) {
 		if (screen == "dialogue") {
 			g.drawImage(dialoguePanel, 20, 350, this);
+			g.setFont(dialogueFont);
+			g.setColor(Color.BLACK);
+			if (npc == 1) {
+				if (firstPanel) {
+					g.drawString("Villager: Folks around here have been tensed up", 170, 410);
+					g.drawString("cause of all the disappearances. I can't even let", 170, 450);
+					g.drawString("my children out anymore without worrying sick", 170, 490);
+				}
+				else if (secondPanel) {
+					g.drawString("about what'll happen to them. It's gotta have", 170, 410);
+					g.drawString("something to do with those hooded men that come", 170, 450);
+					g.drawString("here every so often, I'm sure it is!", 170, 490);
+				}
+//				else if (thirdPanel) {
+//
+//				}
+			}
+//			if (npc == 2) {
+//
+//			}
 		}
 	}
 
