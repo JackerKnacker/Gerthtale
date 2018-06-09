@@ -1,7 +1,7 @@
 //Gerthtale - A Turn-Based Rhythmic RPG inspired by Undertale & Final Fantasy
 //By Alex Shi, Jakir Ansari, Jason Wong
 
-//package Gerthtale;
+package Gerthtale;
 
 import javax.swing.*;
 import java.awt.*;
@@ -456,7 +456,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 	private boolean[] keys;
 	private int mapx, mapy, boxy = 55;
 	private double playerFrame;
-	private String screen = "dialogue", lastDirection = "down";
+	private String screen = "moving", lastDirection = "down";
 	private Rectangle playerHitbox = new Rectangle(382,276,36,48);
 	private ArrayList<Rectangle> map1Rects = new ArrayList<Rectangle>();
 	private ArrayList<Rectangle> map2Rects = new ArrayList<Rectangle>();
@@ -504,8 +504,13 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 	//---------|Dialogue Stuff|---------//
 	Image dialoguePanel = new ImageIcon("Pictures/panelbox.jpg").getImage().getScaledInstance(755, 200,
 			Image.SCALE_DEFAULT);
+	Image npc1 = new ImageIcon("Pictures/npc1.png").getImage().getScaledInstance(36, 48,
+			Image.SCALE_DEFAULT);
+	Image npc1head = new ImageIcon("Pictures/npc1head.png").getImage().getScaledInstance(102, 81,
+			Image.SCALE_DEFAULT);
 	Font dialogueFont = new Font("Comic Sans MS", Font.BOLD, 24);
 	boolean firstPanel = true, secondPanel = false;
+	int npc = 1;
 	//----------------------------------//
 
 	private int character;
@@ -935,6 +940,16 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 				}
 				screen = "shop";
 			}
+			
+			//Engaging in Dialogue
+			if (currentMap.equals(map2) && keys[KeyEvent.VK_ENTER] && keypress) {
+				if ((mapy == -508 && mapx <= -1020 && mapx >= -1036) || (mapy == -412 && mapx <= -1020 && mapx >= -1036) ||
+					 (mapx == -1064 && mapy >= -472 && mapy <= -448) || (mapx == -988 && mapy >= -472 && mapy <= -448)) {
+					npc = 1;
+					screen = "dialogue";
+				}
+			}
+			keypress = false;
 		}
 	}
 
@@ -1068,11 +1083,16 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 		g.fillRect(0, 0, getWidth(), getHeight());
 		g.drawImage(currentMap, mapx, mapy, this);
 		g.setColor(Color.RED);
-
-		//Drawing collision rectangles (for experimental purposes only)
-		for (Rectangle r : currentRects) {
-			g.fillRect((int)r.getX(), (int)r.getY(), (int)r.getWidth(), (int)r.getHeight());
+		
+		//Drawing NPC
+		if (currentMap.equals(map2)) {
+			g.drawImage(npc1, 1408+mapx, 736+mapy, this);
 		}
+		
+		//Drawing collision rectangles (for experimental purposes only)
+/*		for (Rectangle r : currentRects) {
+			g.fillRect((int)r.getX(), (int)r.getY(), (int)r.getWidth(), (int)r.getHeight());
+		}*/
 	}
 
 	public void drawShop(Graphics g) {
@@ -1163,12 +1183,13 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 
 	}
 
-	public void drawDialogue(Graphics g, int npc) {
+	public void drawDialogue(Graphics g) {
 		if (screen == "dialogue") {
 			g.drawImage(dialoguePanel, 20, 350, this);
 			g.setFont(dialogueFont);
 			g.setColor(Color.BLACK);
 			if (npc == 1) {
+				g.drawImage(npc1head, 45, 400, this);
 				if (firstPanel) {
 					g.drawString("Villager: Folks around here have been tensed up", 170, 410);
 					g.drawString("cause of all the disappearances. I can't even let", 170, 450);
@@ -1267,7 +1288,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 		else if (screen == "dialogue") {
 			drawMap(g);
 			displayPlayer(g);
-			drawDialogue(g, 1);
+			drawDialogue(g);
 		}
 		else if (screen == "shop") {
 			drawShop(g);
