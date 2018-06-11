@@ -682,14 +682,13 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 	ArrayList<String> userItems = new ArrayList<String>();
 	ArrayList<Integer> itemNums = new ArrayList<Integer>();
 	int invPos = 0;
-	boolean invSelect = false, invChoice = false;
+	boolean invSelect = false, invChoice = false, cantUse = false;
 	//-------------------------------//
 	
 	//--------|Battle Stuff|--------//
 	private int timer = 0,health,runChance,attackTimer = 0,directionX = 2,directionL = 2,directionR = -2,fire;
 	private String battleScreen = "options", attackType;
 	private boolean immune= false,displaying = false,displayed = false;
-	private GameStuff mainFrame;
 	private Rectangle baseRect = new Rectangle(150,360,480,170),topRect,leftRect,rightRect,attackRect,leftattackRect,rightattackRect;
 	private Color dgreen = new Color(0, 153, 10);
 	//private Player battleChar = new Player(50);
@@ -1801,7 +1800,16 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 					return;
 				}
 				else if (invSelect == false){
-					invSelect = true;
+					if (cantUse == false && (userItems.get(invPos) == "Iron Potion" || userItems.get(invPos) == "Wrath Potion")) {
+						cantUse = true;
+					}
+					else if (cantUse) {
+						cantUse = false;
+					}
+					else {
+						invSelect = true;
+					}
+					
 				}
 				else if (invSelect) {
 					if (invChoice == false) {
@@ -1823,7 +1831,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 					}
 				}
 			}
-			else if (keys[KeyEvent.VK_UP] && keypress) {
+			else if (keys[KeyEvent.VK_UP] && keypress && cantUse == false) {
 				if (invPos == 0) {
 					invPos = userItems.size();
 				}
@@ -1831,7 +1839,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 					invPos--;
 				}
 			}
-			else if (keys[KeyEvent.VK_DOWN] && keypress) {
+			else if (keys[KeyEvent.VK_DOWN] && keypress && cantUse == false) {
 				if (invPos == userItems.size()) {
 					invPos = 0;
 				}
@@ -1899,9 +1907,14 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 				}		
 			}
 			if (invSelect == false) {
-				g.drawString("Which item would you like to use?", 30, 400);
+				if (cantUse) {
+					g.drawString("It's not a wise idea to use that.", 30, 400);
+				}
+				else {
+					g.drawString("Which item would you like to use?", 30, 400);
+				}
 			}
-			if (invSelect) {
+			else if (invSelect) {
 				if (userItems.get(invPos) == "Health Potion") {
 					g.drawString("A potion that restores 5 HP.", 30, 400);
 				}
@@ -2189,6 +2202,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 		else if(source == bagBut && saveScreen == false && profScreen == false) {
 			removeMenu();
 			menuPause = false;
+			initItems();
 			screen = "inventory";
 /*			this.bagScreen = new ShowBag(this.bag);
 			this.add(bagScreen);*/
