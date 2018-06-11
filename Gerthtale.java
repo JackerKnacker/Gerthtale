@@ -361,7 +361,7 @@ public class Gerthtale extends JFrame implements ActionListener, KeyListener {
 			}
 
         	this.cards.add(game, "game");
-        	game.loadRects();
+        	game.loadRects(1);
             this.cLayout.show(this.cards,"game");
             timer.start();
         }
@@ -463,8 +463,8 @@ public class Gerthtale extends JFrame implements ActionListener, KeyListener {
         
         else if(source == this.openSaveConfirm) {
        		this.user = new PlayerStats(Integer.parseInt(savedStats.get(3)), Integer.parseInt(savedStats.get(5)), Integer.parseInt(savedStats.get(1)), Integer.parseInt(savedStats.get(2)), savedStats.get(0), Integer.parseInt(savedStats.get(6))); //HP, ATK, LVL, EXP, NAME, CHAR-NUM
-       		Inventory bag = new Inventory(Integer.parseInt(savedStats.get(17)), Integer.parseInt(savedStats.get(18)), Integer.parseInt(savedStats.get(19)), Integer.parseInt(savedStats.get(20)), Integer.parseInt(savedStats.get(21)), 500);
-       		
+       		Inventory bag = new Inventory(Integer.parseInt(savedStats.get(11)), Integer.parseInt(savedStats.get(12)), Integer.parseInt(savedStats.get(13)), Integer.parseInt(savedStats.get(14)), Integer.parseInt(savedStats.get(15)), 500);
+
        		if(this.nameStat.getParent() == this.sPage) {
        			System.out.println("A");
        			this.sPage.remove(nameStat);
@@ -488,7 +488,6 @@ public class Gerthtale extends JFrame implements ActionListener, KeyListener {
        		
        		this.game = new GameScreen(user, bag, menuTheme.getIsPlaying(), Integer.parseInt(savedStats.get(7)), Integer.parseInt(savedStats.get(8)), savedStats.get(9));
        		this.cards.add(game, "game");
-        	this.game.loadRects();
             this.cLayout.show(this.cards,"game");
             timer.start();
        	}
@@ -691,7 +690,6 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 	private boolean immune= false,displaying = false,displayed = false;
 	private Rectangle baseRect = new Rectangle(150,360,480,170),topRect,leftRect,rightRect,attackRect,leftattackRect,rightattackRect;
 	private Color dgreen = new Color(0, 153, 10);
-	//private Player battleChar = new Player(50);
 	private Random rng = new Random();
 	private Enemy slime = new Enemy(50, 1, "slime"), goblin = new Enemy(75, 3, "goblin"), boss = new Enemy(75, 3, "boss");
 	public ArrayList<Rectangle> rects = new ArrayList<Rectangle>();
@@ -889,7 +887,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 	//-----------------------------//
 
 	private boolean[] keys;
-	private int mapx, mapy, boxy = 55, x1 = -908, y1 = -320, x2 = -716, y2 = -768, x3 = -80, y3 = -460, steps = 0;
+	private int mapx, mapy, boxy = 55, steps = 0;
 	private double playerFrame;
 	private String screen = "moving", lastDirection = "down";
 	private Rectangle playerHitbox = new Rectangle(382,276,36,48);
@@ -1106,16 +1104,19 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 		if(current.equals("map1")) {
 			this.currentMap = map1;
 			this.currentRects = map1Rects;
+			loadRects(1);
 		}
 		
 		else if(current.equals("map2")) {
 			this.currentMap = map2;
 			this.currentRects = map2Rects;
+			loadRects(2);
 		}
 		
 		else if(current.equals("map3")) {
 			this.currentMap = map3;
 			this.currentRects = map3Rects;
+			loadRects(3);
 		}
 		
 		playerFrame = 0;
@@ -1172,123 +1173,137 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 		playerFrame = 0; //Restarts frame if user stops pressing key and starts again
 	}
 
-	public void loadRects() {
+	public void loadRects(int rectsNum) {
 		//-------MAP 1 RECTS-------//
-		map1Rects.add(new Rectangle(mapx,mapy,432,1728));
-		map1Rects.add(new Rectangle(432+mapx, mapy, 1600, 456));
-		map1Rects.add(new Rectangle(688+mapx, 440+mapy, 736, 48));
-		map1Rects.add(new Rectangle(1388+mapx, 456+mapy, 420, 786));
-		map1Rects.add(new Rectangle(692+mapx, 944+mapy, 696, 298));
-		map1Rects.add(new Rectangle(416+mapx, 1390+mapy, 2720, 352));
-		map1Rects.add(new Rectangle(2704+mapx, 480+mapy, 416, 928));
-		map1Rects.add(new Rectangle(1776+mapx, mapy, 288, 1184));
-		map1Rects.add(new Rectangle(2064+mapx, 688+mapy, 224, 512));
+		if (rectsNum == 1) {
+			map1Rects.clear();
+			
+			map1Rects.add(new Rectangle(mapx,mapy,432,1728));
+			map1Rects.add(new Rectangle(432+mapx, mapy, 1600, 456));
+			map1Rects.add(new Rectangle(688+mapx, 440+mapy, 736, 48));
+			map1Rects.add(new Rectangle(1388+mapx, 456+mapy, 420, 786));
+			map1Rects.add(new Rectangle(692+mapx, 944+mapy, 696, 298));
+			map1Rects.add(new Rectangle(416+mapx, 1390+mapy, 2720, 352));
+			map1Rects.add(new Rectangle(2704+mapx, 480+mapy, 416, 928));
+			map1Rects.add(new Rectangle(1776+mapx, mapy, 288, 1184));
+			map1Rects.add(new Rectangle(2064+mapx, 688+mapy, 224, 512));
 
-		//Trees
-		map1Rects.add(new Rectangle(1088+mapx, 512+mapy, 96, 128));
-		map1Rects.add(new Rectangle(1120+mapx, 756+mapy, 64, 104));
-		map1Rects.add(new Rectangle(1312+mapx, 820+mapy, 64, 104));
-		map1Rects.add(new Rectangle(896+mapx, 628+mapy, 64, 76));
-		map1Rects.add(new Rectangle(576+mapx, 564+mapy, 64, 104));
-		map1Rects.add(new Rectangle(512+mapx, 788+mapy, 64, 104));
-		map1Rects.add(new Rectangle(2560+mapx, 1076+mapy, 64, 104));
-		map1Rects.add(new Rectangle(2368+mapx, 800+mapy, 96, 128));
-		map1Rects.add(new Rectangle(2400+mapx, 480+mapy, 96, 128));
-		map1Rects.add(new Rectangle(2112+mapx, 536+mapy, 64, 104));
+			//Trees
+			map1Rects.add(new Rectangle(1088+mapx, 512+mapy, 96, 128));
+			map1Rects.add(new Rectangle(1120+mapx, 756+mapy, 64, 104));
+			map1Rects.add(new Rectangle(1312+mapx, 820+mapy, 64, 104));
+			map1Rects.add(new Rectangle(896+mapx, 628+mapy, 64, 76));
+			map1Rects.add(new Rectangle(576+mapx, 564+mapy, 64, 104));
+			map1Rects.add(new Rectangle(512+mapx, 788+mapy, 64, 104));
+			map1Rects.add(new Rectangle(2560+mapx, 1076+mapy, 64, 104));
+			map1Rects.add(new Rectangle(2368+mapx, 800+mapy, 96, 128));
+			map1Rects.add(new Rectangle(2400+mapx, 480+mapy, 96, 128));
+			map1Rects.add(new Rectangle(2112+mapx, 536+mapy, 64, 104));
 
-		//Bridge
-		map1Rects.add(new Rectangle(1952+mapx, 1200+mapy, 352, 16));
-		map1Rects.add(new Rectangle(1952+mapx, 1312+mapy, 352, 96));
+			//Bridge
+			map1Rects.add(new Rectangle(1952+mapx, 1200+mapy, 352, 16));
+			map1Rects.add(new Rectangle(1952+mapx, 1312+mapy, 352, 96));
 
-		//Rocks
-		map1Rects.add(new Rectangle(1984+mapx, mapy, 336, 432));
-		map1Rects.add(new Rectangle(2016+mapx, 412+mapy, 288, 32));
-		map1Rects.add(new Rectangle(2448+mapx, mapy, 360, 432));
-		map1Rects.add(new Rectangle(2464+mapx, 412+mapy, 608, 32));
+			//Rocks
+			map1Rects.add(new Rectangle(1984+mapx, mapy, 336, 432));
+			map1Rects.add(new Rectangle(2016+mapx, 412+mapy, 288, 32));
+			map1Rects.add(new Rectangle(2448+mapx, mapy, 360, 432));
+			map1Rects.add(new Rectangle(2464+mapx, 412+mapy, 608, 32));	
+		}
+
 
 		//-------MAP 2 RECTS-------//
 
 		//Walls
-		map2Rects.add(new Rectangle(1152+x2, 992+y2, 320, 416));
-		map2Rects.add(new Rectangle(1136+x2, 992+y2, 32, 416));
-		map2Rects.add(new Rectangle(992+x2, 992+y2, 16, 416));
-		map2Rects.add(new Rectangle(1168+x2, 976+y2, 672, 32));
-		map2Rects.add(new Rectangle(1808+x2, 496+y2, 32, 512));
-		map2Rects.add(new Rectangle(1824+x2, 480+y2, 672, 32));
-		map2Rects.add(new Rectangle(1856+x2, 464+y2, 672, 32));
-		map2Rects.add(new Rectangle(1824+x2, 256+y2, 672, 32));
-		map2Rects.add(new Rectangle(1792+x2, 176+y2, 32, 64));
-		map2Rects.add(new Rectangle(1760+x2, 192+y2, 32, 32));
-		map2Rects.add(new Rectangle(192+x2, 192+y2, 1568, 32));
-		map2Rects.add(new Rectangle(160+x2, 224+y2, 16, 736));
-		map2Rects.add(new Rectangle(160+x2, 960+y2, 32, 32));
-		map2Rects.add(new Rectangle(192+x2, 976+y2, 800, 16));
+		else if (rectsNum == 2) {
+			map2Rects.clear();
+			
+			map2Rects.add(new Rectangle(1152+mapx, 992+mapy, 320, 416));
+			map2Rects.add(new Rectangle(1136+mapx, 992+mapy, 32, 416));
+			map2Rects.add(new Rectangle(992+mapx, 992+mapy, 16, 416));
+			map2Rects.add(new Rectangle(1168+mapx, 976+mapy, 672, 32));
+			map2Rects.add(new Rectangle(1808+mapx, 496+mapy, 32, 512));
+			map2Rects.add(new Rectangle(1824+mapx, 480+mapy, 672, 32));
+			map2Rects.add(new Rectangle(1856+mapx, 464+mapy, 672, 32));
+			map2Rects.add(new Rectangle(1824+mapx, 256+mapy, 672, 32));
+			map2Rects.add(new Rectangle(1792+mapx, 176+mapy, 32, 64));
+			map2Rects.add(new Rectangle(1760+mapx, 192+mapy, 32, 32));
+			map2Rects.add(new Rectangle(192+mapx, 192+mapy, 1568, 32));
+			map2Rects.add(new Rectangle(160+mapx, 224+mapy, 16, 736));
+			map2Rects.add(new Rectangle(160+mapx, 960+mapy, 32, 32));
+			map2Rects.add(new Rectangle(192+mapx, 976+mapy, 800, 16));
 
-		map2Rects.add(new Rectangle(800+x2, 864+y2, 96, 128));
-		map2Rects.add(new Rectangle(608+x2, 864+y2, 96, 128));
-		map2Rects.add(new Rectangle(416+x2, 800+y2, 96, 128));
-		map2Rects.add(new Rectangle(224+x2, 800+y2, 96, 128));
-		map2Rects.add(new Rectangle(160+x2, 608+y2, 96, 32));
-		map2Rects.add(new Rectangle(160+x2, 384+y2, 96, 32));
-		map2Rects.add(new Rectangle(256+x2, 352+y2, 28, 256));
-		map2Rects.add(new Rectangle(288+x2, 352+y2, 32, 192));
-		map2Rects.add(new Rectangle(324+x2, 352+y2, 28, 256));
-		map2Rects.add(new Rectangle(352+x2, 352+y2, 160, 256));
-		map2Rects.add(new Rectangle(512+x2, 448+y2, 32, 192));
-		map2Rects.add(new Rectangle(672+x2, 480+y2, 96, 128));
-		map2Rects.add(new Rectangle(992+x2, 576+y2, 32, 64));
-		map2Rects.add(new Rectangle(1248+x2, 576+y2, 32, 64));
-		map2Rects.add(new Rectangle(1408+x2, 736+y2, 36, 48)); //NPC
-		map2Rects.add(new Rectangle(864+x2, 320+y2, 544, 128));
-		map2Rects.add(new Rectangle(864+x2, 448+y2, 224, 64));
-		map2Rects.add(new Rectangle(896+x2, 512+y2, 160, 32));
-		map2Rects.add(new Rectangle(1088+x2, 448+y2, 24, 96));
-		map2Rects.add(new Rectangle(1160+x2, 448+y2, 24, 96));
-		map2Rects.add(new Rectangle(1184+x2, 448+y2, 224, 64));
-		map2Rects.add(new Rectangle(1216+x2, 512+y2, 160, 32));
-		map2Rects.add(new Rectangle(1696+x2, 544+y2, 96, 128));
-		map2Rects.add(new Rectangle(1568+x2, 800+y2, 64, 64));
+			map2Rects.add(new Rectangle(800+mapx, 864+mapy, 96, 128));
+			map2Rects.add(new Rectangle(608+mapx, 864+mapy, 96, 128));
+			map2Rects.add(new Rectangle(416+mapx, 800+mapy, 96, 128));
+			map2Rects.add(new Rectangle(224+mapx, 800+mapy, 96, 128));
+			map2Rects.add(new Rectangle(160+mapx, 608+mapy, 96, 32));
+			map2Rects.add(new Rectangle(160+mapx, 384+mapy, 96, 32));
+			map2Rects.add(new Rectangle(256+mapx, 352+mapy, 28, 256));
+			map2Rects.add(new Rectangle(288+mapx, 352+mapy, 32, 192));
+			map2Rects.add(new Rectangle(324+mapx, 352+mapy, 28, 256));
+			map2Rects.add(new Rectangle(352+mapx, 352+mapy, 160, 256));
+			map2Rects.add(new Rectangle(512+mapx, 448+mapy, 32, 192));
+			map2Rects.add(new Rectangle(672+mapx, 480+mapy, 96, 128));
+			map2Rects.add(new Rectangle(992+mapx, 576+mapy, 32, 64));
+			map2Rects.add(new Rectangle(1248+mapx, 576+mapy, 32, 64));
+			map2Rects.add(new Rectangle(1408+mapx, 736+mapy, 36, 48)); //NPC
+			map2Rects.add(new Rectangle(864+mapx, 320+mapy, 544, 128));
+			map2Rects.add(new Rectangle(864+mapx, 448+mapy, 224, 64));
+			map2Rects.add(new Rectangle(896+mapx, 512+mapy, 160, 32));
+			map2Rects.add(new Rectangle(1088+mapx, 448+mapy, 24, 96));
+			map2Rects.add(new Rectangle(1160+mapx, 448+mapy, 24, 96));
+			map2Rects.add(new Rectangle(1184+mapx, 448+mapy, 224, 64));
+			map2Rects.add(new Rectangle(1216+mapx, 512+mapy, 160, 32));
+			map2Rects.add(new Rectangle(1696+mapx, 544+mapy, 96, 128));
+			map2Rects.add(new Rectangle(1568+mapx, 800+mapy, 64, 64));
 
+		}
+		
 		//-------MAP 3 RECTS-------//
+		else if (rectsNum == 3) {
+			map3Rects.clear();
+			
+			map3Rects.add(new Rectangle(mapx, 576+mapy, 704, 32));
+			map3Rects.add(new Rectangle(704+mapx, 320+mapy, 16, 288));
+			map3Rects.add(new Rectangle(704+mapx, 288+mapy, 2240, 32));
+			map3Rects.add(new Rectangle(2928+mapx, 320+mapy, 16, 576 ));
+			map3Rects.add(new Rectangle(2912+mapx, 896+mapy, 32, 32));
+			map3Rects.add(new Rectangle(2032+mapx, 912+mapy, 896, 16));
+			map3Rects.add(new Rectangle(2016+mapx, 928+mapy, 32, 32));
+			map3Rects.add(new Rectangle(2000+mapx, 944+mapy, 16, 608));
+			map3Rects.add(new Rectangle(1984+mapx, 1536+mapy, 32, 32));
+			map3Rects.add(new Rectangle(1472+mapx, 1552+mapy, 512, 16));
+			map3Rects.add(new Rectangle(1440+mapx, 1536+mapy, 32, 32));
+			map3Rects.add(new Rectangle(1440+mapx, 560+mapy, 16, 992));
+			map3Rects.add(new Rectangle(1440+mapx, 560+mapy, 1088, 16));
+			map3Rects.add(new Rectangle(2496+mapx, 576+mapy, 32, 32));
+			map3Rects.add(new Rectangle(2528+mapx, 592+mapy, 16, 96));
+			map3Rects.add(new Rectangle(1440+mapx, 704+mapy, 1088, 32));
+			map3Rects.add(new Rectangle(1232+mapx, 560+mapy, 16, 608));
+			map3Rects.add(new Rectangle(1232+mapx, 560+mapy, 224, 16));
+			map3Rects.add(new Rectangle(704+mapx, 1120+mapy, 32, 32));
+			map3Rects.add(new Rectangle(736+mapx, 1136+mapy, 512, 16));
+			map3Rects.add(new Rectangle(672+mapx, 800+mapy, 32, 32));
+			map3Rects.add(new Rectangle(704+mapx, 816+mapy, 16, 320));
+			map3Rects.add(new Rectangle(mapx, 784+mapy, 704, 16));
 
-		map3Rects.add(new Rectangle(x3, 576+y3, 704, 32));
-		map3Rects.add(new Rectangle(704+x3, 320+y3, 16, 288));
-		map3Rects.add(new Rectangle(704+x3, 288+y3, 2240, 32));
-		map3Rects.add(new Rectangle(2928+x3, 320+y3, 16, 576 ));
-		map3Rects.add(new Rectangle(2912+x3, 896+y3, 32, 32));
-		map3Rects.add(new Rectangle(2032+x3, 912+y3, 896, 16));
-		map3Rects.add(new Rectangle(2016+x3, 928+y3, 32, 32));
-		map3Rects.add(new Rectangle(2000+x3, 944+y3, 16, 608));
-		map3Rects.add(new Rectangle(1984+x3, 1536+y3, 32, 32));
-		map3Rects.add(new Rectangle(1472+x3, 1552+y3, 512, 16));
-		map3Rects.add(new Rectangle(1440+x3, 1536+y3, 32, 32));
-		map3Rects.add(new Rectangle(1440+x3, 560+y3, 16, 992));
-		map3Rects.add(new Rectangle(1440+x3, 560+y3, 1088, 16));
-		map3Rects.add(new Rectangle(2496+x3, 576+y3, 32, 32));
-		map3Rects.add(new Rectangle(2528+x3, 592+y3, 16, 96));
-		map3Rects.add(new Rectangle(1440+x3, 704+y3, 1088, 32));
-		map3Rects.add(new Rectangle(1232+x3, 560+y3, 16, 608));
-		map3Rects.add(new Rectangle(1232+x3, 560+y3, 224, 16));
-		map3Rects.add(new Rectangle(704+x3, 1120+y3, 32, 32));
-		map3Rects.add(new Rectangle(736+x3, 1136+y3, 512, 16));
-		map3Rects.add(new Rectangle(672+x3, 800+y3, 32, 32));
-		map3Rects.add(new Rectangle(704+x3, 816+y3, 16, 320));
-		map3Rects.add(new Rectangle(x3, 784+y3, 704, 16));
+			//Trees
+			map3Rects.add(new Rectangle(992+mapx, 736+mapy, 96, 128));
+			map3Rects.add(new Rectangle(1024+mapx, 384+mapy, 96, 128));
+			map3Rects.add(new Rectangle(1472+mapx, 864+mapy, 96, 128));
 
-		//Trees
-		map3Rects.add(new Rectangle(992+x3, 736+y3, 96, 128));
-		map3Rects.add(new Rectangle(1024+x3, 384+y3, 96, 128));
-		map3Rects.add(new Rectangle(1472+x3, 864+y3, 96, 128));
+			//Rocks
+			map3Rects.add(new Rectangle(1472+mapx, 1184+mapy, 32, 64));
+			map3Rects.add(new Rectangle(1504+mapx, 1216+mapy, 32, 64));
+			map3Rects.add(new Rectangle(1568+mapx, 1248+mapy, 32, 64));
+			map3Rects.add(new Rectangle(1664+mapx, 1184+mapy, 32, 64));
+			map3Rects.add(new Rectangle(1728+mapx, 1248+mapy, 32, 64));
+			map3Rects.add(new Rectangle(1856+mapx, 1184+mapy, 32, 64));
+			map3Rects.add(new Rectangle(1920+mapx, 1248+mapy, 32, 64));
+			map3Rects.add(new Rectangle(1952+mapx, 1184+mapy, 32, 64));
+		}
 
-		//Rocks
-		map3Rects.add(new Rectangle(1472+x3, 1184+y3, 32, 64));
-		map3Rects.add(new Rectangle(1504+x3, 1216+y3, 32, 64));
-		map3Rects.add(new Rectangle(1568+x3, 1248+y3, 32, 64));
-		map3Rects.add(new Rectangle(1664+x3, 1184+y3, 32, 64));
-		map3Rects.add(new Rectangle(1728+x3, 1248+y3, 32, 64));
-		map3Rects.add(new Rectangle(1856+x3, 1184+y3, 32, 64));
-		map3Rects.add(new Rectangle(1920+x3, 1248+y3, 32, 64));
-		map3Rects.add(new Rectangle(1952+x3, 1184+y3, 32, 64));
 	}
 
 		public boolean checkCollision(String dir, ArrayList<Rectangle> rectList) {
@@ -1376,72 +1391,50 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 			//MAP 1 TO 2
 			if (currentMap.equals(map1) && mapx <= -1940 && mapx >= -2028 && mapy == 0) { //If the player is at the coordinates of the map
 																						  //where the map will switch
-				//When the player switches maps, they enter a path with walls on the left and right of them that remain constant
-				//in the second map as well. The distance that the player is away from the right wall must also remain constant from
-				//the first map to the second map.
 
-				int wallDist = 2028+mapx; //The distance from the player and the right wall; used for properly translating the map and rects
-										  //according to what x-coordinate the player enters from.
-				for (Rectangle r : map1Rects) {
-					r.translate(-wallDist, -64); //All rectangles in map 1 are moved up 64 units to make up for where the player spawns.
-					    						 //The rectangles are also moved back to their original spots in the x-direction so that
-												 //they can be properly translated when map 1 is entered again.
-				}
-				for (Rectangle r : map2Rects) {
-					r.translate(wallDist, 0); //Moving the rectangles in map 2 to correspond with the walls in map 1
-				}
+				int wallDist = 2028+mapx; //The distance from the player and the right wall; used for properly placing the player in the next map
+
 				//Switching the map image and rectangles
-				currentRects = map2Rects;
-				currentMap = map2;
 
 				mapx = -716+(wallDist); //Putting the player at the entrance in map 2
 				mapy = -768; //The player spawns on the next map 64 units above the entrance back to map 2 to avoid infinitely looping in maps
-
+				
+				loadRects(2); //Loading (or re-loading) the collision rectangles in the next map
+				currentRects = map2Rects;
+				currentMap = map2;
 			}
 
 			//MAP 2 TO 1
 			if (currentMap.equals(map2) && mapx <= -628 && mapx >= -716 && mapy == -832) {
 				int wallDist = 716+mapx;
-				for (Rectangle r : map2Rects) {
-					r.translate(-wallDist, 64);
-				}
-				for (Rectangle r : map1Rects) {
-					r.translate(wallDist, 0);
-				}
-				currentRects = map1Rects;
-				currentMap = map1;
 				mapx = -2028+wallDist;
 				mapy = -64;
+				loadRects(1);
+				currentRects = map1Rects;
+				currentMap = map1;
+
 			}
 
 			//MAP 2 TO 3
 			if (currentMap.equals(map2) && mapx == -1692 && mapy <= -12 && mapy >= -140) {
 				int wallDist = 140+mapy;
-				for (Rectangle r : map2Rects) {
-					r.translate(64, -wallDist);
-				}
-				for (Rectangle r : map3Rects) {
-					r.translate(0, wallDist);
-				}
-				currentRects = map3Rects;
-				currentMap = map3;
 				mapx = -84;
 				mapy = -460+wallDist;
+				loadRects(3);
+				currentRects = map3Rects;
+				currentMap = map3;
+
 			}
 
 			//MAP 3 TO 2
 			if (currentMap.equals(map3) && mapx == -20 && mapy <= -332 && mapy >= -460) {
 				int wallDist = 460+mapy;
-				for (Rectangle r : map3Rects) {
-					r.translate(-64, -wallDist);
-				}
-				for (Rectangle r : map2Rects) {
-					r.translate(0, wallDist);
-				}
-				currentRects = map2Rects;
-				currentMap = map2;
 				mapx = -1628;
 				mapy = -140+wallDist;
+				loadRects(2);
+				currentRects = map2Rects;
+				currentMap = map2;
+
 			}
 			
 			//Engaging in Battle
@@ -2204,8 +2197,6 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 			menuPause = false;
 			initItems();
 			screen = "inventory";
-/*			this.bagScreen = new ShowBag(this.bag);
-			this.add(bagScreen);*/
 		}
 
 		else if(source == saveBut && profScreen == false) {
@@ -2246,12 +2237,6 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 					recordStats.add("currentRect3");
 				}
 				
-				recordStats.add(Integer.toString(x1));
-				recordStats.add(Integer.toString(y1));
-				recordStats.add(Integer.toString(x2));
-				recordStats.add(Integer.toString(y2));
-				recordStats.add(Integer.toString(x3));
-				recordStats.add(Integer.toString(y3));
 				recordStats.add(Integer.toString(bag.getPot()));
 				recordStats.add(Integer.toString(bag.getLargePot()));
 				recordStats.add(Integer.toString(bag.getGerthPot()));
