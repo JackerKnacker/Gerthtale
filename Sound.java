@@ -50,6 +50,11 @@ class Sound {
     public void stop() {
     	this.myClip.stop();
     }
+    
+    //This method resets song position 
+    public void setPosition() {
+    	this.myClip.setFramePosition(0);
+    }
 
     //This method plays/pauses the audio clip
     public void playPause() {
