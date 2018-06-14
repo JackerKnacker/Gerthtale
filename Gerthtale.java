@@ -282,24 +282,24 @@ public class Gerthtale extends JFrame implements ActionListener, KeyListener {
         subTitle3.setSize(350,50);
         subTitle3.setLocation(225,50);
         this.iPage.add(subTitle3,1);
-        
+
         JLabel instructPic = new JLabel(new ImageIcon("Pictures/instruct1.png"));
         instructPic.setSize(785,325);
         instructPic.setLocation(5,110);
         this.iPage.add(instructPic,1);
-        
+
         JLabel instructText = new JLabel("'c' to open in game menu");
         instructText.setFont(new Font("Comic Sans ms", Font.PLAIN, 20));
 		instructText.setSize(400,50);
 		instructText.setLocation(275,425);
 		this.iPage.add(instructText,2);
-		
+
 		JLabel instruct2Text = new JLabel("'x' to close in game menu");
         instruct2Text.setFont(new Font("Comic Sans ms", Font.PLAIN, 20));
 		instruct2Text.setSize(400,50);
 		instruct2Text.setLocation(275,455);
 		this.iPage.add(instruct2Text,2);
-		
+
 		JLabel instruct3Text = new JLabel("'enter' to confirm");
         instruct3Text.setFont(new Font("Comic Sans ms", Font.PLAIN, 20));
 		instruct3Text.setSize(400,50);
@@ -311,12 +311,12 @@ public class Gerthtale extends JFrame implements ActionListener, KeyListener {
         subTitle4.setSize(300,50);
         subTitle4.setLocation(250,50);
         this.cPage.add(subTitle4,1);
-        
+
         JLabel creditText = new JLabel(new ImageIcon("Pictures/creditText.png"));
         creditText.setSize(450,370);
         creditText.setLocation(175,100);
         this.cPage.add(creditText,1);
-        
+
         requestFocus();
         setResizable(false);
         setVisible(true);
@@ -680,7 +680,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 	public boolean reverse = false, stop = false;
 	private ArrayList<String> items = new ArrayList<String>();
 	public Rectangle pRect = new Rectangle(300,410,20,20);
-	
+
 	int bPos = 0;
 	boolean bSelect = false, bChoice = false;
 
@@ -715,7 +715,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 		g.setColor(Color.red);
 		g.fillRect((int)(r.getX()),(int)(r.getY()),(int)(r.getWidth()),(int)(r.getHeight()));
     }
-    
+
     public void endScreen(Graphics g){
     	g.setColor(Color.black);
     	g.fillRect(0,0,800,600);
@@ -723,19 +723,19 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
     	g.setFont(new Font("TimesRoman",Font.PLAIN,64));
     	g.drawString("YOU LOSE",230,300);
     }
-    
+
 	public void displayHealth(Graphics g, Enemy goon){
 		//Displaying enemy sprite
 		if (goon.getType().equals("slime")) {
-			g.drawImage(slimePic, 515, 140, this); 
+			g.drawImage(slimePic, 515, 140, this);
 		}
 		else if (goon.getType().equals("goblin")) {
-			g.drawImage(goblinPic, 515, 140, this); 
+			g.drawImage(goblinPic, 515, 140, this);
 		}
 		else if (goon.getType().equals("boss")) {
-			g.drawImage(bossPic, 515, 140, this); 
+			g.drawImage(bossPic, 515, 140, this);
 		}
-		
+
 		//Displaying player sprite
 		if (user.getCharNum() == 1) {
 			g.drawImage(char1Pic, 155, 120, this);
@@ -748,7 +748,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 		}
 		g.setColor(Color.black);
 		g.fillRect(155,275,110,40);
-		g.fillRect(535,275,110,40);		
+		g.fillRect(535,275,110,40);
 		g.setColor(Color.green);
 		g.fillRect(160,280,100,30);
 		g.fillRect(540,280,100,30);
@@ -763,7 +763,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 		String enemyMaxHealth = Integer.toString(goon.getMaxHealth());
 		String enemyHealth = Integer.toString(goon.getHealth());
 		g.drawString(playerHealth+"/"+playerMaxHealth, 255,330);
-		g.drawString(enemyHealth+"/"+enemyMaxHealth, 640,330);		
+		g.drawString(enemyHealth+"/"+enemyMaxHealth, 640,330);
 	}
 
     public void pipeAttack(Graphics g){
@@ -789,7 +789,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
     		if(r.getX() < (int) baseRect.getX() + (int) baseRect.getWidth()){
     			displayRectangleBL(r,g);
     		}
-    		r.translate(-1,0);
+    		r.translate(-2,0);
     		if(r.getX() < (int) baseRect.getX()){
 				rects.remove(r);
 				//r.setLocation(760,(int)r.getY()); //i at finish - (i at start - x) + 40
@@ -797,7 +797,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 			}
     	}
     }
-    
+
     public void goblinAttack(Graphics g){
     	if(!displayed){
     		rects.clear();
@@ -807,6 +807,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 				while (leftY < 30 || leftY > 120){ //change bounds accordingly
 					leftY = rng.nextInt((int) baseRect.getHeight());
 				}
+
 				Rectangle topRect = new Rectangle(i,(int) baseRect.getY(),10,leftY);
 				Rectangle bottomRect = new Rectangle(i,(int) baseRect.getY()+30+leftY,10,((int) baseRect.getHeight()-30)-leftY); //y value - baseRectY - leftY = space in between rects. BaseRectWidth (height?) - space - leftY
 				rects.add(topRect);
@@ -821,13 +822,13 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
     		if(r.getX() < (int) baseRect.getX() + (int) baseRect.getWidth()){
     			displayRectangleR(r,g);
     		}
-    		r.translate(-1,0);
+    		r.translate(-2,0);
     		if(r.getX() < (int) baseRect.getX()){
 				rects.remove(r);
 			}
     	}
     }
-    
+
    	public void laserAttack(Graphics g){
     	if(!displayed){
     		pRect.setLocation(300, 410);
@@ -846,6 +847,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 	    	rightattackRect = new Rectangle(0,(int) rightRect.getY() + 5,800 - (800 - (int) rightRect.getX()),(int) rightRect.getHeight() - 10);
 	    	displayed = true;
     	}
+
 		displayRectangle(topRect,g);
 		displayRectangle(leftRect,g);
 		displayRectangle(rightRect,g);
@@ -864,11 +866,11 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 		if((int) rightattackRect.getY() + 10 > (int) baseRect.getY() + (int) baseRect.getHeight() - (int) rightattackRect.getHeight()){
 			directionR = -2; //rate which its moving
 		}
-		
+
 		else if((int) rightattackRect.getY() - 10 < (int) baseRect.getY()){
 			directionR = 2;
 		}
-		
+
 		if(Math.abs((int) leftRect.getY() + (int) leftRect.getHeight() - (int) rightRect.getY()) > 70 &&
 			(attackTimer >= fire && attackTimer < fire + 150 ||
 			 attackTimer >= fire + 300 && attackTimer < fire + 450 ||
@@ -882,7 +884,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 			displayRectangleBL(rightattackRect,g);
 			displaying = true;
 		}
-		
+
 		else{
 			leftRect.translate(0,directionL);
 			leftattackRect.translate(0,directionL);
@@ -890,24 +892,25 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 			rightattackRect.translate(0,directionR);
 			displaying = false;
 		}
+
 		topRect.translate(directionX,0);
 		attackRect.translate(directionX,0);
 		attackTimer++;
     }
-    
+
     public void options(Graphics g){
     	if(!displayed){
     		option = 0;
     		displayed = true;
     	}
-    	
+
     	for(int i = 50; i <= 550; i += 250){
 			g.setColor(Color.black);
 			g.fillRect(i-15,445,200,80);
 			g.setColor(Color.white);
 			g.fillRect(i-5,453,180,64);
 		}
-		
+
 		g.setColor(Color.black);
 		g.drawImage(redRect,(50+option*250)-15,445,this);
 		g.setFont(new Font("TimesRoman",Font.PLAIN,28));
@@ -915,16 +918,16 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 		g.drawString("Items",300,485);
 		g.drawString("Run",550,485);
     }
-    
+
     public boolean collision(ArrayList<Rectangle> ar){
     	for (Rectangle newR: ar){
     		if(pRect.intersects(newR)){
     			if (pRect.getX() + pRect.getWidth() < newR.getX() + newR.getWidth() / 2) {
     				pRect.setLocation((int)newR.getX()-(int)pRect.getWidth(),(int)pRect.getY());
-    			} 
+    			}
     			else if (newR.getY() == 360 && pRect.getY() > newR.getY()) {
     				pRect.setLocation((int)pRect.getX(),(int)newR.getY() + (int)newR.getHeight());
-    			} 
+    			}
     			else if (pRect.getY() < newR.getY()) {
     				pRect.setLocation((int)pRect.getX(),(int)newR.getY()-(int)pRect.getHeight());
     			}
@@ -948,31 +951,31 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 			pRect.setLocation((int)pRect.getX(),(int)baseRect.getY() + (int)baseRect.getHeight() - (int)pRect.getHeight());
 		}
 	}
-	
+
 	public int attack(Graphics g){
 		damage = 0;
     	g.drawImage(attackBackground,160,360,this);
 		if(linex > 625){
 			reverse = true;
 		}
-		
+
 		else if(linex < 161){
 			reverse = false;
 		}
 
 		if(reverse && !stop){
-			linex -= 3;
+			linex -= 15;
 		}
-		
+
 		else if(!reverse && !stop){
-			linex += 3;
+			linex += 15;
 		}
-		
+
 		else if(stop){
 			damage = Math.round((float) (400 - Math.abs(400 - linex))/400 * user.getAtk());
 			delayTimer++;
 		}
-		
+
 		g.drawImage(slider,linex,360,this);
 		return damage + atkModifier;
 	}
@@ -995,7 +998,6 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 	private int character;
 	private PlayerStats user;
 	private Inventory bag;
-	//private ShowBag bagScreen;
 
 	//Player sprites
 	Image[] playerDown, playerUp, playerLeft, playerRight;
@@ -1081,7 +1083,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
         this.songBut.setFocusPainted(false);
         this.songBut.setBorderPainted(false);
         this.songBut.setCursor(toolkit.createCustomCursor(clickCursor, new Point(0,0), ""));
-		
+
 		//label for in game menu buttons
         this.menuLabel1 = new JLabel("Menu");
 		this.menuLabel1.setFont(new Font("Comic Sans ms", Font.PLAIN, 30));
@@ -1108,7 +1110,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 		this.menuTitle.setFont(new Font("Comic Sans ms", Font.PLAIN, 50));
 		this.menuTitle.setSize(400,50);
 		this.menuTitle.setLocation(250,25);
-		
+
 		this.saveYesBut = new JButton(new ImageIcon("Pictures/confirm.png"));
         this.saveYesBut.addActionListener(this);
         this.saveYesBut.setSize(50,50);
@@ -1242,22 +1244,22 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 				if(option < 2){
 					option ++;
 				}
-				
+
 				else {
 					option = 0;
 				}
 			}
-			
+
 			else if(key == KeyEvent.VK_LEFT && battleScreen == "options"){
 				if(option > 0){
 					option --;
 				}
-				
+
 				else {
 					option = 2;
 				}
 			}
-			
+
 			else if (battleScreen.equals("items")) {
 				if (keys[KeyEvent.VK_UP] && bSelect == false) {
 					if (bPos == 0) {
@@ -1320,7 +1322,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 							if (userItems.get(bPos) == "Iron Potion") {
 								bag.removeIronPot();
 							}
-							
+
 							initItems();
 							bSelect = false;
 							bPos = 0;
@@ -1343,18 +1345,18 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 					}
 				}
 			}
-			
+
 			else if(battleScreen.equals("options") && key == KeyEvent.VK_ENTER){
  				displayed = false;
- 				
+
  				if (option == 0){
  					battleScreen = "player attack";
  				}
- 				
+
  				else if(option == 1){
  					battleScreen = "items";
  				}
- 				
+
  				else if(option == 2){
  					battleScreen = "run";
  				}
@@ -1751,16 +1753,16 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 	public void battleControls() {
 		requestFocus();
 		if(keys[KeyEvent.VK_RIGHT] ){
-			pRect.translate(1,0);
+			pRect.translate(2,0);
 		}
 		if(keys[KeyEvent.VK_LEFT] ){
-			pRect.translate(-1,0);
+			pRect.translate(-2,0);
 		}
 		if(keys[KeyEvent.VK_UP] ){
-			pRect.translate(0,-1);
+			pRect.translate(0,-2);
 		}
 		if(keys[KeyEvent.VK_DOWN] ){
-			pRect.translate(0,1);
+			pRect.translate(0,2);
 		}
 	}
 
@@ -2120,12 +2122,12 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 					g.drawImage(wrathPot, 380, 250, this);
 				}
 			}
-			
+
 			else {
 				g.drawImage(scrollPanel3, 370, 245, this);
 				g.drawImage(shopExit, 380, 250, this);
 			}
-			
+
 			if (invSelect == false) {
 				if (cantUse) {
 					g.drawString("It's not a wise idea to use that.", 30, 400);
@@ -2167,7 +2169,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 			g.drawRect(495, (invPos*80)+45, 275, 50);
 		}
 	}
-	
+
 	public void drawBattleInv(Graphics g) {
 		g.setColor(new Color(255,243,199));
 		g.fillRect(0,0,800,600);
@@ -2264,7 +2266,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 			}
 
 	    	g.drawImage(battleBack,0,0,this);
-	    	
+
 	    	//Enemy Battle Stuff
 	 		if(battleScreen.equals("pipe attack") || battleScreen.equals("laser attack") || battleScreen.equals("goblin attack")){
 		    	g.setColor(dgreen);
@@ -2294,7 +2296,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 			}
 			inside();
 			displayHealth(g, goon);
-				
+
 			if (battleScreen.equals("end screen")) {
 				endScreen(g);
 			}
@@ -2313,7 +2315,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 
 				if (goon.getHealth() <= 0) { //When enemy dies
 					goon.resetHealth();
-					
+
 					bag.addGold(15);
 
 					//resetting battle variables
@@ -2328,8 +2330,8 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 					defModifier = 0;
 					screen = "moving";
 				}
-				
-				if(delayTimer > 100){
+
+				if(delayTimer > 50){
 					if(goon.getType().equals("slime")){
 						battleScreen = "pipe attack";
 					}
@@ -2339,19 +2341,19 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 					else if(goon.getType().equals("boss")){
 						battleScreen = "laser attack";
 					}
-					
+
 					reverse = false;
 					stop = false;
 					delayTimer = 0;
 					linex = 170;
 				}
 			}
-			
+
 			else if(battleScreen.equals("items")){
 				initItems();
 				drawBattleInv(g);
 			}
-			
+
 			else if(battleScreen.equals("run")){
 				if(goon.run()){
 					goon.resetHealth();
@@ -2362,7 +2364,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 					defModifier = 0;
 					screen = "moving";
 				}
-				
+
 				else{
 					if(goon.getType().equals("slime")){
 						battleScreen = "pipe attack";
@@ -2375,7 +2377,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 					}
 				}
 			}
-			
+
 			else if(battleScreen.equals("pipe attack")){
 				pipeAttack(g);
 				if(collision(rects) && !immune){
@@ -2383,28 +2385,28 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 					immune = true;
 					timer = 0;
 				}
-				
+
 				if(rects.size() == 0){
 					battleScreen = "options";
 					displayed = false;
 				}
 			}
-			
+
 			else if(battleScreen.equals("goblin attack")){
 				goblinAttack(g);
-				
+
 				if(collision(rects) && !immune){
 					user.setHp(4-defModifier);;
 					immune = true;
 					timer = 0;
 				}
-				
+
 				if(rects.size() == 0){
 					battleScreen = "options";
 					displayed = false;
 				}
 			}
-			
+
 			else if(battleScreen.equals("laser attack")){
 				laserAttack(g);
 				if((pRect.intersects(attackRect) && !immune && displaying) ||
@@ -2415,7 +2417,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 					immune = true;
 					timer = 0;
 				}
-				
+
 				if (attackTimer > 2000) {
 					battleScreen = "options";
 					displayed = false;
@@ -2515,7 +2517,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 		else if(this.character == 3) {
 			this.add(charProf3);
 		}
-		
+
 		//Display stats of the current character
 		g.setFont(shopFont);
 		g.drawString(user.getName(), 225, 160);
@@ -2679,7 +2681,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 			if (currentMap.equals(map1)) {
 				drawBattle(g, slime);
 			}
-			
+
 			if (currentMap.equals(map3)) {
 				if (bossBattle) {
 					drawBattle(g, boss);
@@ -2839,7 +2841,7 @@ class PlayerStats { //class used to keep track of a player's stats (FIXING)
 	public int getCharNum() {
 		return charNum;
 	}
-	
+
 	public boolean getAtkBoost() {
 		return atkBoost;
 	}
@@ -2852,11 +2854,11 @@ class PlayerStats { //class used to keep track of a player's stats (FIXING)
 	public void setHp(int dmg) {
 		hp = hp - dmg;
 	}
-	
+
 	public void setAtkBoost(boolean setter) {
 		atkBoost = setter;
 	}
-	
+
 	public void setDefBoost(boolean setter) {
 		defBoost = setter;
 	}
@@ -2878,7 +2880,7 @@ class PlayerStats { //class used to keep track of a player's stats (FIXING)
 		if (item == "Gerthy Health Potion") {
 			hp = maxHp;
 		}
-		
+
 		if (item == "Wrath Potion") {
 			atkBoost = true;
 		}
