@@ -1,7 +1,6 @@
 //Gerthtale - A Turn-Based Rhythmic RPG inspired by Undertale & Final Fantasy
 //By Alex Shi, Jakir Ansari, Jason Wong
-
-//package Gerthtale;
+///To be announced...
 
 import javax.swing.*;
 import java.awt.*;
@@ -353,7 +352,7 @@ public class Gerthtale extends JFrame implements ActionListener, KeyListener {
         	charName = nameBox.getText();  //This gets the name from the player after they have died
 
         	if(charSelect == 1) {
-        		this.user = new PlayerStats(20, 20, 40, 1, 0, charName, charSelect); //HP, ATK, LVL, EXP, NAME, CHAR-NUM
+        		this.user = new PlayerStats(20, 20, 10, 1, 0, charName, charSelect); //HP, ATK, LVL, EXP, NAME, CHAR-NUM
         	}
 
         	if(charSelect == 2) {
@@ -511,6 +510,7 @@ public class Gerthtale extends JFrame implements ActionListener, KeyListener {
         //This toggles the menu music
         else if(source == this.soundBut){
             this.menuTheme.playPause();
+            
             //Displays a certain icon depending on if the music is playing
             if(menuTheme.getIsPlaying()) {
                 this.soundBut.setIcon(soundIcon1);
@@ -606,7 +606,7 @@ public class Gerthtale extends JFrame implements ActionListener, KeyListener {
 }
 
 class GameScreen extends JPanel implements ActionListener, KeyListener {
-	private JButton menuBut, bagBut, saveBut, profBut, saveYesBut, saveNoBut, profCloseBut, songBut;
+	private JButton menuBut, bagBut, saveBut, profBut, saveYesBut, saveNoBut, profCloseBut, songBut, gameOverBut;
 
 	private JLabel menuTitle, menuLabel1, menuLabel2, menuLabel3, menuLabel4, saveLabel, charProf1, charProf2, charProf3;
 
@@ -701,285 +701,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 	Image char3Pic = new ImageIcon("Pictures/charDisplay3.png").getImage().getScaledInstance(111, 150, Image.SCALE_DEFAULT);
 	//-------------------------------//
 
-	//-------|Enemy Attacks|-------//
-    public void displayRectangle(Rectangle r, Graphics g){
-		g.setColor(Color.white);
-		g.fillRect((int)(r.getX()),(int)(r.getY()),(int)(r.getWidth()),(int)(r.getHeight()));
-
-    }
-    public void displayRectangleBL(Rectangle r, Graphics g){
-		g.setColor(Color.black);
-		g.fillRect((int)(r.getX()),(int)(r.getY()),(int)(r.getWidth()),(int)(r.getHeight()));
-    }
-
-    public void displayRectangleR(Rectangle r, Graphics g){
-		g.setColor(Color.red);
-		g.fillRect((int)(r.getX()),(int)(r.getY()),(int)(r.getWidth()),(int)(r.getHeight()));
-    }
-
-    public void endScreen(Graphics g){
-    	g.setColor(Color.black);
-    	g.fillRect(0,0,800,600);
-    	g.setColor(Color.white);
-    	g.setFont(new Font("TimesRoman",Font.PLAIN,64));
-    	g.drawString("YOU LOSE",230,300);
-    }
-
-	public void displayHealth(Graphics g, Enemy goon){
-		//Displaying enemy sprite
-		if (goon.getType().equals("slime")) {
-			g.drawImage(slimePic, 515, 140, this);
-		}
-		else if (goon.getType().equals("goblin")) {
-			g.drawImage(goblinPic, 515, 140, this);
-		}
-		else if (goon.getType().equals("boss")) {
-			g.drawImage(bossPic, 515, 140, this);
-		}
-
-		//Displaying player sprite
-		if (user.getCharNum() == 1) {
-			g.drawImage(char1Pic, 155, 120, this);
-		}
-		else if (user.getCharNum() == 2) {
-			g.drawImage(char2Pic, 155, 120, this);
-		}
-		else if (user.getCharNum() == 3) {
-			g.drawImage(char3Pic, 155, 120, this);
-		}
-		g.setColor(Color.black);
-		g.fillRect(155,275,110,40);
-		g.fillRect(535,275,110,40);
-		g.setColor(Color.green);
-		g.fillRect(160,280,100,30);
-		g.fillRect(540,280,100,30);
-		g.setColor(Color.red);
-		g.fillRect(260-Math.round(100-(100*(float)user.getHp()/user.getMaxHp())),280,Math.round(100-(100*(float)user.getHp()/user.getMaxHp())),30);
-		g.fillRect(640-Math.round(100-(100*(float)goon.getHealth()/goon.getMaxHealth())),280,Math.round(100-(100*(float)goon.getHealth()/goon.getMaxHealth())),30);
-		g.setFont(new Font("TimesRoman",Font.PLAIN,16));
-		g.drawString(user.getName()+"'s Health: ", 160,330);
-		g.drawString("Enemy's Health: ", 540,330);
-		String playerMaxHealth = Integer.toString(user.getMaxHp());
-		String playerHealth = Integer.toString(user.getHp());
-		String enemyMaxHealth = Integer.toString(goon.getMaxHealth());
-		String enemyHealth = Integer.toString(goon.getHealth());
-		g.drawString(playerHealth+"/"+playerMaxHealth, 255,330);
-		g.drawString(enemyHealth+"/"+enemyMaxHealth, 640,330);
-	}
-
-    public void pipeAttack(Graphics g){
-    	//attackType = "attack1";
-    	if(!displayed){
-    		rects.clear();
-    		pRect.setLocation(300, 410);
-			for(int i = 600; i <= 1800; i+=60){ //1. starting pos for rects 2. amount of rects 3. space between rects
-				int leftY = rng.nextInt((int) baseRect.getHeight());
-				while (leftY < 30 || leftY > 120){ //change bounds accordingly
-					leftY = rng.nextInt((int) baseRect.getHeight());
-				}
-				Rectangle topRect = new Rectangle(i,(int) baseRect.getY(),10,leftY);
-				Rectangle bottomRect = new Rectangle(i,(int) baseRect.getY()+50+leftY,10,((int) baseRect.getHeight()-50)-leftY); //y value - baseRectY - leftY = space in between rects. BaseRectWidth (height?) - space - leftY
-				rects.add(topRect);
-				rects.add(bottomRect);
-			}
-			displayed = true;
-    	}
-    	for(int i = rects.size()-1; i>=0; i--){
-
-    		Rectangle r = rects.get(i);
-    		if(r.getX() < (int) baseRect.getX() + (int) baseRect.getWidth()){
-    			displayRectangleBL(r,g);
-    		}
-    		r.translate(-2,0);
-    		if(r.getX() < (int) baseRect.getX()){
-				rects.remove(r);
-				//r.setLocation(760,(int)r.getY()); //i at finish - (i at start - x) + 40
-				//rects.add(r);
-			}
-    	}
-    }
-
-    public void goblinAttack(Graphics g){
-    	if(!displayed){
-    		rects.clear();
-    		pRect.setLocation(300,410);
-			for(int i = 600; i <= 1800; i+=60){ //1. starting pos for rects 2. amount of rects 3. space between rects
-				int leftY = rng.nextInt((int) baseRect.getHeight());
-				while (leftY < 30 || leftY > 120){ //change bounds accordingly
-					leftY = rng.nextInt((int) baseRect.getHeight());
-				}
-
-				Rectangle topRect = new Rectangle(i,(int) baseRect.getY(),10,leftY);
-				Rectangle bottomRect = new Rectangle(i,(int) baseRect.getY()+30+leftY,10,((int) baseRect.getHeight()-30)-leftY); //y value - baseRectY - leftY = space in between rects. BaseRectWidth (height?) - space - leftY
-				rects.add(topRect);
-				rects.add(bottomRect);
-			}
-			displayed = true;
-    	}
-
-    	for(int i = rects.size()-1; i>=0; i--){
-
-    		Rectangle r = rects.get(i);
-    		if(r.getX() < (int) baseRect.getX() + (int) baseRect.getWidth()){
-    			displayRectangleR(r,g);
-    		}
-    		r.translate(-2,0);
-    		if(r.getX() < (int) baseRect.getX()){
-				rects.remove(r);
-			}
-    	}
-    }
-
-   	public void laserAttack(Graphics g){
-    	if(!displayed){
-    		pRect.setLocation(300, 410);
-    		fire = rng.nextInt(100) + 300; //change timer after testing
-	    	int newX = rng.nextInt((int) baseRect.getWidth());
-	    	int leftY = rng.nextInt((int) baseRect.getHeight());
-	    	int rightY = rng.nextInt((int) baseRect.getHeight());
-	    	while(Math.abs(leftY - rightY) < 20){ //player height + 10
-	    		rightY = rng.nextInt((int) baseRect.getHeight());
-	    	}
-	    	topRect = new Rectangle ((int) baseRect.getX() + newX, (int) baseRect.getY() - 60 ,30,30);
-	    	attackRect = new Rectangle((int) topRect.getX() + 5,(int) topRect.getY() + (int) topRect.getHeight(),(int) topRect.getWidth() - 10,600);
-	    	leftRect = new Rectangle ((int) baseRect.getX() - 60, (int) baseRect.getY() + leftY ,30,30);
-	    	leftattackRect = new Rectangle((int) leftRect.getX() + (int) leftRect.getWidth(),(int) leftRect.getY() + 5,800,(int) leftRect.getHeight() - 10);
-	    	rightRect = new Rectangle ((int) baseRect.getX() + (int) baseRect.getWidth() + 30, (int) baseRect.getY() + rightY ,30,30);
-	    	rightattackRect = new Rectangle(0,(int) rightRect.getY() + 5,800 - (800 - (int) rightRect.getX()),(int) rightRect.getHeight() - 10);
-	    	displayed = true;
-    	}
-
-		displayRectangle(topRect,g);
-		displayRectangle(leftRect,g);
-		displayRectangle(rightRect,g);
-		if((int) attackRect.getX() + 10 > (int) baseRect.getX() + (int) baseRect.getWidth() - (int) attackRect.getWidth()){
-			directionX = -2; //rate which its moving
-		}
-		else if((int) attackRect.getX() - 10 < (int) baseRect.getX()){
-			directionX = 2;
-		}
-		if((int) leftattackRect.getY() + 10 > (int) baseRect.getY() + (int) baseRect.getHeight() - (int) leftattackRect.getHeight()){
-			directionL = -2; //rate which its moving
-		}
-		else if((int) leftattackRect.getY() - 10 < (int) baseRect.getY()){
-			directionL = 2;
-		}
-		if((int) rightattackRect.getY() + 10 > (int) baseRect.getY() + (int) baseRect.getHeight() - (int) rightattackRect.getHeight()){
-			directionR = -2; //rate which its moving
-		}
-
-		else if((int) rightattackRect.getY() - 10 < (int) baseRect.getY()){
-			directionR = 2;
-		}
-
-		if(Math.abs((int) leftRect.getY() + (int) leftRect.getHeight() - (int) rightRect.getY()) > 70 &&
-			(attackTimer >= fire && attackTimer < fire + 150 ||
-			 attackTimer >= fire + 300 && attackTimer < fire + 450 ||
-			 attackTimer >= fire + 600 && attackTimer < fire + 850 ||
-			 attackTimer >= fire + 900 && attackTimer < fire + 1050 ||
-			 attackTimer >= fire + 1200 && attackTimer < fire + 1350 ||
-			 attackTimer >= fire + 1500 && attackTimer < fire +  1650 ||
-			 attackTimer >= fire + 1800 && attackTimer < fire +  1950)){
-			displayRectangleBL(attackRect,g);
-			displayRectangleBL(leftattackRect,g);
-			displayRectangleBL(rightattackRect,g);
-			displaying = true;
-		}
-
-		else{
-			leftRect.translate(0,directionL);
-			leftattackRect.translate(0,directionL);
-			rightRect.translate(0,directionR);
-			rightattackRect.translate(0,directionR);
-			displaying = false;
-		}
-
-		topRect.translate(directionX,0);
-		attackRect.translate(directionX,0);
-		attackTimer++;
-    }
-
-    public void options(Graphics g){
-    	if(!displayed){
-    		option = 0;
-    		displayed = true;
-    	}
-
-    	for(int i = 50; i <= 550; i += 250){
-			g.setColor(Color.black);
-			g.fillRect(i-15,445,200,80);
-			g.setColor(Color.white);
-			g.fillRect(i-5,453,180,64);
-		}
-
-		g.setColor(Color.black);
-		g.drawImage(redRect,(50+option*250)-15,445,this);
-		g.setFont(new Font("TimesRoman",Font.PLAIN,28));
-		g.drawString("Attack", 50,485);
-		g.drawString("Items",300,485);
-		g.drawString("Run",550,485);
-    }
-
-    public boolean collision(ArrayList<Rectangle> ar){
-    	for (Rectangle newR: ar){
-    		if(pRect.intersects(newR)){
-    			if (pRect.getX() + pRect.getWidth() < newR.getX() + newR.getWidth() / 2) {
-    				pRect.setLocation((int)newR.getX()-(int)pRect.getWidth(),(int)pRect.getY());
-    			}
-    			else if (newR.getY() == 360 && pRect.getY() > newR.getY()) {
-    				pRect.setLocation((int)pRect.getX(),(int)newR.getY() + (int)newR.getHeight());
-    			}
-    			else if (pRect.getY() < newR.getY()) {
-    				pRect.setLocation((int)pRect.getX(),(int)newR.getY()-(int)pRect.getHeight());
-    			}
-
-    			return true;
-    		}
-    	}
-    	return false;
-    }
-	public void inside(){
-		if((int)baseRect.getX() >= (int)pRect.getX()){
-			pRect.setLocation((int)baseRect.getX(),(int)pRect.getY());
-		}
-		else if((int)pRect.getX() >= (int)baseRect.getX() + (int)baseRect.getWidth() - (int)pRect.getWidth()){ //rect x + width - player width
-			pRect.setLocation((int)baseRect.getX() + (int)baseRect.getWidth() - (int)pRect.getWidth(),(int)pRect.getY());
-		}
-		if((int)baseRect.getY() >= (int)pRect.getY()){
-			pRect.setLocation((int)pRect.getX(),(int)baseRect.getY());
-		}
-		else if((int)pRect.getY() >= (int)baseRect.getY() + (int)baseRect.getHeight() - (int)pRect.getHeight()){
-			pRect.setLocation((int)pRect.getX(),(int)baseRect.getY() + (int)baseRect.getHeight() - (int)pRect.getHeight());
-		}
-	}
-
-	public int attack(Graphics g){
-		damage = 0;
-    	g.drawImage(attackBackground,160,360,this);
-		if(linex > 625){
-			reverse = true;
-		}
-
-		else if(linex < 161){
-			reverse = false;
-		}
-
-		if(reverse && !stop){
-			linex -= 15;
-		}
-
-		else if(!reverse && !stop){
-			linex += 15;
-		}
-
-		else if(stop){
-			damage = Math.round((float) (400 - Math.abs(400 - linex))/400 * user.getAtk());
-			delayTimer++;
-		}
-
-		g.drawImage(slider,linex,360,this);
-		return damage + atkModifier;
-	}
+	
 	//-----------------------------//
 
 	private boolean[] keys;
@@ -1135,7 +857,6 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
         this.profCloseBut.setSize(50,50);
         this.profCloseBut.setLocation(700,185);
         this.profCloseBut.setContentAreaFilled(false);
-
         this.profCloseBut.setFocusPainted(false);
         this.profCloseBut.setBorderPainted(false);
         this.profCloseBut.setCursor(toolkit.createCustomCursor(clickCursor, new Point(0,0), ""));
@@ -1157,6 +878,15 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 		this.charProf3 = new JLabel(new ImageIcon("Pictures/charPortrait3.png"));
 		this.charProf3.setSize(150,150);
 		this.charProf3.setLocation(50,135);
+		
+		this.gameOverBut = new JButton(new ImageIcon("Pictures/gameOverText.png"));
+		this.gameOverBut.addActionListener(this);
+        this.gameOverBut.setSize(400,100);
+        this.gameOverBut.setLocation(200,250);
+        this.gameOverBut.setContentAreaFilled(false);
+        this.gameOverBut.setFocusPainted(false);
+        this.gameOverBut.setBorderPainted(false);
+        this.gameOverBut.setCursor(toolkit.createCustomCursor(clickCursor, new Point(0,0), ""));
 
         this.character = user.getCharNum();
 
@@ -1503,7 +1233,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 
 	}
 
-		public boolean checkCollision(String dir, ArrayList<Rectangle> rectList) {
+	public boolean checkCollision(String dir, ArrayList<Rectangle> rectList) {
 		boolean flag = false;
 		for (Rectangle r : rectList) {
 			if (dir == "l")
@@ -1750,6 +1480,293 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 			keypress = false;
 		}
 	}
+	
+	//-------|Enemy Attacks|-------//
+    public void displayRectangle(Rectangle r, Graphics g){
+		g.setColor(Color.white);
+		g.fillRect((int)(r.getX()),(int)(r.getY()),(int)(r.getWidth()),(int)(r.getHeight()));
+
+    }
+    public void displayRectangleBL(Rectangle r, Graphics g){
+		g.setColor(Color.black);
+		g.fillRect((int)(r.getX()),(int)(r.getY()),(int)(r.getWidth()),(int)(r.getHeight()));
+    }
+
+    public void displayRectangleR(Rectangle r, Graphics g){
+		g.setColor(Color.red);
+		g.fillRect((int)(r.getX()),(int)(r.getY()),(int)(r.getWidth()),(int)(r.getHeight()));
+    }
+
+    public void endScreen(Graphics g){
+    	g.setColor(Color.black);
+    	g.fillRect(0,0,800,600);
+    	g.setColor(Color.white);
+    	g.setFont(new Font("TimesRoman",Font.PLAIN,64));
+    	g.drawString("YOU LOSE",230,150);
+    	this.add(gameOverBut);
+    }
+
+	public void displayHealth(Graphics g, Enemy goon){
+		//Displaying enemy sprite
+		if (goon.getType().equals("slime")) {
+			g.drawImage(slimePic, 515, 140, this);
+		}
+		else if (goon.getType().equals("goblin")) {
+			g.drawImage(goblinPic, 515, 140, this);
+		}
+		else if (goon.getType().equals("boss")) {
+			g.drawImage(bossPic, 515, 140, this);
+		}
+
+		//Displaying player sprite
+		if (user.getCharNum() == 1) {
+			g.drawImage(char1Pic, 155, 120, this);
+		}
+		else if (user.getCharNum() == 2) {
+			g.drawImage(char2Pic, 155, 120, this);
+		}
+		else if (user.getCharNum() == 3) {
+			g.drawImage(char3Pic, 155, 120, this);
+		}
+		
+		g.setColor(Color.BLACK);
+		g.fillRect(155,275,110,40);
+		g.fillRect(535,275,110,40);
+		g.setColor(Color.GREEN);
+		g.fillRect(160,280,100,30);
+		g.fillRect(540,280,100,30);
+		g.setColor(Color.BLACK);
+		g.fillRect(260-Math.round(100-(100*(float)user.getHp()/user.getMaxHp())),280,Math.round(100-(100*(float)user.getHp()/user.getMaxHp())),30);
+		g.fillRect(640-Math.round(100-(100*(float)goon.getHealth()/goon.getMaxHealth())),280,Math.round(100-(100*(float)goon.getHealth()/goon.getMaxHealth())),30);
+		g.setFont(new Font("Comic Sans ms",Font.BOLD,25));
+		g.drawString(user.getName(), 125,75);
+		g.drawString(goon.getType(), 540,75); //FIX
+		String playerMaxHealth = Integer.toString(user.getMaxHp());
+		String playerHealth = Integer.toString(user.getHp());
+		String enemyMaxHealth = Integer.toString(goon.getMaxHealth());
+		String enemyHealth = Integer.toString(goon.getHealth());
+		g.drawString("HP: " + playerHealth+"/"+playerMaxHealth, 125,110);
+		g.drawString("HP: " + enemyHealth+"/"+enemyMaxHealth, 540,110);
+	}
+
+    public void pipeAttack(Graphics g){
+    	if(!displayed){
+    		rects.clear();
+    		pRect.setLocation(300, 410);
+			for(int i = 600; i <= 1800; i+=60){ //1. starting pos for rects 2. amount of rects 3. space between rects
+				int leftY = rng.nextInt((int) baseRect.getHeight());
+				while (leftY < 30 || leftY > 120){ //change bounds accordingly
+					leftY = rng.nextInt((int) baseRect.getHeight());
+				}
+				Rectangle topRect = new Rectangle(i,(int) baseRect.getY(),10,leftY);
+				Rectangle bottomRect = new Rectangle(i,(int) baseRect.getY()+50+leftY,10,((int) baseRect.getHeight()-50)-leftY); //y value - baseRectY - leftY = space in between rects. BaseRectWidth (height?) - space - leftY
+				rects.add(topRect);
+				rects.add(bottomRect);
+			}
+			displayed = true;
+    	}
+    	
+    	for(int i = rects.size()-1; i>=0; i--){
+
+    		Rectangle r = rects.get(i);
+    		if(r.getX() < (int) baseRect.getX() + (int) baseRect.getWidth()){
+    			displayRectangleBL(r,g);
+    		}
+    		r.translate(-2,0);
+    		if(r.getX() < (int) baseRect.getX()){
+				rects.remove(r);
+				//r.setLocation(760,(int)r.getY()); //i at finish - (i at start - x) + 40
+				//rects.add(r);
+			}
+    	}
+    }
+
+    public void goblinAttack(Graphics g){
+    	if(!displayed){
+    		rects.clear();
+    		pRect.setLocation(300,410);
+			for(int i = 600; i <= 1800; i+=60){ //1. starting pos for rects 2. amount of rects 3. space between rects
+				int leftY = rng.nextInt((int) baseRect.getHeight());
+				while (leftY < 30 || leftY > 120){ //change bounds accordingly
+					leftY = rng.nextInt((int) baseRect.getHeight());
+				}
+
+				Rectangle topRect = new Rectangle(i,(int) baseRect.getY(),10,leftY);
+				Rectangle bottomRect = new Rectangle(i,(int) baseRect.getY()+30+leftY,10,((int) baseRect.getHeight()-30)-leftY); //y value - baseRectY - leftY = space in between rects. BaseRectWidth (height?) - space - leftY
+				rects.add(topRect);
+				rects.add(bottomRect);
+			}
+			displayed = true;
+    	}
+
+    	for(int i = rects.size()-1; i>=0; i--){
+
+    		Rectangle r = rects.get(i);
+    		if(r.getX() < (int) baseRect.getX() + (int) baseRect.getWidth()){
+    			displayRectangleR(r,g);
+    		}
+    		r.translate(-2,0);
+    		if(r.getX() < (int) baseRect.getX()){
+				rects.remove(r);
+			}
+    	}
+    }
+
+   	public void laserAttack(Graphics g){
+    	if(!displayed){
+    		pRect.setLocation(300, 410);
+    		fire = rng.nextInt(100) + 300; //change timer after testing
+	    	int newX = rng.nextInt((int) baseRect.getWidth());
+	    	int leftY = rng.nextInt((int) baseRect.getHeight());
+	    	int rightY = rng.nextInt((int) baseRect.getHeight());
+	    	while(Math.abs(leftY - rightY) < 20){ //player height + 10
+	    		rightY = rng.nextInt((int) baseRect.getHeight());
+	    	}
+	    	topRect = new Rectangle ((int) baseRect.getX() + newX, (int) baseRect.getY() - 60 ,30,30);
+	    	attackRect = new Rectangle((int) topRect.getX() + 5,(int) topRect.getY() + (int) topRect.getHeight(),(int) topRect.getWidth() - 10,600);
+	    	leftRect = new Rectangle ((int) baseRect.getX() - 60, (int) baseRect.getY() + leftY ,30,30);
+	    	leftattackRect = new Rectangle((int) leftRect.getX() + (int) leftRect.getWidth(),(int) leftRect.getY() + 5,800,(int) leftRect.getHeight() - 10);
+	    	rightRect = new Rectangle ((int) baseRect.getX() + (int) baseRect.getWidth() + 30, (int) baseRect.getY() + rightY ,30,30);
+	    	rightattackRect = new Rectangle(0,(int) rightRect.getY() + 5,800 - (800 - (int) rightRect.getX()),(int) rightRect.getHeight() - 10);
+	    	displayed = true;
+    	}
+
+		displayRectangle(topRect,g);
+		displayRectangle(leftRect,g);
+		displayRectangle(rightRect,g);
+		
+		if((int) attackRect.getX() + 10 > (int) baseRect.getX() + (int) baseRect.getWidth() - (int) attackRect.getWidth()){
+			directionX = -2; //rate which its moving
+		}
+		
+		else if((int) attackRect.getX() - 10 < (int) baseRect.getX()){
+			directionX = 2;
+		}
+		
+		if((int) leftattackRect.getY() + 10 > (int) baseRect.getY() + (int) baseRect.getHeight() - (int) leftattackRect.getHeight()){
+			directionL = -2; //rate which its moving
+		}
+		
+		else if((int) leftattackRect.getY() - 10 < (int) baseRect.getY()){
+			directionL = 2;
+		}
+		
+		if((int) rightattackRect.getY() + 10 > (int) baseRect.getY() + (int) baseRect.getHeight() - (int) rightattackRect.getHeight()){
+			directionR = -2; //rate which its moving
+		}
+
+		else if((int) rightattackRect.getY() - 10 < (int) baseRect.getY()){
+			directionR = 2;
+		}
+
+		if(Math.abs((int) leftRect.getY() + (int) leftRect.getHeight() - (int) rightRect.getY()) > 70 &&
+			(attackTimer >= fire && attackTimer < fire + 150 ||
+			 attackTimer >= fire + 300 && attackTimer < fire + 450 ||
+			 attackTimer >= fire + 600 && attackTimer < fire + 850 ||
+			 attackTimer >= fire + 900 && attackTimer < fire + 1050 ||
+			 attackTimer >= fire + 1200 && attackTimer < fire + 1350 ||
+			 attackTimer >= fire + 1500 && attackTimer < fire +  1650 ||
+			 attackTimer >= fire + 1800 && attackTimer < fire +  1950)){
+			displayRectangleBL(attackRect,g);
+			displayRectangleBL(leftattackRect,g);
+			displayRectangleBL(rightattackRect,g);
+			displaying = true;
+		}
+
+		else{
+			leftRect.translate(0,directionL);
+			leftattackRect.translate(0,directionL);
+			rightRect.translate(0,directionR);
+			rightattackRect.translate(0,directionR);
+			displaying = false;
+		}
+
+		topRect.translate(directionX,0);
+		attackRect.translate(directionX,0);
+		attackTimer++;
+    }
+
+    public void options(Graphics g){
+    	if(!displayed){
+    		option = 0;
+    		displayed = true;
+    	}
+
+    	for(int i = 50; i <= 550; i += 250){
+			g.setColor(Color.black);
+			g.fillRect(i-15,445,200,80);
+			g.setColor(Color.white);
+			g.fillRect(i-5,453,180,64);
+		}
+
+		g.setColor(Color.black);
+		g.drawImage(redRect,(50+option*250)-15,445,this);
+		g.setFont(new Font("TimesRoman",Font.PLAIN,28));
+		g.drawString("Attack", 50,485);
+		g.drawString("Items",300,485);
+		g.drawString("Run",550,485);
+    }
+
+    public boolean collision(ArrayList<Rectangle> ar){
+    	for (Rectangle newR: ar){
+    		if(pRect.intersects(newR)){
+    			if (pRect.getX() + pRect.getWidth() < newR.getX() + newR.getWidth() / 2) {
+    				pRect.setLocation((int)newR.getX()-(int)pRect.getWidth(),(int)pRect.getY());
+    			}
+    			else if (newR.getY() == 360 && pRect.getY() > newR.getY()) {
+    				pRect.setLocation((int)pRect.getX(),(int)newR.getY() + (int)newR.getHeight());
+    			}
+    			else if (pRect.getY() < newR.getY()) {
+    				pRect.setLocation((int)pRect.getX(),(int)newR.getY()-(int)pRect.getHeight());
+    			}
+
+    			return true;
+    		}
+    	}
+    	return false;
+    }
+	public void inside(){
+		if((int)baseRect.getX() >= (int)pRect.getX()){
+			pRect.setLocation((int)baseRect.getX(),(int)pRect.getY());
+		}
+		else if((int)pRect.getX() >= (int)baseRect.getX() + (int)baseRect.getWidth() - (int)pRect.getWidth()){ //rect x + width - player width
+			pRect.setLocation((int)baseRect.getX() + (int)baseRect.getWidth() - (int)pRect.getWidth(),(int)pRect.getY());
+		}
+		if((int)baseRect.getY() >= (int)pRect.getY()){
+			pRect.setLocation((int)pRect.getX(),(int)baseRect.getY());
+		}
+		else if((int)pRect.getY() >= (int)baseRect.getY() + (int)baseRect.getHeight() - (int)pRect.getHeight()){
+			pRect.setLocation((int)pRect.getX(),(int)baseRect.getY() + (int)baseRect.getHeight() - (int)pRect.getHeight());
+		}
+	}
+
+	public int attack(Graphics g){
+		damage = 0;
+    	g.drawImage(attackBackground,160,360,this);
+		if(linex > 625){
+			reverse = true;
+		}
+
+		else if(linex < 161){
+			reverse = false;
+		}
+
+		if(reverse && !stop){
+			linex -= 15;
+		}
+
+		else if(!reverse && !stop){
+			linex += 15;
+		}
+
+		else if(stop){
+			damage = Math.round((float) (400 - Math.abs(400 - linex))/400 * user.getAtk());
+			delayTimer++;
+		}
+
+		g.drawImage(slider,linex,360,this);
+		return damage + atkModifier;
+	}
 
 	public void battleControls() {
 		requestFocus();
@@ -1932,7 +1949,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 			g.drawString("have already caused several disappearances. I'm afraid", 50, 250);
 			g.drawString("there is nothing we can possibly do at this point in", 50, 300);
 			g.drawString("time. Please help us!", 50, 350);
-			g.drawString("-The Mayor", 50, 400);
+			g.drawString("- The Mayor", 50, 400);
 			g.drawString("(Click Enter to Continue)", 50, 500);
 		}
 	}
@@ -2339,6 +2356,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 					else if(goon.getType().equals("goblin")){
 						battleScreen = "goblin attack";
 					}
+
 					else if(goon.getType().equals("boss")){
 						battleScreen = "laser attack";
 					}
@@ -2371,10 +2389,10 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 						battleScreen = "pipe attack";
 					}
 					else if(goon.getType().equals("goblin")){
-						battleScreen = "goblin attack";
+						System.exit(0);
 					}
-					else if(goon.getType().equals("boss")){
-						battleScreen = "laser attack";
+					else if(goon.getType().equals("gerth")){
+						System.exit(0);
 					}
 				}
 			}
@@ -2537,8 +2555,8 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 		if(source == menuBut && saveScreen == false && profScreen == false) { //if the save screen or profile is displayed, other buttons cannot be pressed
 			int paneResult = JOptionPane.showConfirmDialog(null,"Any unsaved progress will be lost!","Return to menu?",JOptionPane.YES_NO_OPTION);
 			if (paneResult == JOptionPane.YES_OPTION) { //opens a warning msg toward the user to make they have saved before returning to menu
-				gameTheme.stop();
-          		back = true;
+				this.gameTheme.stop();
+          		this.back = true;
 			}
 
           	else {}
@@ -2651,6 +2669,11 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
                 this.songBut.setIcon(songIcon2);
                 this.songOn = false;
             }
+        }
+        
+        else if(source == this.gameOverBut) {
+        	this.gameTheme.stop();
+        	this.back = true;
         }
 	}
 
