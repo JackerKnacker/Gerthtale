@@ -1,6 +1,7 @@
-//Gerthtale.java
-//Alex S, Jakir A, Jason W
-///To be announced...
+//Gerthtale - A Turn-Based Rhythmic RPG inspired by Undertale & Final Fantasy
+//By Alex Shi, Jakir Ansari, Jason Wong
+
+//package Gerthtale;
 
 import javax.swing.*;
 import java.awt.*;
@@ -352,7 +353,7 @@ public class Gerthtale extends JFrame implements ActionListener, KeyListener {
         	charName = nameBox.getText();  //This gets the name from the player after they have died
 
         	if(charSelect == 1) {
-        		this.user = new PlayerStats(20, 20, 10, 1, 0, charName, charSelect); //HP, ATK, LVL, EXP, NAME, CHAR-NUM
+        		this.user = new PlayerStats(20, 20, 40, 1, 0, charName, charSelect); //HP, ATK, LVL, EXP, NAME, CHAR-NUM
         	}
 
         	if(charSelect == 2) {
@@ -1925,13 +1926,13 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 			g.drawImage(storyPanel, 0, 0, this);
 			g.setFont(dialogueFont);
 			g.setColor(Color.BLACK);
-			g.drawString("Dear Adventurer,", 50, 100);
+			g.drawString("Dear "+user.getName()+", ", 50, 100);
 			g.drawString("The town is currently in a state of utter chaos.", 100, 150);
 			g.drawString("The hooded men have plagued our peaceful town and", 50, 200);
 			g.drawString("have already caused several disappearances. I'm afraid", 50, 250);
-			g.drawString("There is nothing we can possibly do at this point in", 50, 300);
+			g.drawString("there is nothing we can possibly do at this point in", 50, 300);
 			g.drawString("time. Please help us!", 50, 350);
-			g.drawString("The Mayor", 50, 400);
+			g.drawString("-The Mayor", 50, 400);
 			g.drawString("(Click Enter to Continue)", 50, 500);
 		}
 	}
@@ -2336,7 +2337,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 						battleScreen = "pipe attack";
 					}
 					else if(goon.getType().equals("goblin")){
-						battleScreen = "golbin attack";
+						battleScreen = "goblin attack";
 					}
 					else if(goon.getType().equals("boss")){
 						battleScreen = "laser attack";
@@ -2370,10 +2371,10 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 						battleScreen = "pipe attack";
 					}
 					else if(goon.getType().equals("goblin")){
-						System.exit(0);
+						battleScreen = "goblin attack";
 					}
-					else if(goon.getType().equals("gerth")){
-						System.exit(0);
+					else if(goon.getType().equals("boss")){
+						battleScreen = "laser attack";
 					}
 				}
 			}
