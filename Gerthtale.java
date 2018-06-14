@@ -29,8 +29,8 @@ public class Gerthtale extends JFrame implements ActionListener, KeyListener {
 
 	JTextField nameBox;
 
-	PlayerStats user;
-	Sound menuTheme;
+	PlayerStats user; //keeps track of the player's stats
+	Sound menuTheme; //main menu song
 
 	//The two icons will be used interchangeably to display whether or not the music is muted or not
     ImageIcon soundIcon1 = new ImageIcon("Pictures/sound.png"); //soundIcon1 holds the unmuted version of the sound image
@@ -40,19 +40,20 @@ public class Gerthtale extends JFrame implements ActionListener, KeyListener {
 	String saveSlotSelect = "none"; //keeps track which save slot is selected
 	String charName;
 	int charSelect = 0;
-	ArrayList<String> savedStats;
+	ArrayList<String> savedStats; //arrayList to keep track of all the recorded stats from txt file
 
-	GameScreen game;
-	Toolkit toolkit = Toolkit.getDefaultToolkit();
-	Image clickCursor = toolkit.getImage("Pictures/clickCursor.png");
-	Image gloveCursor = toolkit.getImage("Pictures/gloveCursor.png");
+	GameScreen game; //game screen
+	
+	Toolkit toolkit = Toolkit.getDefaultToolkit(); //used to change the mouse cursor pic
+	Image clickCursor = toolkit.getImage("Pictures/clickCursor.png"); //pic for when mouse is normal
+	Image gloveCursor = toolkit.getImage("Pictures/gloveCursor.png"); //pic for when mouse hovers over a button
 
     public Gerthtale() {
         super("Gerthtale");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800,600);
 
-        setCursor(toolkit.createCustomCursor(gloveCursor, new Point(0,0), ""));
+        setCursor(toolkit.createCustomCursor(gloveCursor, new Point(0,0), "")); //sets the mouse cursor pic
 
         setLocationRelativeTo(null); //makes the window appear in the center
 
@@ -233,7 +234,8 @@ public class Gerthtale extends JFrame implements ActionListener, KeyListener {
 		pName3.setSize(400,100);
 		pName3.setLocation(600,275);
 		this.pPage.add(pName3,2);
-
+		
+		//pictures to display the character avatars
 		this.charDisplay1 = new JLabel(new ImageIcon("Pictures/charDisplay1.png"));
         this.charDisplay1.setSize(100,150);
         this.charDisplay1.setLocation(450,370);
@@ -251,7 +253,8 @@ public class Gerthtale extends JFrame implements ActionListener, KeyListener {
         subTitle2.setSize(400,50);
         subTitle2.setLocation(200,50);
         this.sPage.add(subTitle2,1);
-
+		
+		//char portraits
         this.charFace1 = new JLabel(new ImageIcon("Pictures/charPortrait1.png"));
         this.charFace1.setSize(200,200);
         this.charFace1.setLocation(300,350);
@@ -264,6 +267,11 @@ public class Gerthtale extends JFrame implements ActionListener, KeyListener {
         this.charFace3.setSize(200,200);
         this.charFace3.setLocation(300,350);
 
+        this.charPanel = new JLabel(new ImageIcon(scrollSavePanel));
+        this.charPanel.setSize(400,450);
+        this.charPanel.setLocation(200,115);
+        
+        //confirm button to play the game with save file
         this.openSaveConfirm = new JButton(new ImageIcon("Pictures/confirm.png"));
         this.openSaveConfirm.addActionListener(this);
         this.openSaveConfirm.setSize(50,50);
@@ -272,10 +280,6 @@ public class Gerthtale extends JFrame implements ActionListener, KeyListener {
         this.openSaveConfirm.setFocusPainted(false);
         this.openSaveConfirm.setBorderPainted(false);
         this.openSaveConfirm.setCursor(toolkit.createCustomCursor(clickCursor, new Point(0,0), ""));
-
-        this.charPanel = new JLabel(new ImageIcon(scrollSavePanel));
-        this.charPanel.setSize(400,450);
-        this.charPanel.setLocation(200,115);
 
         //\/ --- components for iPage --- \/
 		JLabel subTitle3 = new JLabel(new ImageIcon("Pictures/subtitle3.png"));
@@ -325,7 +329,7 @@ public class Gerthtale extends JFrame implements ActionListener, KeyListener {
     public void keyPressed(KeyEvent k){}
 	public void keyReleased(KeyEvent k){}
 
-	public void keyTyped(KeyEvent k){ //making sure the name length does not go over 25 characters
+	public void keyTyped(KeyEvent k){ //making sure the name length does not go over 20 characters
 		if(this.nameBox.getText().length() == 20) {
 			k.consume();
 		}
@@ -334,10 +338,11 @@ public class Gerthtale extends JFrame implements ActionListener, KeyListener {
     public void actionPerformed(ActionEvent evt){
         Object source = evt.getSource();
 
-		if(source == this.newGameBut) {
+		if(source == this.newGameBut) { //opens the character creation 
 			if(this.backBut.getParent() != pPage) { //only adds back button if not already in the page
-        		this.pPage.add(backBut,1); //always looks to add back button cause it is removed from its current page every time it is added to a new one
+        		this.pPage.add(backBut,1);
         	}
+        	
 			//Text Box
 	        this.nameBox = new JTextField("Type Name Here!"); //text field used to recieve the player's name
 	        this.nameBox.addKeyListener(this);
@@ -347,12 +352,12 @@ public class Gerthtale extends JFrame implements ActionListener, KeyListener {
         	this.cLayout.show(this.cards, "playerCreation");
 		}
 
-        else if(source == this.confirmBut && charSelect != 0){
-        	this.confirmBut.setCursor(toolkit.createCustomCursor(clickCursor, new Point(0,0), ""));
-        	charName = nameBox.getText();  //This gets the name from the player after they have died
+        else if(source == this.confirmBut && charSelect != 0){ //confirming character and sets up game
+        	this.confirmBut.setCursor(toolkit.createCustomCursor(clickCursor, new Point(0,0), "")); //once confirm button can be selected, than the cursor will change pic
+        	charName = nameBox.getText();  //This gets the name from text box typed by the player
 
-        	if(charSelect == 1) {
-        		this.user = new PlayerStats(20, 20, 10, 1, 0, charName, charSelect); //HP, ATK, LVL, EXP, NAME, CHAR-NUM
+        	if(charSelect == 1) { //different characters will have different base stats (creates the player class to keep track of stats)
+        		this.user = new PlayerStats(20, 20, 10, 1, 0, charName, charSelect); //HP, MAXHP, ATK, LVL, EXP, NAME, CHAR-NUM
         	}
 
         	if(charSelect == 2) {
@@ -363,11 +368,11 @@ public class Gerthtale extends JFrame implements ActionListener, KeyListener {
         		this.user = new PlayerStats(10, 10, 20, 1, 0, charName, charSelect);
         	}
 
-			Inventory bag = new Inventory(1,1,1,1,1, 500);
+			Inventory bag = new Inventory(1,1,1,1,1, 500); //creates the inventory of the player
         	this.pPage.remove(nameBox);
-        	menuTheme.stop();
+        	menuTheme.stop(); //stops the menu music so it doesnt overlap with game music
 
-			if(this.user != null) {
+			if(this.user != null) { //creates the game screen when character has been selected
 				game = new GameScreen(user, bag, menuTheme.getIsPlaying(), -908, -320, "map1", true);
 			}
 
@@ -375,7 +380,8 @@ public class Gerthtale extends JFrame implements ActionListener, KeyListener {
             this.cLayout.show(this.cards,"game");
             timer.start();
         }
-
+		
+		//changes the current character selected
         else if(source == this.pBut1) {
         	this.charSelect = 1;
         }
@@ -388,12 +394,12 @@ public class Gerthtale extends JFrame implements ActionListener, KeyListener {
         	this.charSelect = 3;
         }
 
-        else if(source == this.saveSelectBut){
-        	if(this.backBut.getParent() != sPage) {
+        else if(source == this.saveSelectBut){ //opens save select page
+        	if(this.backBut.getParent() != sPage) { //only adds back button if not already in the page
         		this.sPage.add(backBut,1);
         	}
 
-        	this.noSave = new JLabel("No Save File Found");
+        	this.noSave = new JLabel("No Save File Found"); //label used if there is no save file
 			this.noSave.setFont(new Font("Comic Sans ms", Font.PLAIN, 20));
 			this.noSave.setSize(200,150);
 			this.noSave.setLocation(300,100);
@@ -409,16 +415,18 @@ public class Gerthtale extends JFrame implements ActionListener, KeyListener {
 	            while((line = in.readLine()) != null){ //reads a line if it is not nothing
 	            	savedStats.add(line);
 	            }
-	            System.out.println(savedStats);
+	            
+	            //System.out.println(savedStats);
 
-	            if(this.noSave.getParent() == this.sPage) {
+	            if(this.noSave.getParent() == this.sPage) { //if the no save label exists, it will be removed since there will be a save file
 	            	sPage.remove(noSave);
 	            }
 
-	            if(this.openSaveConfirm.getParent() != sPage) {
+	            if(this.openSaveConfirm.getParent() != sPage) { //adds the confirm button if not on the page
 	            	this.sPage.add(openSaveConfirm);
 	            }
-
+				
+				//displays which character is in the save
 	            if(Integer.parseInt(savedStats.get(6)) == 1) {
 	            	this.sPage.add(charFace1,2);
 	            }
@@ -432,7 +440,8 @@ public class Gerthtale extends JFrame implements ActionListener, KeyListener {
 	            }
 
 	            this.sPage.add(this.charPanel,3);
-
+				
+				//displaying the stats of the save file character
 	            this.nameStat = new JLabel(savedStats.get(0));
 				this.nameStat.setFont(new Font("Comic Sans ms", Font.PLAIN, 20));
 				this.nameStat.setSize(800,50);
@@ -466,7 +475,7 @@ public class Gerthtale extends JFrame implements ActionListener, KeyListener {
 
 	        catch (IOException e){ //If there no save text file, the slot will be empty
 	        	if(this.openSaveConfirm.getParent() == this.sPage) {
-	        		this.openSaveConfirm.setVisible(false);
+	        		this.openSaveConfirm.setVisible(false); //will remove the confirm button if it exists on the page
 	        		this.sPage.remove(openSaveConfirm);
 	        	}
 
@@ -475,7 +484,7 @@ public class Gerthtale extends JFrame implements ActionListener, KeyListener {
 	        }
         }
 
-        else if(source == this.openSaveConfirm) {
+        else if(source == this.openSaveConfirm) { //sets up the game with the save file information
        		this.user = new PlayerStats(Integer.parseInt(savedStats.get(3)), Integer.parseInt(savedStats.get(4)), Integer.parseInt(savedStats.get(5)), Integer.parseInt(savedStats.get(1)), Integer.parseInt(savedStats.get(2)), savedStats.get(0), Integer.parseInt(savedStats.get(6))); //HP, ATK, LVL, EXP, NAME, CHAR-NUM
        		Inventory bag = new Inventory(Integer.parseInt(savedStats.get(10)), Integer.parseInt(savedStats.get(11)), Integer.parseInt(savedStats.get(12)), Integer.parseInt(savedStats.get(13)), Integer.parseInt(savedStats.get(14)), Integer.parseInt(savedStats.get(15)));
 
@@ -485,8 +494,8 @@ public class Gerthtale extends JFrame implements ActionListener, KeyListener {
             menuTheme.stop();
             timer.start();
        	}
-
-        else if(source == this.instructBut){
+		
+        else if(source == this.instructBut){ //opens instructions page
         	if(this.backBut.getParent() != iPage) {
         		this.iPage.add(backBut,1);
         	}
@@ -494,7 +503,7 @@ public class Gerthtale extends JFrame implements ActionListener, KeyListener {
         	this.cLayout.show(this.cards, "instructions");
         }
 
-        else if(source == this.creditBut){
+        else if(source == this.creditBut){ //opens credits page
         	if(this.backBut.getParent() != cPage) {
         		this.cPage.add(backBut,1);
         	}
@@ -572,7 +581,7 @@ public class Gerthtale extends JFrame implements ActionListener, KeyListener {
 
         		if(game.getSongOn() == true) { //re-checks if the user has muted before entering game
         			this.soundBut.setIcon(soundIcon1);
-        			menuTheme.setPosition();
+        			menuTheme.setPosition(); //restarts the song if music isnt muted
 		    		menuTheme.loop();
 		    	}
 
@@ -586,9 +595,9 @@ public class Gerthtale extends JFrame implements ActionListener, KeyListener {
 		    	this.charSelect = 0; //resets char selection to 0 (nothing)
         	}
 
-        	game.toggleMenu();
+        	game.toggleMenu(); //checks if in game menu is toggled on
 
-        	if(game.getMenuPause() == false) {
+        	if(game.getMenuPause() == false) { //if the menu isnt toggled on, the controls can be used
         		game.storyControls();
 				game.move();
 				game.shopControls();
@@ -596,6 +605,7 @@ public class Gerthtale extends JFrame implements ActionListener, KeyListener {
 				game.inventoryControls();
 				game.battleControls();
         	}
+        	
         	game.repaint();
 		}
     }
@@ -605,12 +615,12 @@ public class Gerthtale extends JFrame implements ActionListener, KeyListener {
     }
 }
 
-class GameScreen extends JPanel implements ActionListener, KeyListener {
+class GameScreen extends JPanel implements ActionListener, KeyListener { //Screen that displays the game
 	private JButton menuBut, bagBut, saveBut, profBut, saveYesBut, saveNoBut, profCloseBut, songBut, gameOverBut;
 
 	private JLabel menuTitle, menuLabel1, menuLabel2, menuLabel3, menuLabel4, saveLabel, charProf1, charProf2, charProf3;
 
-	private Toolkit toolkit = Toolkit.getDefaultToolkit();
+	private Toolkit toolkit = Toolkit.getDefaultToolkit(); //sets cursor image when hovering over a button
 	private Image clickCursor = toolkit.getImage("Pictures/clickCursor.png");
 
 	private ImageIcon songIcon1 = new ImageIcon("Pictures/sound.png"); //unmuted version of the song image
@@ -701,9 +711,6 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 	Image char3Pic = new ImageIcon("Pictures/charDisplay3.png").getImage().getScaledInstance(111, 150, Image.SCALE_DEFAULT);
 	//-------------------------------//
 
-	
-	//-----------------------------//
-
 	private boolean[] keys;
 	private int mapx, mapy, boxy = 55, steps = 0;
 	private double playerFrame;
@@ -718,9 +725,9 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 	Image map3 = new ImageIcon("Maps/map3.png").getImage();
 	Image currentMap;
 
-	private int character;
-	private PlayerStats user;
-	private Inventory bag;
+	private int character; //keep track of which character is being used
+	private PlayerStats user; //the player's stats
+	private Inventory bag; //the player's inventory
 
 	//Player sprites
 	Image[] playerDown, playerUp, playerLeft, playerRight;
@@ -732,9 +739,9 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 	private boolean songOn;
 	private boolean keypress;
 
-	private Sound gameTheme;
+	private Sound gameTheme; //game music
 
-	public GameScreen(PlayerStats user, Inventory bag, boolean songOn, int mapx, int mapy, String current, boolean storyStart) {
+	public GameScreen(PlayerStats user, Inventory bag, boolean songOn, int mapx, int mapy, String current, boolean storyStart) { //constructor for GameScreen
 		this.user = user;
 		this.songOn = songOn;
 		this.bag = bag;
@@ -750,11 +757,11 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 			this.songBut = new JButton(songIcon2);
 		}
 
-		if(storyStart) {
-			screen = "story";
+		if(storyStart) { //boolean checks if the game is a brand new game
+			screen = "story"; //if it is it set the screen to display story
 		}
 
-		else {
+		else { //if not (loading from save) it will not display story
 			screen = "moving";
 		}
 
@@ -860,14 +867,15 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
         this.profCloseBut.setFocusPainted(false);
         this.profCloseBut.setBorderPainted(false);
         this.profCloseBut.setCursor(toolkit.createCustomCursor(clickCursor, new Point(0,0), ""));
-
+		
+		//text to prompt the user if they would like to save the game
         this.saveLabel = new JLabel("Would you like to save the game?");
 		this.saveLabel.setFont(new Font("Comic Sans ms", Font.PLAIN, 30));
 		this.saveLabel.setSize(600,100);
 		this.saveLabel.setLocation(175,100);
 
 		//Character profile
-		this.charProf1 = new JLabel(new ImageIcon("Pictures/charPortrait1.png"));
+		this.charProf1 = new JLabel(new ImageIcon("Pictures/charPortrait1.png")); //loading images of all characters, since any of the three could be used
 		this.charProf1.setSize(150,150);
 		this.charProf1.setLocation(50,135);
 
@@ -879,6 +887,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 		this.charProf3.setSize(150,150);
 		this.charProf3.setLocation(50,135);
 		
+		//Button to return to main menu after dying in battle
 		this.gameOverBut = new JButton(new ImageIcon("Pictures/gameOverText.png"));
 		this.gameOverBut.addActionListener(this);
         this.gameOverBut.setSize(400,100);
@@ -888,7 +897,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
         this.gameOverBut.setBorderPainted(false);
         this.gameOverBut.setCursor(toolkit.createCustomCursor(clickCursor, new Point(0,0), ""));
 
-        this.character = user.getCharNum();
+        this.character = user.getCharNum(); //gets the num from the parameter
 
 		keys = new boolean[KeyEvent.KEY_LAST + 1];
 		playerDown = new Image[4];
@@ -934,7 +943,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 		this.mapx = mapx;
 		this.mapy = mapy;
 
-		if(current.equals("map1")) {
+		if(current.equals("map1")) { //loads correct map and corresponding rects based on parameter
 			this.currentMap = map1;
 			this.currentRects = map1Rects;
 			loadRects(1);
@@ -958,7 +967,6 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 		addKeyListener(this);
 
 	}
-
 
 	//KEYBOARD METHODS - Moving Code
 	public void keyTyped(KeyEvent e) {}
@@ -1532,15 +1540,17 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 		g.setColor(Color.BLACK);
 		g.fillRect(155,275,110,40);
 		g.fillRect(535,275,110,40);
+		
 		g.setColor(Color.GREEN);
 		g.fillRect(160,280,100,30);
 		g.fillRect(540,280,100,30);
+		
 		g.setColor(Color.BLACK);
 		g.fillRect(260-Math.round(100-(100*(float)user.getHp()/user.getMaxHp())),280,Math.round(100-(100*(float)user.getHp()/user.getMaxHp())),30);
 		g.fillRect(640-Math.round(100-(100*(float)goon.getHealth()/goon.getMaxHealth())),280,Math.round(100-(100*(float)goon.getHealth()/goon.getMaxHealth())),30);
 		g.setFont(new Font("Comic Sans ms",Font.BOLD,25));
 		g.drawString(user.getName(), 125,75);
-		g.drawString(goon.getType(), 540,75); //FIX
+		g.drawString(goon.getType(), 540,75);
 		String playerMaxHealth = Integer.toString(user.getMaxHp());
 		String playerHealth = Integer.toString(user.getHp());
 		String enemyMaxHealth = Integer.toString(goon.getMaxHealth());
@@ -1928,17 +1938,17 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 		}
 	}
 
-	public void storyControls() {
+	public void storyControls() { //commands for the story
 		if (screen == "story") {
 			requestFocus();
-			if (keys[KeyEvent.VK_ENTER] && keypress) {
+			if (keys[KeyEvent.VK_ENTER] && keypress) { //return the screen to moving
 				screen = "moving";
 			}
 			keypress = false;
 		}
 	}
 
-	public void storyDialogue(Graphics g) {
+	public void storyDialogue(Graphics g) { //displays dialogue of the story
 		if (screen == "story") {
 			g.drawImage(storyPanel, 0, 0, this);
 			g.setFont(dialogueFont);
@@ -2446,15 +2456,15 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 
 	}
 
-	public boolean getBack() {
+	public boolean getBack() { //gets the back boolean that checks if user is returning to main menu
 		return back;
 	}
 
-	public void setBack() {
+	public void setBack() { //sets the back boolean to false
 		back = false;
 	}
 
-	public boolean getSongOn() {
+	public boolean getSongOn() { //gets the boolean that checks if the music is muted or not
 		return this.songOn;
 	}
 
@@ -2463,17 +2473,17 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 			this.menuPause = true;
 		}
 
-		if (keys[KeyEvent.VK_X]) {
+		if (keys[KeyEvent.VK_X]) { //removes menu when toggled off
 			removeMenu();
 			this.menuPause = false;
 		}
 	}
 
-	public boolean getMenuPause() { //accessor method
+	public boolean getMenuPause() { //accessor method to check if game is paused (in-game menu on)
 		return menuPause;
 	}
 
-	public void displayMenu(Graphics g) { //dislays contents of the in game menu
+	public void displayMenu(Graphics g) { //dislays contents of the in-game menu
 		g.setColor(Color.BLACK);
 		g.drawLine(0,100,800,100);
 		g.drawLine(0,324,800,324);
@@ -2492,7 +2502,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 		this.add(menuLabel4);
 	}
 
-	public void removeMenu() { //removes contents of the in game menu
+	public void removeMenu() { //removes contents of the in-game menu
 		this.remove(menuBut);
 		this.remove(bagBut);
 		this.remove(saveBut);
@@ -2505,7 +2515,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 		this.remove(menuLabel4);
 	}
 
-	public void displaySaveScreen(Graphics g) {
+	public void displaySaveScreen(Graphics g) { //displays the save screen in in-game menu
 		g.setColor(new Color(255,243,199));
 		g.fillRect(0,100,800,225);
 		g.setColor(Color.BLACK);
@@ -2516,7 +2526,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
         this.add(saveNoBut);
 	}
 
-	public void displayProfile(Graphics g) {
+	public void displayProfile(Graphics g) { //displays the profile in in-game menu
 		g.setColor(new Color(255,243,199));
 		g.fillRect(0,100,800,225);
 		g.setColor(Color.BLACK);
@@ -2525,7 +2535,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 
 		this.add(profCloseBut);
 
-		if(this.character == 1) {
+		if(this.character == 1) { //displays the specific character portrait
 			this.add(charProf1);
 		}
 
@@ -2562,11 +2572,11 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
           	else {}
 		}
 
-		else if(source == bagBut && saveScreen == false && profScreen == false) {
+		else if(source == bagBut && saveScreen == false && profScreen == false) { //when the bag button is pressed when the other options aren't opened
 			removeMenu();
 			menuPause = false;
 			initItems();
-			screen = "inventory";
+			screen = "inventory"; //it will set the screen to inventory
 		}
 
 		else if(source == saveBut && profScreen == false) {
@@ -2580,8 +2590,9 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 		else if(source == saveYesBut) {
 			int paneResult = JOptionPane.showConfirmDialog(null,"This will replace any pre-existing data!","Save Current Game?",JOptionPane.YES_NO_OPTION);
 			if (paneResult == JOptionPane.YES_OPTION) { //opens a warning msg toward the user to inform them that any pre saved data will be replaced
-				ArrayList<String> recordStats = new ArrayList<String>();
-
+				ArrayList<String> recordStats = new ArrayList<String>(); //will record stats if player selects "yes"
+				
+				//Recording stats of the player and writing them into a txt file
 				recordStats.add(user.getName());
 				recordStats.add(Integer.toString(user.getLvl()));
 				recordStats.add(Integer.toString(user.getExp()));
@@ -2592,7 +2603,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 				recordStats.add(Integer.toString(mapx));
 				recordStats.add(Integer.toString(mapy));
 
-				if(currentMap.equals(map1)) {
+				if(currentMap.equals(map1)) { //records the current map the user is in
 					recordStats.add("map1");
 				}
 
@@ -2622,7 +2633,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
                 	}
 
                 writer.close();
-                JOptionPane.showMessageDialog(this, "Game has been saved");
+                JOptionPane.showMessageDialog(this, "Game has been saved"); //displays a quick message if successful
 
 	            }
 
@@ -2634,18 +2645,18 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 			else{}
 		}
 
-		else if(source == saveNoBut) {
+		else if(source == saveNoBut) { //closes save screen
 			this.saveScreen = false;
 			this.remove(saveYesBut);
 			this.remove(saveNoBut);
 			this.remove(saveLabel);
 		}
 
-		else if(source == profCloseBut) {
+		else if(source == profCloseBut) { //closes the profile
 			this.profScreen = false;
 			this.remove(profCloseBut);
 
-			if(this.character == 1) {
+			if(this.character == 1) { //removes the correct char portrait
 				this.remove(charProf1);
 			}
 
@@ -2658,12 +2669,12 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 			}
 		}
 
-		else if(source == this.songBut && saveScreen == false && profScreen == false){
+		else if(source == this.songBut && saveScreen == false && profScreen == false){ //if other options are not displayed, user is allowed to mute/unmute song
             this.gameTheme.playPause();
             //Displays a certain icon depending on if the music is playing
             if(gameTheme.getIsPlaying()) {
                 this.songBut.setIcon(songIcon1);
-                this.songOn = true;
+                this.songOn = true; //sets the song boolean if it is playing or not
             }
             else {
                 this.songBut.setIcon(songIcon2);
@@ -2671,8 +2682,8 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
             }
         }
         
-        else if(source == this.gameOverBut) {
-        	this.gameTheme.stop();
+        else if(source == this.gameOverBut) { //button returns the user to the main menu after losing
+        	this.gameTheme.stop(); //stops game music so it doesnt overlap with menu music
         	this.back = true;
         }
 	}
@@ -2733,10 +2744,10 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 	}
 }
 
-class Inventory {
+class Inventory { //class to keep track of player's inventory
 	private int pot, largePot, gerthPot, ironPot, wrathPot, gold;
 
-	public Inventory(int pot, int largePot, int gerthPot, int ironPot, int wrathPot, int gold) {
+	public Inventory(int pot, int largePot, int gerthPot, int ironPot, int wrathPot, int gold) { //Constructor method
 		this.pot = pot;
 		this.largePot = largePot;
 		this.gerthPot = gerthPot;
@@ -2745,7 +2756,7 @@ class Inventory {
 		this.gold = gold;
 	}
 
-	public void addItem(String item) {
+	public void addItem(String item) { //when a user buys an item from the shop, it will be added to here
 		if(item == "pot") {
 			pot ++;
 		}
@@ -2767,7 +2778,7 @@ class Inventory {
 		}
 	}
 
-	public void addGold(int amount) {
+	public void addGold(int amount) { //when a battle is won, gold will be added to here
 		gold += amount;
 	}
 
@@ -2820,12 +2831,12 @@ class Inventory {
 	}
 }
 
-class PlayerStats { //class used to keep track of a player's stats (FIXING)
+class PlayerStats { //class used to keep track of a player's stats
 	private int hp, maxHp, atk, lvl, exp, charNum;
 	private String name;
 	private boolean atkBoost, defBoost;
 
-	public PlayerStats(int hp, int maxHp, int atk, int lvl, int exp, String name, int charNum) {
+	public PlayerStats(int hp, int maxHp, int atk, int lvl, int exp, String name, int charNum) { //Constructor class
 		this.maxHp = maxHp;
 		this.hp = hp;
 		this.atk = atk;
@@ -2878,38 +2889,40 @@ class PlayerStats { //class used to keep track of a player's stats (FIXING)
 	public void setHp(int dmg) {
 		hp = hp - dmg;
 	}
-
+	
+	//Set the atk boost if wrath potion is used
 	public void setAtkBoost(boolean setter) {
 		atkBoost = setter;
 	}
-
+	
+	//sets the def boost if iron potion is used
 	public void setDefBoost(boolean setter) {
 		defBoost = setter;
 	}
 
 	//Using an item in inventory
 	public void useItem(String item) {
-		if (item == "Health Potion") {
+		if (item == "Health Potion") { //heals the user 5 HP or to the max
 			hp += 5;
 			if (hp > maxHp) {
 				hp = maxHp;
 			}
 		}
-		if (item == "Large Health Potion") {
+		if (item == "Large Health Potion") { //heals the user 10 HP or to the max
 			hp += 10;
 			if (hp > maxHp) {
 				hp = maxHp;
 			}
 		}
-		if (item == "Gerthy Health Potion") {
+		if (item == "Gerthy Health Potion") { //heals the user to max
 			hp = maxHp;
 		}
 
-		if (item == "Wrath Potion") {
+		if (item == "Wrath Potion") { //sets the atk boost
 			atkBoost = true;
 		}
 
-		if (item == "Iron Potion") {
+		if (item == "Iron Potion") { //sets the def boost
 			defBoost = true;
 		}
 	}
