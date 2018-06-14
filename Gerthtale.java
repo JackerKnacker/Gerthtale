@@ -1,8 +1,6 @@
-
 //Gerthtale.java
 //Alex S, Jakir A, Jason W
 ///To be announced...
-package Gerthtale;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,32 +23,10 @@ public class Gerthtale extends JFrame implements ActionListener, KeyListener {
     JLayeredPane iPage = new JLayeredPane(); //options page
     JLayeredPane cPage = new JLayeredPane(); //credits page
 
-    JButton newGameBut;
-    JButton saveSelectBut;
-    JButton instructBut;
-    JButton creditBut;
-    JButton continueBut;
-    JButton soundBut;
-	JButton backBut;
-	JButton confirmBut;
-	JButton pBut1;
-	JButton pBut2;
-	JButton pBut3;
-	JButton openSaveConfirm;
+    JButton newGameBut, saveSelectBut, instructBut, creditBut, continueBut, soundBut, backBut, confirmBut, pBut1, pBut2, pBut3, openSaveConfirm;
 
-	JLabel charDisplay1;
-	JLabel charDisplay2;
-	JLabel charDisplay3;
-	JLabel noSave;
-	JLabel charFace1;
-	JLabel charFace2;
-	JLabel charFace3;
-	JLabel nameStat;
-	JLabel hpStat;
-	JLabel lvlStat;
-	JLabel expStat;
-	JLabel atkStat;
-	JLabel charPanel;
+	JLabel charDisplay1, charDisplay2, charDisplay3, noSave, charFace1, charFace2, charFace3, nameStat, hpStat, lvlStat, expStat, atkStat, charPanel;
+
 	JTextField nameBox;
 
 	PlayerStats user;
@@ -80,7 +56,7 @@ public class Gerthtale extends JFrame implements ActionListener, KeyListener {
 
         setLocationRelativeTo(null); //makes the window appear in the center
 
-        this.timer = new javax.swing.Timer(30, this);
+        this.timer = new javax.swing.Timer(25, this);
 
         menuTheme = new Sound("Music/FINAL FANTASY XV - Somnus (Instrumental Version).wav"); //This loads the background music
         menuTheme.loop(); //This loops the background music
@@ -306,13 +282,41 @@ public class Gerthtale extends JFrame implements ActionListener, KeyListener {
         subTitle3.setSize(350,50);
         subTitle3.setLocation(225,50);
         this.iPage.add(subTitle3,1);
+        
+        JLabel instructPic = new JLabel(new ImageIcon("Pictures/instruct1.png"));
+        instructPic.setSize(785,325);
+        instructPic.setLocation(5,110);
+        this.iPage.add(instructPic,1);
+        
+        JLabel instructText = new JLabel("'c' to open in game menu");
+        instructText.setFont(new Font("Comic Sans ms", Font.PLAIN, 20));
+		instructText.setSize(400,50);
+		instructText.setLocation(275,425);
+		this.iPage.add(instructText,2);
+		
+		JLabel instruct2Text = new JLabel("'x' to close in game menu");
+        instruct2Text.setFont(new Font("Comic Sans ms", Font.PLAIN, 20));
+		instruct2Text.setSize(400,50);
+		instruct2Text.setLocation(275,455);
+		this.iPage.add(instruct2Text,2);
+		
+		JLabel instruct3Text = new JLabel("'enter' to confirm");
+        instruct3Text.setFont(new Font("Comic Sans ms", Font.PLAIN, 20));
+		instruct3Text.setSize(400,50);
+		instruct3Text.setLocation(275,485);
+		this.iPage.add(instruct3Text,2);
 
         //\/ --- components for cPage --- \/
 		JLabel subTitle4 = new JLabel(new ImageIcon("Pictures/subtitle4.png"));
         subTitle4.setSize(300,50);
         subTitle4.setLocation(250,50);
         this.cPage.add(subTitle4,1);
-
+        
+        JLabel creditText = new JLabel(new ImageIcon("Pictures/creditText.png"));
+        creditText.setSize(450,370);
+        creditText.setLocation(175,100);
+        this.cPage.add(creditText,1);
+        
         requestFocus();
         setResizable(false);
         setVisible(true);
@@ -364,7 +368,7 @@ public class Gerthtale extends JFrame implements ActionListener, KeyListener {
         	menuTheme.stop();
 
 			if(this.user != null) {
-				game = new GameScreen(user, bag, menuTheme.getIsPlaying(), -908, -320, "map1");
+				game = new GameScreen(user, bag, menuTheme.getIsPlaying(), -908, -320, "map1", true);
 			}
 
         	this.cards.add(game, "game");
@@ -475,7 +479,7 @@ public class Gerthtale extends JFrame implements ActionListener, KeyListener {
        		this.user = new PlayerStats(Integer.parseInt(savedStats.get(3)), Integer.parseInt(savedStats.get(4)), Integer.parseInt(savedStats.get(5)), Integer.parseInt(savedStats.get(1)), Integer.parseInt(savedStats.get(2)), savedStats.get(0), Integer.parseInt(savedStats.get(6))); //HP, ATK, LVL, EXP, NAME, CHAR-NUM
        		Inventory bag = new Inventory(Integer.parseInt(savedStats.get(10)), Integer.parseInt(savedStats.get(11)), Integer.parseInt(savedStats.get(12)), Integer.parseInt(savedStats.get(13)), Integer.parseInt(savedStats.get(14)), Integer.parseInt(savedStats.get(15)));
 
-       		this.game = new GameScreen(user, bag, menuTheme.getIsPlaying(), Integer.parseInt(savedStats.get(7)), Integer.parseInt(savedStats.get(8)), savedStats.get(9));
+       		this.game = new GameScreen(user, bag, menuTheme.getIsPlaying(), Integer.parseInt(savedStats.get(7)), Integer.parseInt(savedStats.get(8)), savedStats.get(9), false);
        		this.cards.add(game, "game");
             this.cLayout.show(this.cards,"game");
             menuTheme.stop();
@@ -584,7 +588,7 @@ public class Gerthtale extends JFrame implements ActionListener, KeyListener {
         	game.toggleMenu();
 
         	if(game.getMenuPause() == false) {
-        		game.reloadStats();
+        		game.storyControls();
 				game.move();
 				game.shopControls();
 				game.dialogueControls();
@@ -599,36 +603,20 @@ public class Gerthtale extends JFrame implements ActionListener, KeyListener {
         Gerthtale gameStart = new Gerthtale();
     }
 }
-class GameScreen extends JPanel implements ActionListener, KeyListener {
-	private JButton menuBut;
-	private JButton bagBut;
-	private JButton saveBut;
-	private JButton profBut;
-	private JButton saveYesBut;
-	private JButton saveNoBut;
-	private JButton profCloseBut;
-	private JButton songBut;
 
-	private JLabel menuLabel1;
-	private JLabel menuLabel2;
-	private JLabel menuLabel3;
-	private JLabel menuLabel4;
-	private JLabel nameLabel;
-	private JLabel saveLabel;
-	private JLabel charProf1;
-	private JLabel charProf2;
-	private JLabel charProf3;
-	private JLabel hpStat;
-	private JLabel atkStat;
-	private JLabel lvlStat;
-	private JLabel expStat;
-	private JLabel expLeftStat;
+class GameScreen extends JPanel implements ActionListener, KeyListener {
+	private JButton menuBut, bagBut, saveBut, profBut, saveYesBut, saveNoBut, profCloseBut, songBut;
+
+	private JLabel menuTitle, menuLabel1, menuLabel2, menuLabel3, menuLabel4, saveLabel, charProf1, charProf2, charProf3;
 
 	private Toolkit toolkit = Toolkit.getDefaultToolkit();
 	private Image clickCursor = toolkit.getImage("Pictures/clickCursor.png");
 
 	private ImageIcon songIcon1 = new ImageIcon("Pictures/sound.png"); //unmuted version of the song image
     private ImageIcon songIcon2 = new ImageIcon("Pictures/mute.png");  //muted version of the song image
+
+    //--------|Story Related Stuff| ------//
+    Image storyPanel = new ImageIcon("Pictures/panelbox.jpg").getImage().getScaledInstance(800, 600, Image.SCALE_DEFAULT);
 
     //--------|Shop Related Stuff|--------//
 	Image shopBack = new ImageIcon("Pictures/shopBack.jpg").getImage().getScaledInstance(800, 600, Image.SCALE_DEFAULT);
@@ -722,10 +710,12 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 		g.setColor(Color.black);
 		g.fillRect((int)(r.getX()),(int)(r.getY()),(int)(r.getWidth()),(int)(r.getHeight()));
     }
+
     public void displayRectangleR(Rectangle r, Graphics g){
 		g.setColor(Color.red);
 		g.fillRect((int)(r.getX()),(int)(r.getY()),(int)(r.getWidth()),(int)(r.getHeight()));
     }
+    
     public void endScreen(Graphics g){
     	g.setColor(Color.black);
     	g.fillRect(0,0,800,600);
@@ -733,6 +723,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
     	g.setFont(new Font("TimesRoman",Font.PLAIN,64));
     	g.drawString("YOU LOSE",230,300);
     }
+    
 	public void displayHealth(Graphics g, Enemy goon){
 		//Displaying enemy sprite
 		if (goon.getType().equals("slime")) {
@@ -774,6 +765,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 		g.drawString(playerHealth+"/"+playerMaxHealth, 255,330);
 		g.drawString(enemyHealth+"/"+enemyMaxHealth, 640,330);		
 	}
+
     public void pipeAttack(Graphics g){
     	//attackType = "attack1";
     	if(!displayed){
@@ -805,6 +797,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 			}
     	}
     }
+    
     public void goblinAttack(Graphics g){
     	if(!displayed){
     		rects.clear();
@@ -821,6 +814,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 			}
 			displayed = true;
     	}
+
     	for(int i = rects.size()-1; i>=0; i--){
 
     		Rectangle r = rects.get(i);
@@ -832,8 +826,8 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 				rects.remove(r);
 			}
     	}
-
     }
+    
    	public void laserAttack(Graphics g){
     	if(!displayed){
     		pRect.setLocation(300, 410);
@@ -870,9 +864,11 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 		if((int) rightattackRect.getY() + 10 > (int) baseRect.getY() + (int) baseRect.getHeight() - (int) rightattackRect.getHeight()){
 			directionR = -2; //rate which its moving
 		}
+		
 		else if((int) rightattackRect.getY() - 10 < (int) baseRect.getY()){
 			directionR = 2;
 		}
+		
 		if(Math.abs((int) leftRect.getY() + (int) leftRect.getHeight() - (int) rightRect.getY()) > 70 &&
 			(attackTimer >= fire && attackTimer < fire + 150 ||
 			 attackTimer >= fire + 300 && attackTimer < fire + 450 ||
@@ -886,6 +882,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 			displayRectangleBL(rightattackRect,g);
 			displaying = true;
 		}
+		
 		else{
 			leftRect.translate(0,directionL);
 			leftattackRect.translate(0,directionL);
@@ -897,6 +894,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 		attackRect.translate(directionX,0);
 		attackTimer++;
     }
+    
     public void options(Graphics g){
     	if(!displayed){
     		option = 0;
@@ -909,6 +907,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 			g.setColor(Color.white);
 			g.fillRect(i-5,453,180,64);
 		}
+		
 		g.setColor(Color.black);
 		g.drawImage(redRect,(50+option*250)-15,445,this);
 		g.setFont(new Font("TimesRoman",Font.PLAIN,28));
@@ -916,17 +915,19 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 		g.drawString("Items",300,485);
 		g.drawString("Run",550,485);
     }
+    
     public boolean collision(ArrayList<Rectangle> ar){
     	for (Rectangle newR: ar){
     		if(pRect.intersects(newR)){
     			if (pRect.getX() + pRect.getWidth() < newR.getX() + newR.getWidth() / 2) {
     				pRect.setLocation((int)newR.getX()-(int)pRect.getWidth(),(int)pRect.getY());
-    			} else if (newR.getY() == 360 && pRect.getY() > newR.getY()) {
+    			} 
+    			else if (newR.getY() == 360 && pRect.getY() > newR.getY()) {
     				pRect.setLocation((int)pRect.getX(),(int)newR.getY() + (int)newR.getHeight());
-    			} else if (pRect.getY() < newR.getY()) {
+    			} 
+    			else if (pRect.getY() < newR.getY()) {
     				pRect.setLocation((int)pRect.getX(),(int)newR.getY()-(int)pRect.getHeight());
     			}
-
 
     			return true;
     		}
@@ -947,25 +948,31 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 			pRect.setLocation((int)pRect.getX(),(int)baseRect.getY() + (int)baseRect.getHeight() - (int)pRect.getHeight());
 		}
 	}
+	
 	public int attack(Graphics g){
 		damage = 0;
     	g.drawImage(attackBackground,160,360,this);
 		if(linex > 625){
 			reverse = true;
 		}
+		
 		else if(linex < 161){
 			reverse = false;
 		}
+
 		if(reverse && !stop){
 			linex -= 3;
 		}
+		
 		else if(!reverse && !stop){
 			linex += 3;
 		}
+		
 		else if(stop){
 			damage = Math.round((float) (400 - Math.abs(400 - linex))/400 * user.getAtk());
 			delayTimer++;
 		}
+		
 		g.drawImage(slider,linex,360,this);
 		return damage + atkModifier;
 	}
@@ -974,7 +981,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 	private boolean[] keys;
 	private int mapx, mapy, boxy = 55, steps = 0;
 	private double playerFrame;
-	private String screen = "moving", lastDirection = "down";
+	private String screen, lastDirection = "down";
 	private Rectangle playerHitbox = new Rectangle(382,276,36,48);
 	private ArrayList<Rectangle> map1Rects = new ArrayList<Rectangle>();
 	private ArrayList<Rectangle> map2Rects = new ArrayList<Rectangle>();
@@ -1002,7 +1009,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 
 	private Sound gameTheme;
 
-	public GameScreen(PlayerStats user, Inventory bag, boolean songOn, int mapx, int mapy, String current) {
+	public GameScreen(PlayerStats user, Inventory bag, boolean songOn, int mapx, int mapy, String current, boolean storyStart) {
 		this.user = user;
 		this.songOn = songOn;
 		this.bag = bag;
@@ -1016,6 +1023,14 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 
 		else {
 			this.songBut = new JButton(songIcon2);
+		}
+
+		if(storyStart) {
+			screen = "story";
+		}
+
+		else {
+			screen = "moving";
 		}
 
 		//back to menu button
@@ -1066,7 +1081,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
         this.songBut.setFocusPainted(false);
         this.songBut.setBorderPainted(false);
         this.songBut.setCursor(toolkit.createCustomCursor(clickCursor, new Point(0,0), ""));
-
+		
 		//label for in game menu buttons
         this.menuLabel1 = new JLabel("Menu");
 		this.menuLabel1.setFont(new Font("Comic Sans ms", Font.PLAIN, 30));
@@ -1089,6 +1104,11 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 		this.menuLabel4.setLocation(640,475);
 
 		//Other side buttons/displays
+		this.menuTitle = new JLabel("Game Paused");
+		this.menuTitle.setFont(new Font("Comic Sans ms", Font.PLAIN, 50));
+		this.menuTitle.setSize(400,50);
+		this.menuTitle.setLocation(250,25);
+		
 		this.saveYesBut = new JButton(new ImageIcon("Pictures/confirm.png"));
         this.saveYesBut.addActionListener(this);
         this.saveYesBut.setSize(50,50);
@@ -1121,11 +1141,6 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 		this.saveLabel.setFont(new Font("Comic Sans ms", Font.PLAIN, 30));
 		this.saveLabel.setSize(600,100);
 		this.saveLabel.setLocation(175,100);
-
-        this.nameLabel = new JLabel(user.getName());
-		this.nameLabel.setFont(new Font("Comic Sans ms", Font.PLAIN, 25));
-		this.nameLabel.setSize(800,100);
-		this.nameLabel.setLocation(225,100);
 
 		//Character profile
 		this.charProf1 = new JLabel(new ImageIcon("Pictures/charPortrait1.png"));
@@ -1227,19 +1242,23 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 				if(option < 2){
 					option ++;
 				}
+				
 				else {
 					option = 0;
 				}
 			}
-	        else if(key == KeyEvent.VK_LEFT && battleScreen == "options"){
+			
+			else if(key == KeyEvent.VK_LEFT && battleScreen == "options"){
 				if(option > 0){
 					option --;
 				}
+				
 				else {
 					option = 2;
 				}
 			}
-	        else if (battleScreen.equals("items")) {
+			
+			else if (battleScreen.equals("items")) {
 				if (keys[KeyEvent.VK_UP] && bSelect == false) {
 					if (bPos == 0) {
 						bPos = userItems.size();
@@ -1248,34 +1267,42 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 						bPos--;
 					}
 				}
+
 				else if (keys[KeyEvent.VK_DOWN] && bSelect == false) {
 					if (bPos == userItems.size()) {
 						bPos = 0;
 					}
+
 					else {
 						bPos++;
 					}
 				}
+
 				else if (keys[KeyEvent.VK_LEFT] && bSelect) {
 					if (bChoice == false)
 						bChoice = true;
 				}
+
 				else if (keys[KeyEvent.VK_RIGHT] && bSelect) {
 					if (bChoice)
 						bChoice = false;
 				}
+
 				else if (keys[KeyEvent.VK_ENTER]) {
 					if (bPos == userItems.size()) {
 						bPos = 0;
 						battleScreen = "options";
 					}
+
 					else if (bSelect == false){
 						bSelect = true;
 					}
+
 					else if (bSelect) {
 						if (bChoice == false) {
 							bSelect = false;
 						}
+
 						else if (bChoice) { //user uses an item
 							user.useItem(userItems.get(bPos));
 							if (userItems.get(bPos) == "Health Potion") {
@@ -1293,6 +1320,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 							if (userItems.get(bPos) == "Iron Potion") {
 								bag.removeIronPot();
 							}
+							
 							initItems();
 							bSelect = false;
 							bPos = 0;
@@ -1315,22 +1343,23 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 					}
 				}
 			}
-
+			
 			else if(battleScreen.equals("options") && key == KeyEvent.VK_ENTER){
-				displayed = false;
-				//change screen
-				if (option == 0){
-					battleScreen = "player attack";
-				}
-				else if(option == 1){
-					battleScreen = "items";
-				}
-				else if(option == 2){
-					battleScreen = "run";
-				}
+ 				displayed = false;
+ 				
+ 				if (option == 0){
+ 					battleScreen = "player attack";
+ 				}
+ 				
+ 				else if(option == 1){
+ 					battleScreen = "items";
+ 				}
+ 				
+ 				else if(option == 2){
+ 					battleScreen = "run";
+ 				}
 			}
-        }
-
+		}
 	}
 
 	public void keyReleased(KeyEvent e) {
@@ -1879,6 +1908,32 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 		}
 	}
 
+	public void storyControls() {
+		if (screen == "story") {
+			requestFocus();
+			if (keys[KeyEvent.VK_ENTER] && keypress) {
+				screen = "moving";
+			}
+			keypress = false;
+		}
+	}
+
+	public void storyDialogue(Graphics g) {
+		if (screen == "story") {
+			g.drawImage(storyPanel, 0, 0, this);
+			g.setFont(dialogueFont);
+			g.setColor(Color.BLACK);
+			g.drawString("Dear Adventurer,", 50, 100);
+			g.drawString("The town is currently in a state of utter chaos.", 100, 150);
+			g.drawString("The hooded men have plagued our peaceful town and", 50, 200);
+			g.drawString("have already caused several disappearances. I'm afraid", 50, 250);
+			g.drawString("There is nothing we can possibly do at this point in", 50, 300);
+			g.drawString("time. Please help us!", 50, 350);
+			g.drawString("The Mayor", 50, 400);
+			g.drawString("(Click Enter to Continue)", 50, 500);
+		}
+	}
+
 	public void dialogueControls() {
 		if (screen == "dialogue") {
 			requestFocus();
@@ -1923,6 +1978,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 //			}
 		}
 	}
+
 	public void initItems() {
 		userItems.clear();
 		itemNums.clear();
@@ -2036,6 +2092,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 				else {
 					g.drawString("Exit Inventory", 500, (i+1)*80);
 				}
+
 			}
 			if (invPos < userItems.size()) {
 				if(userItems.get(invPos) == "Health Potion") {
@@ -2063,10 +2120,12 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 					g.drawImage(wrathPot, 380, 250, this);
 				}
 			}
+			
 			else {
 				g.drawImage(scrollPanel3, 370, 245, this);
-				g.drawImage(shopExit, 380, 250, this);	
+				g.drawImage(shopExit, 380, 250, this);
 			}
+			
 			if (invSelect == false) {
 				if (cantUse) {
 					g.drawString("It's not a wise idea to use that.", 30, 400);
@@ -2199,10 +2258,13 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 			if (user.getAtkBoost()) {
 				atkModifier = 5;
 			}
+
 			if (user.getDefBoost()) {
 				defModifier = 1;
 			}
+
 	    	g.drawImage(battleBack,0,0,this);
+	    	
 	    	//Enemy Battle Stuff
 	 		if(battleScreen.equals("pipe attack") || battleScreen.equals("laser attack") || battleScreen.equals("goblin attack")){
 		    	g.setColor(dgreen);
@@ -2214,6 +2276,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 					battleScreen = "end screen";
 				}
 				else{
+
 					if(user.getHp() < user.getMaxHp()/2){
 						g.drawImage(damaged,(int)pRect.getX(),(int)pRect.getY(),this);
 					}
@@ -2230,11 +2293,12 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 				}
 			}
 			inside();
-			
 			displayHealth(g, goon);
+				
 			if (battleScreen.equals("end screen")) {
 				endScreen(g);
 			}
+
 			else if (battleScreen.equals("options")) {
 				options(g);
 			}
@@ -2242,11 +2306,14 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 				if (delayTimer == 0) {
 					goon.damage(attack(g));
 				}
+
 				else {
 					attack(g);
 				}
+
 				if (goon.getHealth() <= 0) { //When enemy dies
 					goon.resetHealth();
+					
 					bag.addGold(15);
 
 					//resetting battle variables
@@ -2261,26 +2328,30 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 					defModifier = 0;
 					screen = "moving";
 				}
+				
 				if(delayTimer > 100){
 					if(goon.getType().equals("slime")){
 						battleScreen = "pipe attack";
 					}
 					else if(goon.getType().equals("goblin")){
-						battleScreen = "goblin attack";
+						battleScreen = "golbin attack";
 					}
 					else if(goon.getType().equals("boss")){
 						battleScreen = "laser attack";
 					}
+					
 					reverse = false;
 					stop = false;
 					delayTimer = 0;
 					linex = 170;
 				}
 			}
+			
 			else if(battleScreen.equals("items")){
 				initItems();
 				drawBattleInv(g);
 			}
+			
 			else if(battleScreen.equals("run")){
 				if(goon.run()){
 					goon.resetHealth();
@@ -2291,6 +2362,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 					defModifier = 0;
 					screen = "moving";
 				}
+				
 				else{
 					if(goon.getType().equals("slime")){
 						battleScreen = "pipe attack";
@@ -2303,6 +2375,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 					}
 				}
 			}
+			
 			else if(battleScreen.equals("pipe attack")){
 				pipeAttack(g);
 				if(collision(rects) && !immune){
@@ -2310,23 +2383,28 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 					immune = true;
 					timer = 0;
 				}
+				
 				if(rects.size() == 0){
 					battleScreen = "options";
 					displayed = false;
 				}
 			}
+			
 			else if(battleScreen.equals("goblin attack")){
 				goblinAttack(g);
+				
 				if(collision(rects) && !immune){
 					user.setHp(4-defModifier);;
 					immune = true;
 					timer = 0;
 				}
+				
 				if(rects.size() == 0){
 					battleScreen = "options";
 					displayed = false;
 				}
 			}
+			
 			else if(battleScreen.equals("laser attack")){
 				laserAttack(g);
 				if((pRect.intersects(attackRect) && !immune && displaying) ||
@@ -2337,6 +2415,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 					immune = true;
 					timer = 0;
 				}
+				
 				if (attackTimer > 2000) {
 					battleScreen = "options";
 					displayed = false;
@@ -2359,7 +2438,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 	}
 
 	public void toggleMenu() { //toggles if the in game menu shows or not (depending on key pressed)
-		if (keys[KeyEvent.VK_C] && screen != "battle" && screen != "inventory") {
+		if (keys[KeyEvent.VK_C] && screen != "battle" && screen != "inventory" && screen != "dialogue" && screen != "story") {
 			this.menuPause = true;
 		}
 
@@ -2385,6 +2464,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 		this.add(saveBut);
 		this.add(profBut);
 		this.add(songBut);
+		this.add(menuTitle);
 		this.add(menuLabel1);
 		this.add(menuLabel2);
 		this.add(menuLabel3);
@@ -2397,6 +2477,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 		this.remove(saveBut);
 		this.remove(profBut);
 		this.remove(songBut);
+		this.remove(menuTitle);
 		this.remove(menuLabel1);
 		this.remove(menuLabel2);
 		this.remove(menuLabel3);
@@ -2421,7 +2502,6 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 		g.drawRect(1,100,799,224);
 		g.drawRect(49,133,152,152);
 
-		this.add(nameLabel);
 		this.add(profCloseBut);
 
 		if(this.character == 1) {
@@ -2435,40 +2515,17 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 		else if(this.character == 3) {
 			this.add(charProf3);
 		}
-
+		
 		//Display stats of the current character
-		this.add(lvlStat);
-		this.add(hpStat);
-		this.add(atkStat);
-		this.add(expStat);
-		this.add(expLeftStat);
-	}
-
-	public void reloadStats() { //constantly updating the stats displayed in the profile
-		this.lvlStat = new JLabel("LVL: " + user.getLvl());
-		this.lvlStat.setFont(new Font("Comic Sans ms", Font.PLAIN, 20));
-		this.lvlStat.setSize(100,50);
-		this.lvlStat.setLocation(225,170);
-
-		this.hpStat = new JLabel("HP: " + user.getHp() + "/" + user.getMaxHp());
-		this.hpStat.setFont(new Font("Comic Sans ms", Font.PLAIN, 20));
-		this.hpStat.setSize(100,50);
-		this.hpStat.setLocation(225,195);
-
-		this.atkStat = new JLabel("ATK: " + user.getAtk());
-		this.atkStat.setFont(new Font("Comic Sans ms", Font.PLAIN, 20));
-		this.atkStat.setSize(100,50);
-		this.atkStat.setLocation(225,220);
-
-		this.expStat = new JLabel("EXP: " + user.getExp());
-		this.expStat.setFont(new Font("Comic Sans ms", Font.PLAIN, 20));
-		this.expStat.setSize(100,50);
-		this.expStat.setLocation(225,245);
-
-		this.expLeftStat = new JLabel("Exp Needed: " + (int)Math.pow(user.getLvl()/0.1,2));
-		this.expLeftStat.setFont(new Font("Comic Sans ms", Font.PLAIN, 20));
-		this.expLeftStat.setSize(200,50);
-		this.expLeftStat.setLocation(400,245);
+		g.setFont(shopFont);
+		g.drawString(user.getName(), 225, 160);
+		g.drawString("LVL: " + user.getLvl(), 225, 185);
+		g.drawString("HP: " + user.getHp() + "/" + user.getMaxHp(), 225, 210);
+		g.drawString("ATK: " + user.getAtk(), 225, 235);
+		g.drawString("EXP: " + user.getExp(), 225, 260);
+		g.drawString("Exp Required: " + (int)Math.pow(user.getLvl()/0.1,2), 400, 260);
+		g.drawString("Exp Left Till Lvl Up: " + ((int)Math.pow(user.getLvl()/0.1,2) - user.getExp()), 400, 285);
+		g.drawString("Gold: " + bag.getGold(), 225, 285);
 	}
 
 	public void actionPerformed(ActionEvent evt) {
@@ -2565,7 +2622,6 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 
 		else if(source == profCloseBut) {
 			this.profScreen = false;
-			this.remove(nameLabel);
 			this.remove(profCloseBut);
 
 			if(this.character == 1) {
@@ -2579,12 +2635,6 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 			else if(this.character == 3) {
 				this.remove(charProf3);
 			}
-
-			this.remove(lvlStat);
-			this.remove(hpStat);
-			this.remove(atkStat);
-			this.remove(expStat);
-			this.remove(expLeftStat);
 		}
 
 		else if(source == this.songBut && saveScreen == false && profScreen == false){
@@ -2607,11 +2657,17 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 			drawMap(g);
 			displayPlayer(g);
 		}
+
+		else if (screen == "story") {
+			storyDialogue(g);
+		}
+
 		else if (screen == "dialogue") {
 			drawMap(g);
 			displayPlayer(g);
 			drawDialogue(g);
 		}
+
 		else if (screen == "shop") {
 			drawShop(g);
 		}
@@ -2620,15 +2676,18 @@ class GameScreen extends JPanel implements ActionListener, KeyListener {
 			drawInventory(g);
 		}
 		else if (screen == "battle") {
-			if (currentMap.equals(map1))
+			if (currentMap.equals(map1)) {
 				drawBattle(g, slime);
-			if (currentMap.equals(map3))
+			}
+			
+			if (currentMap.equals(map3)) {
 				if (bossBattle) {
 					drawBattle(g, boss);
 				}
 				else {
 					drawBattle(g, goblin);
 				}
+			}
 		}
 
 		//System.out.println(secondPanel);
@@ -2780,9 +2839,11 @@ class PlayerStats { //class used to keep track of a player's stats (FIXING)
 	public int getCharNum() {
 		return charNum;
 	}
+	
 	public boolean getAtkBoost() {
 		return atkBoost;
 	}
+
 	public boolean getDefBoost() {
 		return defBoost;
 	}
@@ -2795,6 +2856,7 @@ class PlayerStats { //class used to keep track of a player's stats (FIXING)
 	public void setAtkBoost(boolean setter) {
 		atkBoost = setter;
 	}
+	
 	public void setDefBoost(boolean setter) {
 		defBoost = setter;
 	}
@@ -2816,9 +2878,11 @@ class PlayerStats { //class used to keep track of a player's stats (FIXING)
 		if (item == "Gerthy Health Potion") {
 			hp = maxHp;
 		}
+		
 		if (item == "Wrath Potion") {
 			atkBoost = true;
 		}
+
 		if (item == "Iron Potion") {
 			defBoost = true;
 		}
