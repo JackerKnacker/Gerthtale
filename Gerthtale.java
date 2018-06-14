@@ -1550,13 +1550,13 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 		g.fillRect(640-Math.round(100-(100*(float)goon.getHealth()/goon.getMaxHealth())),280,Math.round(100-(100*(float)goon.getHealth()/goon.getMaxHealth())),30);
 		g.setFont(new Font("Comic Sans ms",Font.BOLD,25));
 		g.drawString(user.getName(), 125,75);
-		g.drawString(goon.getType(), 540,75);
+		g.drawString(goon.getType(), 520,75);
 		String playerMaxHealth = Integer.toString(user.getMaxHp());
 		String playerHealth = Integer.toString(user.getHp());
 		String enemyMaxHealth = Integer.toString(goon.getMaxHealth());
 		String enemyHealth = Integer.toString(goon.getHealth());
 		g.drawString("HP: " + playerHealth+"/"+playerMaxHealth, 125,110);
-		g.drawString("HP: " + enemyHealth+"/"+enemyMaxHealth, 540,110);
+		g.drawString("HP: " + enemyHealth+"/"+enemyMaxHealth, 520,110);
 	}
 
     public void pipeAttack(Graphics g){
