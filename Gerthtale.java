@@ -1,6 +1,7 @@
 //Gerthtale - A Turn-Based Rhythmic RPG inspired by Undertale & Final Fantasy
 //By Alex Shi, Jakir Ansari, Jason Wong
-///To be announced...
+
+package Gerthtale;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,7 +17,7 @@ public class Gerthtale extends JFrame implements ActionListener, KeyListener {
     JPanel cards;
     CardLayout cLayout = new CardLayout();
 
-    // LayeredPane allows my to control what shows on top
+    // LayeredPane allows me to control what shows on top
     JLayeredPane mPage = new JLayeredPane(); //menu page
     JLayeredPane pPage = new JLayeredPane(); //player creation page
     JLayeredPane sPage = new JLayeredPane(); //save-select page
@@ -368,7 +369,7 @@ public class Gerthtale extends JFrame implements ActionListener, KeyListener {
         		this.user = new PlayerStats(10, 10, 20, 1, 0, charName, charSelect);
         	}
 
-			Inventory bag = new Inventory(1,1,1,1,1, 500); //creates the inventory of the player
+			Inventory bag = new Inventory(3,1,0,0,0, 100); //creates the inventory of the player
         	this.pPage.remove(nameBox);
         	menuTheme.stop(); //stops the menu music so it doesnt overlap with game music
 
@@ -630,85 +631,88 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
     Image storyPanel = new ImageIcon("Pictures/panelbox.jpg").getImage().getScaledInstance(800, 600, Image.SCALE_DEFAULT);
 
     //--------|Shop Related Stuff|--------//
-	Image shopBack = new ImageIcon("Pictures/shopBack.jpg").getImage().getScaledInstance(800, 600, Image.SCALE_DEFAULT);
-	Image panel = new ImageIcon("Pictures/panelbox.jpg").getImage().getScaledInstance(455, 205, Image.SCALE_DEFAULT);
-	Image panel2 = new ImageIcon("Pictures/panelbox.jpg").getImage().getScaledInstance(300, 550, Image.SCALE_DEFAULT);
-	Image longPanel = new ImageIcon("Pictures/panelbox.jpg").getImage().getScaledInstance(765, 205, Image.SCALE_DEFAULT);
-	Image iconPanel = new ImageIcon("Pictures/panelbox.jpg").getImage().getScaledInstance(90, 90, Image.SCALE_DEFAULT);
-	Image arrow = new ImageIcon("Pictures/arrow.png").getImage().getScaledInstance(80, 40, Image.SCALE_DEFAULT);
-	Image healthPot = new ImageIcon("Pictures/pot.png").getImage().getScaledInstance(80, 80, Image.SCALE_DEFAULT);
-	Image largePot = new ImageIcon("Pictures/largepot.png").getImage().getScaledInstance(80, 80, Image.SCALE_DEFAULT);
-	Image gerthPot = new ImageIcon("Pictures/gerthpot.png").getImage().getScaledInstance(80, 80, Image.SCALE_DEFAULT);
-	Image wrathPot = new ImageIcon("Pictures/wrathpot.png").getImage().getScaledInstance(80, 80, Image.SCALE_DEFAULT);
-	Image ironPot = new ImageIcon("Pictures/ironpot.png").getImage().getScaledInstance(80, 80, Image.SCALE_DEFAULT);
-	Image shopExit = new ImageIcon("Pictures/shopExit.png").getImage().getScaledInstance(80, 80, Image.SCALE_DEFAULT);
+	private Image shopBack = new ImageIcon("Pictures/shopBack.jpg").getImage().getScaledInstance(800, 600, Image.SCALE_DEFAULT);
+	private Image panel = new ImageIcon("Pictures/panelbox.jpg").getImage().getScaledInstance(455, 205, Image.SCALE_DEFAULT);
+	private Image panel2 = new ImageIcon("Pictures/panelbox.jpg").getImage().getScaledInstance(300, 550, Image.SCALE_DEFAULT);
+	private Image longPanel = new ImageIcon("Pictures/panelbox.jpg").getImage().getScaledInstance(765, 205, Image.SCALE_DEFAULT);
+	private Image iconPanel = new ImageIcon("Pictures/panelbox.jpg").getImage().getScaledInstance(90, 90, Image.SCALE_DEFAULT);
+	private Image arrow = new ImageIcon("Pictures/arrow.png").getImage().getScaledInstance(80, 40, Image.SCALE_DEFAULT);
+	private Image healthPot = new ImageIcon("Pictures/pot.png").getImage().getScaledInstance(80, 80, Image.SCALE_DEFAULT);
+	private Image largePot = new ImageIcon("Pictures/largepot.png").getImage().getScaledInstance(80, 80, Image.SCALE_DEFAULT);
+	private Image gerthPot = new ImageIcon("Pictures/gerthpot.png").getImage().getScaledInstance(80, 80, Image.SCALE_DEFAULT);
+	private Image wrathPot = new ImageIcon("Pictures/wrathpot.png").getImage().getScaledInstance(80, 80, Image.SCALE_DEFAULT);
+	private Image ironPot = new ImageIcon("Pictures/ironpot.png").getImage().getScaledInstance(80, 80, Image.SCALE_DEFAULT);
+	private Image shopExit = new ImageIcon("Pictures/shopExit.png").getImage().getScaledInstance(80, 80, Image.SCALE_DEFAULT);
 
-	Font shopFont = new Font("Comic Sans MS", Font.BOLD, 20);
-	Font bigShopFont = new Font("Comic Sans MS", Font.BOLD, 28);
-	String[] shopItems = {"Health Potion [50g]", "Large Health Potion [100g]", "Gerthy Health Potion [200g]", "Wrath Potion [150g]", "Iron Potion [150g]", "Exit Shop"};
-	int[] goldCosts = {50, 100, 200, 150, 150};
-	boolean shop = false, itemSelect = false, choice = false, notEnoughGold = false;
-	int itemPos = 0, testGold = 500;
-	ArrayList<String> testInv = new ArrayList<String>();
+	private Font shopFont = new Font("Comic Sans MS", Font.BOLD, 20);
+	private Font bigShopFont = new Font("Comic Sans MS", Font.BOLD, 28);
+	//Lists for displaying items
+	private String[] shopItems = {"Health Potion [50g]", "Large Health Potion [100g]", "Gerthy Health Potion [200g]", "Wrath Potion [150g]", "Iron Potion [150g]", "Exit Shop"};
+	private int[] goldCosts = {50, 100, 200, 150, 150};
+	//Booleans for displaying certain panels
+	private boolean shop = false, itemSelect = false, choice = false, notEnoughGold = false;
+	private int itemPos = 0; //item that user is hovering over
 	//------------------------------------//
 
 	//---------|Dialogue Stuff|---------//
-	Image dialoguePanel = new ImageIcon("Pictures/panelbox.jpg").getImage().getScaledInstance(755, 200, Image.SCALE_DEFAULT);
-	Image npc1 = new ImageIcon("Pictures/npc1.png").getImage().getScaledInstance(36, 48, Image.SCALE_DEFAULT);
-	Image npc1head = new ImageIcon("Pictures/npc1head.png").getImage().getScaledInstance(102, 81, Image.SCALE_DEFAULT);
-	Image npc2 = new ImageIcon("Pictures/npc2.png").getImage().getScaledInstance(36, 48, Image.SCALE_DEFAULT);
-	Image npc2head = new ImageIcon("Pictures/npc2head.png").getImage().getScaledInstance(102, 81, Image.SCALE_DEFAULT);
-	Image npc3 = new ImageIcon("Pictures/npc3.png").getImage().getScaledInstance(36, 48, Image.SCALE_DEFAULT);
-	Image npc3head = new ImageIcon("Pictures/npc3head.png").getImage().getScaledInstance(102, 81, Image.SCALE_DEFAULT);
-	Font dialogueFont = new Font("Comic Sans MS", Font.BOLD, 24);
-	boolean firstPanel = true, secondPanel = false;
-	int npc = 1;
+	private Image dialoguePanel = new ImageIcon("Pictures/panelbox.jpg").getImage().getScaledInstance(755, 200, Image.SCALE_DEFAULT);
+	private Image npc1 = new ImageIcon("Pictures/npc1.png").getImage().getScaledInstance(36, 48, Image.SCALE_DEFAULT);
+	private Image npc1head = new ImageIcon("Pictures/npc1head.png").getImage().getScaledInstance(102, 81, Image.SCALE_DEFAULT);
+	private Image npc2 = new ImageIcon("Pictures/npc2.png").getImage().getScaledInstance(36, 48, Image.SCALE_DEFAULT);
+	private Image npc2head = new ImageIcon("Pictures/npc2head.png").getImage().getScaledInstance(102, 81, Image.SCALE_DEFAULT);
+	private Image npc3 = new ImageIcon("Pictures/npc3.png").getImage().getScaledInstance(36, 48, Image.SCALE_DEFAULT);
+	private Image npc3head = new ImageIcon("Pictures/npc3head.png").getImage().getScaledInstance(102, 81, Image.SCALE_DEFAULT);
+	private Font dialogueFont = new Font("Comic Sans MS", Font.BOLD, 24);
+	private boolean firstPanel = true, secondPanel = false; //panel that is currently displayed
+	private int npc = 1; //the NPC that user is talking to (1 = villager, 2 = mayor, 3 = final boss)
 	//----------------------------------//
 
 	//-------|Inventory Stuff|-------//
-	Image scrollPanel1 = new ImageIcon("Pictures/panelbox.jpg").getImage().getScaledInstance(455, 205, Image.SCALE_DEFAULT);
-	Image scrollPanel2 = new ImageIcon("Pictures/panelbox.jpg").getImage().getScaledInstance(300, 550, Image.SCALE_DEFAULT);
-	Image scrollPanel3 = new ImageIcon("Pictures/panelbox.jpg").getImage().getScaledInstance(100, 100, Image.SCALE_DEFAULT);
-	Image bagPic = new ImageIcon("Pictures/bag.png").getImage().getScaledInstance(275, 325, Image.SCALE_DEFAULT);
-	ArrayList<String> userItems = new ArrayList<String>();
-	ArrayList<Integer> itemNums = new ArrayList<Integer>();
-	int invPos = 0;
-	boolean invSelect = false, invChoice = false, cantUse = false;
+	private Image scrollPanel1 = new ImageIcon("Pictures/panelbox.jpg").getImage().getScaledInstance(455, 205, Image.SCALE_DEFAULT);
+	private Image scrollPanel2 = new ImageIcon("Pictures/panelbox.jpg").getImage().getScaledInstance(300, 550, Image.SCALE_DEFAULT);
+	private Image scrollPanel3 = new ImageIcon("Pictures/panelbox.jpg").getImage().getScaledInstance(100, 100, Image.SCALE_DEFAULT);
+	private Image bagPic = new ImageIcon("Pictures/bag.png").getImage().getScaledInstance(275, 325, Image.SCALE_DEFAULT);
+	private ArrayList<String> userItems = new ArrayList<String>();
+	private ArrayList<Integer> itemNums = new ArrayList<Integer>();
+	private int invPos = 0;
+	private boolean invSelect = false, invChoice = false, cantUse = false;
 	//-------------------------------//
 
 	//--------|Battle Stuff|--------//
-	private int timer = 0,health,runChance,attackTimer = 0,directionX = 2,directionL = 2,directionR = -2,fire;
-	private String battleScreen = "options", attackType;
+	private int timer = 0, attackTimer = 0,directionX = 2,directionL = 2,directionR = -2,fire; //variables used in the various attacks throughout our game
+	private String battleScreen = "options"; //changes the screen of the battle
 	private boolean immune= false,displaying = false,displayed = false, bossBattle = false;
 	private Rectangle baseRect = new Rectangle(150,360,480,170),topRect,leftRect,rightRect,attackRect,leftattackRect,rightattackRect;
-	private Color dgreen = new Color(0, 153, 10);
 	private Random rng = new Random();
-	private Enemy slime = new Enemy(30, 1, "slime"), goblin = new Enemy(50, 3, "goblin"), boss = new Enemy(80, 0, "boss");
+	private Enemy slime = new Enemy(30, 2, "Slime"), goblin = new Enemy(50, 4, "Goblin"), boss = new Enemy(80, 0, "Boss");
 	public ArrayList<Rectangle> rects = new ArrayList<Rectangle>();
-	private ArrayList<Rectangle> web1 = new ArrayList<Rectangle>();
 
 	private int linex = 170,damage,option,delayTimer = 0, atkModifier = 0, defModifier = 0;
 	public boolean reverse = false, stop = false;
-	private ArrayList<String> items = new ArrayList<String>();
 	public Rectangle pRect = new Rectangle(300,410,20,20);
+	private Color dgreen = new Color(0,153,2);
+	
+	//Variables for 'items' option in battle
+	private int bPos = 0;
+	private boolean bSelect = false, bChoice = false;
 
-	int bPos = 0;
-	boolean bSelect = false, bChoice = false;
-
-	Image battleBack = new ImageIcon("Pictures/map.jpg").getImage().getScaledInstance(800,650,Image.SCALE_SMOOTH);
-	Image consumer = new ImageIcon("Pictures/player.png").getImage().getScaledInstance((int)pRect.getWidth(),(int)pRect.getHeight(),Image.SCALE_SMOOTH);
-	Image backRect = new ImageIcon("Pictures/Back Rect.png").getImage().getScaledInstance(530,210,Image.SCALE_SMOOTH);
-	Image damaged = new ImageIcon("Pictures/damaged.png").getImage().getScaledInstance((int)pRect.getWidth(),(int)pRect.getHeight(),Image.SCALE_SMOOTH);
-	Image immune1 = new ImageIcon("Pictures/immune_0.png").getImage().getScaledInstance((int)pRect.getWidth(),(int)pRect.getHeight(),Image.SCALE_SMOOTH);
-	Image redRect = new ImageIcon("Pictures/Red Border.png").getImage().getScaledInstance(200,80,Image.SCALE_SMOOTH);
-	Image attackBackground = new ImageIcon("Pictures/Attack Background.png").getImage().getScaledInstance(480,170,Image.SCALE_SMOOTH);
-	Image slider = new ImageIcon("Pictures/slider.png").getImage().getScaledInstance(15,170,Image.SCALE_SMOOTH);
-	Image slimePic = new ImageIcon("Pictures/slime.png").getImage().getScaledInstance(150, 150, Image.SCALE_DEFAULT);
-	Image goblinPic = new ImageIcon("Pictures/goblin.png").getImage().getScaledInstance(150, 150, Image.SCALE_DEFAULT);
-	Image bossPic = new ImageIcon("Pictures/knight.png").getImage().getScaledInstance(150, 150, Image.SCALE_DEFAULT);
-	Image char1Pic = new ImageIcon("Pictures/charDisplay1.png").getImage().getScaledInstance(111, 150, Image.SCALE_DEFAULT);
-	Image char2Pic = new ImageIcon("Pictures/bCharDisplay.png").getImage().getScaledInstance(111, 150, Image.SCALE_DEFAULT);
-	Image char3Pic = new ImageIcon("Pictures/charDisplay3.png").getImage().getScaledInstance(111, 150, Image.SCALE_DEFAULT);
+	private Image battleBack = new ImageIcon("Pictures/map.jpg").getImage().getScaledInstance(800,650,Image.SCALE_SMOOTH);
+	private Image consumer = new ImageIcon("Pictures/player.png").getImage().getScaledInstance((int)pRect.getWidth(),(int)pRect.getHeight(),Image.SCALE_SMOOTH);
+	private Image backRect = new ImageIcon("Pictures/Back Rect.png").getImage().getScaledInstance(530,210,Image.SCALE_SMOOTH);
+	private Image damaged = new ImageIcon("Pictures/damaged.png").getImage().getScaledInstance((int)pRect.getWidth(),(int)pRect.getHeight(),Image.SCALE_SMOOTH);
+	private Image immune1 = new ImageIcon("Pictures/immune_0.png").getImage().getScaledInstance((int)pRect.getWidth(),(int)pRect.getHeight(),Image.SCALE_SMOOTH);
+	private Image redRect = new ImageIcon("Pictures/Red Border.png").getImage().getScaledInstance(200,80,Image.SCALE_SMOOTH);
+	private Image attackBackground = new ImageIcon("Pictures/Attack Background.png").getImage().getScaledInstance(480,170,Image.SCALE_SMOOTH);
+	private Image slider = new ImageIcon("Pictures/slider.png").getImage().getScaledInstance(15,170,Image.SCALE_SMOOTH);
+	private Image slimePic = new ImageIcon("Pictures/slime.png").getImage().getScaledInstance(150, 150, Image.SCALE_DEFAULT);
+	private Image goblinPic = new ImageIcon("Pictures/goblin.png").getImage().getScaledInstance(150, 150, Image.SCALE_DEFAULT);
+	private Image bossPic = new ImageIcon("Pictures/knight.png").getImage().getScaledInstance(150, 150, Image.SCALE_DEFAULT);
+	private Image char1Pic = new ImageIcon("Pictures/charDisplay1.png").getImage().getScaledInstance(111, 150, Image.SCALE_DEFAULT);
+	private Image char2Pic = new ImageIcon("Pictures/bCharDisplay.png").getImage().getScaledInstance(111, 150, Image.SCALE_DEFAULT);
+	private Image char3Pic = new ImageIcon("Pictures/charDisplay3.png").getImage().getScaledInstance(111, 150, Image.SCALE_DEFAULT);
+	private Image sword = new ImageIcon("Pictures/sword.png").getImage().getScaledInstance(40,40,Image.SCALE_SMOOTH);
+	private Image run = new ImageIcon("Pictures/running man.png").getImage().getScaledInstance(40,40,Image.SCALE_SMOOTH);
+	private Image itemBag = new ImageIcon("Pictures/items.png").getImage().getScaledInstance(40,40,Image.SCALE_SMOOTH);
 	//-------------------------------//
 
 	private boolean[] keys;
@@ -716,21 +720,21 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 	private double playerFrame;
 	private String screen, lastDirection = "down";
 	private Rectangle playerHitbox = new Rectangle(382,276,36,48);
-	private ArrayList<Rectangle> map1Rects = new ArrayList<Rectangle>();
+	private ArrayList<Rectangle> map1Rects = new ArrayList<Rectangle>(); //Collision rectangles for each map
 	private ArrayList<Rectangle> map2Rects = new ArrayList<Rectangle>();
 	private ArrayList<Rectangle> map3Rects = new ArrayList<Rectangle>();
-	private ArrayList<Rectangle> currentRects;
-	Image map1 = new ImageIcon("Maps/map1.png").getImage();
-	Image map2 = new ImageIcon("Maps/map2.png").getImage();
-	Image map3 = new ImageIcon("Maps/map3.png").getImage();
-	Image currentMap;
+	private ArrayList<Rectangle> currentRects; //Current array of rectangles on screen
+	private Image map1 = new ImageIcon("Maps/map1.png").getImage();
+	private Image map2 = new ImageIcon("Maps/map2.png").getImage();
+	private Image map3 = new ImageIcon("Maps/map3.png").getImage();
+	private Image currentMap; //Current map displayed
 
 	private int character; //keep track of which character is being used
 	private PlayerStats user; //the player's stats
 	private Inventory bag; //the player's inventory
 
 	//Player sprites
-	Image[] playerDown, playerUp, playerLeft, playerRight;
+	private Image[] playerDown, playerUp, playerLeft, playerRight;
 
 	private boolean back = false;
 	private boolean menuPause = false;
@@ -938,8 +942,6 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 
 		}
 
-		//OG COORDINATES: -908, -320 [any other coords used are for testing purposes only]
-		//testing entrance [map 1 to 2] : -1984, -104
 		this.mapx = mapx;
 		this.mapy = mapy;
 
@@ -975,11 +977,11 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 		int key = e.getKeyCode();
 		keys[e.getKeyCode()] = true;
 		keypress = true;
-		if (screen == "battle") {
-	        if(key == KeyEvent.VK_SPACE && battleScreen == "player attack"){
+		if (screen == "battle") { 
+	        if(key == KeyEvent.VK_SPACE && battleScreen == "player attack"){ //used to stop the slider
 	        	stop = true;
 	        }
-	        else if(key == KeyEvent.VK_RIGHT && battleScreen == "options"){
+	        else if(key == KeyEvent.VK_RIGHT && battleScreen == "options"){ //moves the option selected
 				if(option < 2){
 					option ++;
 				}
@@ -1000,7 +1002,8 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 			}
 
 			else if (battleScreen.equals("items")) {
-				if (keys[KeyEvent.VK_UP] && bSelect == false) {
+				//If user is selecting an item, UP and DOWN keys are used to navigate through items
+				if (keys[KeyEvent.VK_UP] && bSelect == false) { 
 					if (bPos == 0) {
 						bPos = userItems.size();
 					}
@@ -1018,7 +1021,9 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 						bPos++;
 					}
 				}
-
+				
+				//Once an item has been selected, LEFT and RIGHT keys are used to switch between
+				//if the player's confirmation choice (if they're sure they want to use the item)
 				else if (keys[KeyEvent.VK_LEFT] && bSelect) {
 					if (bChoice == false)
 						bChoice = true;
@@ -1029,24 +1034,24 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 						bChoice = false;
 				}
 
-				else if (keys[KeyEvent.VK_ENTER]) {
-					if (bPos == userItems.size()) {
+				else if (keys[KeyEvent.VK_ENTER]) { //ENTER is used for multiple things
+					if (bPos == userItems.size()) { //exiting items
 						bPos = 0;
 						battleScreen = "options";
 					}
 
-					else if (bSelect == false){
+					else if (bSelect == false){ //selecting an item
 						bSelect = true;
 					}
 
-					else if (bSelect) {
+					else if (bSelect) { //checking if player is sure they want to use item
 						if (bChoice == false) {
 							bSelect = false;
 						}
 
 						else if (bChoice) { //user uses an item
 							user.useItem(userItems.get(bPos));
-							if (userItems.get(bPos) == "Health Potion") {
+							if (userItems.get(bPos) == "Health Potion") { //removing item from bag
 								bag.removePot();
 							}
 							if (userItems.get(bPos) == "Large Health Potion") {
@@ -1063,12 +1068,14 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 							}
 
 							initItems();
+							//resetting all variables; preparing for enemy to attack
 							bSelect = false;
 							bPos = 0;
 							reverse = false;
 							stop = false;
 							delayTimer = 0;
 							linex = 170;
+							//switching to enemy attack
 							if(currentMap.equals(map1)){
 								battleScreen = "pipe attack";
 							}
@@ -1085,7 +1092,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 				}
 			}
 
-			else if(battleScreen.equals("options") && key == KeyEvent.VK_ENTER){
+			else if(battleScreen.equals("options") && key == KeyEvent.VK_ENTER){ //choosing an option
  				displayed = false;
 
  				if (option == 0){
@@ -1108,7 +1115,8 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 		playerFrame = 0; //Restarts frame if user stops pressing key and starts again
 	}
 
-	public void loadRects(int rectsNum) {
+	public void loadRects(int rectsNum) { //A method using for initializing all collision rectangles
+										  //for a certain map
 		//-------MAP 1 RECTS-------//
 		if (rectsNum == 1) {
 			map1Rects.clear();
@@ -1149,7 +1157,6 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 
 		//-------MAP 2 RECTS-------//
 
-		//Walls
 		else if (rectsNum == 2) {
 			map2Rects.clear();
 
@@ -1177,6 +1184,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 			map2Rects.add(new Rectangle(256+mapx, 352+mapy, 28, 256));
 			map2Rects.add(new Rectangle(288+mapx, 352+mapy, 32, 192));
 			map2Rects.add(new Rectangle(324+mapx, 352+mapy, 28, 256));
+			map2Rects.add(new Rectangle(1118+mapx, 500+mapy, 36, 48)); //Mayor NPC
 			map2Rects.add(new Rectangle(352+mapx, 352+mapy, 160, 256));
 			map2Rects.add(new Rectangle(512+mapx, 448+mapy, 32, 192));
 			map2Rects.add(new Rectangle(672+mapx, 480+mapy, 96, 128));
@@ -1192,7 +1200,6 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 			map2Rects.add(new Rectangle(1216+mapx, 512+mapy, 160, 32));
 			map2Rects.add(new Rectangle(1696+mapx, 544+mapy, 96, 128));
 			map2Rects.add(new Rectangle(1568+mapx, 800+mapy, 64, 64));
-
 		}
 
 		//-------MAP 3 RECTS-------//
@@ -1202,6 +1209,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 			map3Rects.add(new Rectangle(mapx, 576+mapy, 704, 32));
 			map3Rects.add(new Rectangle(704+mapx, 320+mapy, 16, 288));
 			map3Rects.add(new Rectangle(704+mapx, 288+mapy, 2240, 32));
+			
 			map3Rects.add(new Rectangle(2928+mapx, 320+mapy, 16, 576 ));
 			map3Rects.add(new Rectangle(2912+mapx, 896+mapy, 32, 32));
 			map3Rects.add(new Rectangle(2032+mapx, 912+mapy, 896, 16));
@@ -1209,6 +1217,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 			map3Rects.add(new Rectangle(2000+mapx, 944+mapy, 16, 608));
 			map3Rects.add(new Rectangle(1984+mapx, 1536+mapy, 32, 32));
 			map3Rects.add(new Rectangle(1472+mapx, 1552+mapy, 512, 16));
+			map3Rects.add(new Rectangle(1712+mapx, 1500+mapy, 36, 48)); //Boss NPC
 			map3Rects.add(new Rectangle(1440+mapx, 1536+mapy, 32, 32));
 			map3Rects.add(new Rectangle(1440+mapx, 560+mapy, 16, 992));
 			map3Rects.add(new Rectangle(1440+mapx, 560+mapy, 1088, 16));
@@ -1243,8 +1252,8 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 
 	public boolean checkCollision(String dir, ArrayList<Rectangle> rectList) {
 		boolean flag = false;
-		for (Rectangle r : rectList) {
-			if (dir == "l")
+		for (Rectangle r : rectList) { //When user moves (map moves), rectangles have to move with the map
+			if (dir == "l") //Moving the rectangles depending on direction that player wants to go
 				r.translate(4,0);
 			else if (dir == "r")
 				r.translate(-4,0);
@@ -1252,7 +1261,9 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 				r.translate(0,4);
 			else if (dir == "d")
 				r.translate(0,-4);
-			if (playerHitbox.intersects(r)) {
+			//Once the rectangles are moved, if the player is intersecting with where the rectangle's
+			//new position is, then move the rectangles back (since the map doesn't move either)
+			if (playerHitbox.intersects(r)) { 
 				for (Rectangle s : rectList) {
 					if (dir == "l")
 						s.translate(-4,0);
@@ -1269,18 +1280,19 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 		return flag;
 	}
 
-	public void move() {
+	public void move() { //responsible for player moving
 		if (screen == "moving") {
 			requestFocus();
 			if (keys[KeyEvent.VK_LEFT]) {
 				lastDirection = "left";
-				if (checkCollision("l",currentRects) == false) {
-					playerFrame += 0.2;
-					if (playerFrame > 3.8)
+				if (checkCollision("l",currentRects) == false) { //if player doesn't collide with a rect
+					playerFrame += 0.2; //switching animations (slowly)
+					if (playerFrame > 3.8) 
 						playerFrame = 0;
-					mapx += 4;
-					if (currentMap.equals(map1) || currentMap.equals(map3))
-						steps++;
+					mapx += 4; //move the map (moving the character)
+					if (currentMap.equals(map1) || currentMap.equals(map3)) //if the player is in an area
+																			//where there are enemies
+						steps++; //every 150 steps, user initiates a battle
 				}
 			}
 
@@ -1373,9 +1385,9 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 			}
 
 			//Engaging in Battle
-			if (steps >= 100) {
+			if (steps >= 150) {
 				if (currentMap.equals(map1)) {
-					steps = 0;
+					steps = 0; //resetting steps
 					screen = "battle";
 				}
 				else if (currentMap.equals(map3)) {
@@ -1386,29 +1398,42 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 
 			//Accessing the Shop
 			if (currentMap.equals(map2) && mapx == 96 && mapy == -268) {
-				for (Rectangle r : map2Rects) {
+/*				for (Rectangle r : map2Rects) {
 					r.translate(0, -64);
-				}
+				}*/
 				screen = "shop";
 			}
 
 			//Engaging in Dialogue
 			if (currentMap.equals(map2) && keys[KeyEvent.VK_ENTER] && keypress) {
 				if ((mapy == -508 && mapx <= -1020 && mapx >= -1036) || (mapy == -412 && mapx <= -1020 && mapx >= -1036) ||
-					 (mapx == -1064 && mapy >= -472 && mapy <= -448) || (mapx == -988 && mapy >= -472 && mapy <= -448)) {
-					npc = 1;
+					 (mapx == -1064 && mapy >= -472 && mapy <= -448) || (mapx == -988 && mapy >= -472 && mapy <= -448)) { //villager
+					npc = 1; //setting which NPC to talk to
+					screen = "dialogue";
+				}
+				else if ((mapy == -272 && mapx >= -744 && mapx <= -732)) { //mayor
+					npc = 2;
+					screen = "dialogue";
+				}
+			}
+			if (currentMap.equals(map3) && keys[KeyEvent.VK_ENTER] && keypress) { //talking with final boss
+				if ((mapy == -1176 && mapx <= -1316 && mapx >= -1344) || (mapx == -1368 && mapy <= -1208 && mapy >= -1228) ||
+						(mapx == -1292 && mapy <= -1208 && mapy <= -1228)) {
+					npc = 3;
+					bossBattle = true; 
 					screen = "dialogue";
 				}
 			}
 
-			keypress = false;
+			keypress = false; //Always resetting keypress so that when user presses key, it only
+							  //iterates once.
 		}
 	}
 
-	public void shopControls() { //starting value of boxy = 75
+	public void shopControls() { //keyboard controls for shop
 		if (screen == "shop") {
 			requestFocus();
-			if (keys[KeyEvent.VK_UP] && keypress && itemSelect == false && shop) {
+			if (keys[KeyEvent.VK_UP] && keypress && itemSelect == false && shop) { //Navigating through shop
 				if (boxy == 55) {
 					itemPos = 5;
 					boxy = 455;
@@ -1428,7 +1453,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 					itemPos++;
 				}
 			}
-			else if (keys[KeyEvent.VK_LEFT] && keypress && itemSelect && shop) {
+			else if (keys[KeyEvent.VK_LEFT] && keypress && itemSelect && shop) { //Confirming if player wants to buy
 				if (choice == false)
 					choice = true;
 			}
@@ -1437,21 +1462,21 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 					choice = false;
 			}
 			else if (keys[KeyEvent.VK_ENTER] && keypress) {
-				if (shop) {
-					if (itemPos == 5) {
+				if (shop) { //if the player is shopping (no intro screen)
+					if (itemPos == 5) { //exiting shop
 						mapx = 96;
 						mapy = -332;
 						screen = "moving";
 						return;
 					}
 					else if (itemSelect) {
-						if (notEnoughGold) {
-							notEnoughGold = false;
+						if (notEnoughGold) { //the panel that tells the user if they can't buy the item
+							notEnoughGold = false; //when they press enter, they can shop again
 							itemSelect = false;
 						}
 						else if (choice) {
-							if (bag.getGold() >= goldCosts[itemPos]) {
-								if (itemPos == 0) {
+							if (bag.getGold() >= goldCosts[itemPos]) { //If the user has enough gold
+								if (itemPos == 0) { //Adding items to player's bag
 									bag.addItem("pot");
 								}
 								else if (itemPos == 1) {
@@ -1466,63 +1491,63 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 								else if (itemPos == 4) {
 									bag.addItem("ironPot");
 								}
-								bag.removeGold(goldCosts[itemPos]);
+								bag.removeGold(goldCosts[itemPos]); //Taking gold out
 								itemSelect = false;
 							}
-							else {
+							else { //User doesn't have enough gold? Barricade them from buying item.
 								notEnoughGold = true;
 							}
 						}
-						else if (choice == false) {
+						else if (choice == false) { //Player says they don't want to buy item
 							itemSelect = false;
 						}
 					}
-					else if (itemSelect == false) {
+					else if (itemSelect == false) { //Player selecting an item
 						itemSelect = true;
 					}
 				}
-				if (shop == false) {
-					shop = true;
+				if (shop == false) { //if its the intro screen
+					shop = true; //switch it to the shop
 				}
 			}
 			keypress = false;
 		}
 	}
 	
-	//-------|Enemy Attacks|-------//
-    public void displayRectangle(Rectangle r, Graphics g){
+	//-------|Stuff Related To Displaying Battle|-------//
+    public void displayRectangle(Rectangle r, Graphics g){ //takes rectangle paremeter and draws the rectangle according to the colour
 		g.setColor(Color.white);
 		g.fillRect((int)(r.getX()),(int)(r.getY()),(int)(r.getWidth()),(int)(r.getHeight()));
 
     }
-    public void displayRectangleBL(Rectangle r, Graphics g){
+    public void displayRectangleBL(Rectangle r, Graphics g){ //black version of displayRectangle
 		g.setColor(Color.black);
 		g.fillRect((int)(r.getX()),(int)(r.getY()),(int)(r.getWidth()),(int)(r.getHeight()));
     }
 
-    public void displayRectangleR(Rectangle r, Graphics g){
+    public void displayRectangleR(Rectangle r, Graphics g){ //red version of displayRectangle
 		g.setColor(Color.red);
 		g.fillRect((int)(r.getX()),(int)(r.getY()),(int)(r.getWidth()),(int)(r.getHeight()));
     }
 
-    public void endScreen(Graphics g){
+    public void endScreen(Graphics g){ //end screen when player health <= 0
     	g.setColor(Color.black);
     	g.fillRect(0,0,800,600);
     	g.setColor(Color.white);
     	g.setFont(new Font("TimesRoman",Font.PLAIN,64));
-    	g.drawString("YOU LOSE",230,150);
+    	g.drawString("YOU LOSE",230,150); //blits the text you lose to the screen
     	this.add(gameOverBut);
     }
 
-	public void displayHealth(Graphics g, Enemy goon){
+	public void displayHealth(Graphics g, Enemy goon){ //displays the health bars of both the enemy and player
 		//Displaying enemy sprite
-		if (goon.getType().equals("slime")) {
+		if (goon.getType().equals("Slime")) {
 			g.drawImage(slimePic, 515, 140, this);
 		}
-		else if (goon.getType().equals("goblin")) {
+		else if (goon.getType().equals("Goblin")) {
 			g.drawImage(goblinPic, 515, 140, this);
 		}
-		else if (goon.getType().equals("boss")) {
+		else if (goon.getType().equals("Boss")) {
 			g.drawImage(bossPic, 515, 140, this);
 		}
 
@@ -1537,18 +1562,18 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 			g.drawImage(char3Pic, 155, 120, this);
 		}
 		
-		g.setColor(Color.BLACK);
+		g.setColor(Color.BLACK); //outside border of the health bars
 		g.fillRect(155,275,110,40);
 		g.fillRect(535,275,110,40);
 		
-		g.setColor(Color.GREEN);
+		g.setColor(Color.GREEN); //display of the health they have remaining
 		g.fillRect(160,280,100,30);
 		g.fillRect(540,280,100,30);
 		
-		g.setColor(Color.BLACK);
+		g.setColor(Color.BLACK); //display the damage that the user has taken using a rect that gets bigger from right to left
 		g.fillRect(260-Math.round(100-(100*(float)user.getHp()/user.getMaxHp())),280,Math.round(100-(100*(float)user.getHp()/user.getMaxHp())),30);
 		g.fillRect(640-Math.round(100-(100*(float)goon.getHealth()/goon.getMaxHealth())),280,Math.round(100-(100*(float)goon.getHealth()/goon.getMaxHealth())),30);
-		g.setFont(new Font("Comic Sans ms",Font.BOLD,25));
+		g.setFont(new Font("Comic Sans ms",Font.BOLD,25)); //displays the hp of the player and enemy through text
 		g.drawString(user.getName(), 125,75);
 		g.drawString(goon.getType(), 520,75);
 		String playerMaxHealth = Integer.toString(user.getMaxHp());
@@ -1560,49 +1585,47 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 	}
 
     public void pipeAttack(Graphics g){
-    	if(!displayed){
-    		rects.clear();
-    		pRect.setLocation(300, 410);
-			for(int i = 600; i <= 1800; i+=60){ //1. starting pos for rects 2. amount of rects 3. space between rects
-				int leftY = rng.nextInt((int) baseRect.getHeight());
-				while (leftY < 30 || leftY > 120){ //change bounds accordingly
+    	if(!displayed){ //ensure these varibles are declared once
+    		rects.clear(); //clears the array just in case
+    		pRect.setLocation(300, 410); //resets the location of the player
+			for(int i = 600; i <= 1800; i+=60){ //1. starting pos for rects 2. amount of rects created 3. space between rects
+				int leftY = rng.nextInt((int) baseRect.getHeight()); // randomly determine where the space of the pipe will be
+				while (leftY < 30 || leftY > 120){ // bound of how low/high the pipe is, if its too small/tall, reset the value
 					leftY = rng.nextInt((int) baseRect.getHeight());
 				}
 				Rectangle topRect = new Rectangle(i,(int) baseRect.getY(),10,leftY);
-				Rectangle bottomRect = new Rectangle(i,(int) baseRect.getY()+50+leftY,10,((int) baseRect.getHeight()-50)-leftY); //y value - baseRectY - leftY = space in between rects. BaseRectWidth (height?) - space - leftY
+				Rectangle bottomRect = new Rectangle(i,(int) baseRect.getY()+50+leftY,10,((int) baseRect.getHeight()-50)-leftY); //declares the top and bottom rects with a space between them
 				rects.add(topRect);
 				rects.add(bottomRect);
 			}
 			displayed = true;
     	}
     	
-    	for(int i = rects.size()-1; i>=0; i--){
+    	for(int i = rects.size()-1; i>=0; i--){ //loops through the rects list and displays them
 
     		Rectangle r = rects.get(i);
-    		if(r.getX() < (int) baseRect.getX() + (int) baseRect.getWidth()){
+    		if(r.getX() < (int) baseRect.getX() + (int) baseRect.getWidth()){ //if the x value of the rect is inside the base rectangle
     			displayRectangleBL(r,g);
     		}
     		r.translate(-2,0);
-    		if(r.getX() < (int) baseRect.getX()){
+    		if(r.getX() < (int) baseRect.getX()){ //if its out of the rectangle, delete it
 				rects.remove(r);
-				//r.setLocation(760,(int)r.getY()); //i at finish - (i at start - x) + 40
-				//rects.add(r);
 			}
     	}
     }
 
-    public void goblinAttack(Graphics g){
-    	if(!displayed){
+    public void goblinAttack(Graphics g){ // same concept as the pipe attack, except with tighter spaces and less space between pipes 
+    	if(!displayed){ 
     		rects.clear();
     		pRect.setLocation(300,410);
-			for(int i = 600; i <= 1800; i+=60){ //1. starting pos for rects 2. amount of rects 3. space between rects
+			for(int i = 600; i <= 1800; i+=50){
 				int leftY = rng.nextInt((int) baseRect.getHeight());
-				while (leftY < 30 || leftY > 120){ //change bounds accordingly
+				while (leftY < 30 || leftY > 120){
 					leftY = rng.nextInt((int) baseRect.getHeight());
 				}
 
 				Rectangle topRect = new Rectangle(i,(int) baseRect.getY(),10,leftY);
-				Rectangle bottomRect = new Rectangle(i,(int) baseRect.getY()+30+leftY,10,((int) baseRect.getHeight()-30)-leftY); //y value - baseRectY - leftY = space in between rects. BaseRectWidth (height?) - space - leftY
+				Rectangle bottomRect = new Rectangle(i,(int) baseRect.getY()+30+leftY,10,((int) baseRect.getHeight()-30)-leftY);
 				rects.add(topRect);
 				rects.add(bottomRect);
 			}
@@ -1623,16 +1646,16 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
     }
 
    	public void laserAttack(Graphics g){
-    	if(!displayed){
-    		pRect.setLocation(300, 410);
-    		fire = rng.nextInt(100) + 300; //change timer after testing
-	    	int newX = rng.nextInt((int) baseRect.getWidth());
-	    	int leftY = rng.nextInt((int) baseRect.getHeight());
+    	if(!displayed){ // making sure these variables are only declared once
+    		pRect.setLocation(300, 410); //reset location of player
+    		fire = rng.nextInt(100) + 300; //time before the the lasers fire
+	    	int newX = rng.nextInt((int) baseRect.getWidth()); //randomly place the rects that fire the lasers
+	    	int leftY = rng.nextInt((int) baseRect.getHeight()); 
 	    	int rightY = rng.nextInt((int) baseRect.getHeight());
-	    	while(Math.abs(leftY - rightY) < 20){ //player height + 10
+	    	while(Math.abs(leftY - rightY) < 70){ //if the rects arent at least 70 pikels apart
 	    		rightY = rng.nextInt((int) baseRect.getHeight());
 	    	}
-	    	topRect = new Rectangle ((int) baseRect.getX() + newX, (int) baseRect.getY() - 60 ,30,30);
+	    	topRect = new Rectangle ((int) baseRect.getX() + newX, (int) baseRect.getY() - 60 ,30,30); // declare all the rects that are used in the attack
 	    	attackRect = new Rectangle((int) topRect.getX() + 5,(int) topRect.getY() + (int) topRect.getHeight(),(int) topRect.getWidth() - 10,600);
 	    	leftRect = new Rectangle ((int) baseRect.getX() - 60, (int) baseRect.getY() + leftY ,30,30);
 	    	leftattackRect = new Rectangle((int) leftRect.getX() + (int) leftRect.getWidth(),(int) leftRect.getY() + 5,800,(int) leftRect.getHeight() - 10);
@@ -1640,13 +1663,12 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 	    	rightattackRect = new Rectangle(0,(int) rightRect.getY() + 5,800 - (800 - (int) rightRect.getX()),(int) rightRect.getHeight() - 10);
 	    	displayed = true;
     	}
-
-		displayRectangle(topRect,g);
+		displayRectangle(topRect,g); //always display the moving rects
 		displayRectangle(leftRect,g);
 		displayRectangle(rightRect,g);
 		
 		if((int) attackRect.getX() + 10 > (int) baseRect.getX() + (int) baseRect.getWidth() - (int) attackRect.getWidth()){
-			directionX = -2; //rate which its moving
+			directionX = -2; //rate which its moving which changes direction depending on what part of the base rect it hit
 		}
 		
 		else if((int) attackRect.getX() - 10 < (int) baseRect.getX()){
@@ -1654,7 +1676,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 		}
 		
 		if((int) leftattackRect.getY() + 10 > (int) baseRect.getY() + (int) baseRect.getHeight() - (int) leftattackRect.getHeight()){
-			directionL = -2; //rate which its moving
+			directionL = -2;
 		}
 		
 		else if((int) leftattackRect.getY() - 10 < (int) baseRect.getY()){
@@ -1662,7 +1684,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 		}
 		
 		if((int) rightattackRect.getY() + 10 > (int) baseRect.getY() + (int) baseRect.getHeight() - (int) rightattackRect.getHeight()){
-			directionR = -2; //rate which its moving
+			directionR = -2; 
 		}
 
 		else if((int) rightattackRect.getY() - 10 < (int) baseRect.getY()){
@@ -1676,14 +1698,14 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 			 attackTimer >= fire + 900 && attackTimer < fire + 1050 ||
 			 attackTimer >= fire + 1200 && attackTimer < fire + 1350 ||
 			 attackTimer >= fire + 1500 && attackTimer < fire +  1650 ||
-			 attackTimer >= fire + 1800 && attackTimer < fire +  1950)){
+			 attackTimer >= fire + 1800 && attackTimer < fire +  1950)){ //if statement where checks when the actual laser should fire
 			displayRectangleBL(attackRect,g);
 			displayRectangleBL(leftattackRect,g);
 			displayRectangleBL(rightattackRect,g);
 			displaying = true;
 		}
 
-		else{
+		else{ //while its not firing, moves the rects
 			leftRect.translate(0,directionL);
 			leftattackRect.translate(0,directionL);
 			rightRect.translate(0,directionR);
@@ -1691,42 +1713,45 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 			displaying = false;
 		}
 
-		topRect.translate(directionX,0);
+		topRect.translate(directionX,0); //keeps the top box moving when the attack commences
 		attackRect.translate(directionX,0);
 		attackTimer++;
     }
 
     public void options(Graphics g){
-    	if(!displayed){
+    	if(!displayed){ //resets the choice when its first declared
     		option = 0;
     		displayed = true;
     	}
 
-    	for(int i = 50; i <= 550; i += 250){
-			g.setColor(Color.black);
+    	for(int i = 50; i <= 550; i += 250){ //draws the option rects
+			g.setColor(Color.black); //draws the border rect
 			g.fillRect(i-15,445,200,80);
 			g.setColor(Color.white);
 			g.fillRect(i-5,453,180,64);
 		}
 
 		g.setColor(Color.black);
-		g.drawImage(redRect,(50+option*250)-15,445,this);
-		g.setFont(new Font("TimesRoman",Font.PLAIN,28));
+		g.drawImage(redRect,(50+option*250)-15,445,this); //draws selecter
+		g.setFont(new Font("TimesRoman",Font.PLAIN,28)); //writes the words for the options and the pictures
 		g.drawString("Attack", 50,485);
 		g.drawString("Items",300,485);
 		g.drawString("Run",550,485);
+		g.drawImage(sword,150,465,this);
+		g.drawImage(itemBag,400,465,this);
+		g.drawImage(run,640,460,this);
     }
 
-    public boolean collision(ArrayList<Rectangle> ar){
+    public boolean collision(ArrayList<Rectangle> ar){ //checking if the player collides with anyone of the rects in the pipe/goblin attack
     	for (Rectangle newR: ar){
     		if(pRect.intersects(newR)){
-    			if (pRect.getX() + pRect.getWidth() < newR.getX() + newR.getWidth() / 2) {
-    				pRect.setLocation((int)newR.getX()-(int)pRect.getWidth(),(int)pRect.getY());
+    			if (pRect.getX() + pRect.getWidth() < newR.getX() + newR.getWidth() / 2) { //if it hits the rectangle on the left side
+    				pRect.setLocation((int)newR.getX()-(int)pRect.getWidth(),(int)pRect.getY()); //reset location of the player to one piksel ago
     			}
-    			else if (newR.getY() == 360 && pRect.getY() > newR.getY()) {
+    			else if (newR.getY() == 360 && pRect.getY() > newR.getY()) { //if it hits the rectangle on top
     				pRect.setLocation((int)pRect.getX(),(int)newR.getY() + (int)newR.getHeight());
     			}
-    			else if (pRect.getY() < newR.getY()) {
+    			else if (pRect.getY() < newR.getY()) { //if it hits the rectangle on bottom
     				pRect.setLocation((int)pRect.getX(),(int)newR.getY()-(int)pRect.getHeight());
     			}
 
@@ -1735,11 +1760,11 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
     	}
     	return false;
     }
-	public void inside(){
-		if((int)baseRect.getX() >= (int)pRect.getX()){
-			pRect.setLocation((int)baseRect.getX(),(int)pRect.getY());
+	public void inside(){ //ensures that the player cant go outside the base rectangle
+		if((int)baseRect.getX() >= (int)pRect.getX()){ //checks all sides to keep him inside the rect
+			pRect.setLocation((int)baseRect.getX(),(int)pRect.getY()); //if he goes out, reset loction to where it was one piksel ago
 		}
-		else if((int)pRect.getX() >= (int)baseRect.getX() + (int)baseRect.getWidth() - (int)pRect.getWidth()){ //rect x + width - player width
+		else if((int)pRect.getX() >= (int)baseRect.getX() + (int)baseRect.getWidth() - (int)pRect.getWidth()){
 			pRect.setLocation((int)baseRect.getX() + (int)baseRect.getWidth() - (int)pRect.getWidth(),(int)pRect.getY());
 		}
 		if((int)baseRect.getY() >= (int)pRect.getY()){
@@ -1750,10 +1775,10 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 		}
 	}
 
-	public int attack(Graphics g){
+	public int attack(Graphics g){ //returns that damage that the player deals
 		damage = 0;
-    	g.drawImage(attackBackground,160,360,this);
-		if(linex > 625){
+    	g.drawImage(attackBackground,160,360,this); 
+		if(linex > 625){ //changes direction of the slider
 			reverse = true;
 		}
 
@@ -1761,7 +1786,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 			reverse = false;
 		}
 
-		if(reverse && !stop){
+		if(reverse && !stop){ //if the slider hasnt stopped yet
 			linex -= 15;
 		}
 
@@ -1769,16 +1794,16 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 			linex += 15;
 		}
 
-		else if(stop){
+		else if(stop){ //calculate damage relitive to where the slider is on the background
 			damage = Math.round((float) (400 - Math.abs(400 - linex))/400 * user.getAtk());
-			delayTimer++;
+			delayTimer++; //delay so the player can see where he landed on the background
 		}
 
 		g.drawImage(slider,linex,360,this);
-		return damage + atkModifier;
+		return damage + atkModifier; //return the damage + attack boost if you used the item
 	}
 
-	public void battleControls() {
+	public void battleControls() { //moving the player left and right && up and down (in battle)
 		requestFocus();
 		if(keys[KeyEvent.VK_RIGHT] ){
 			pRect.translate(2,0);
@@ -1794,11 +1819,13 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 		}
 	}
 
-	public void displayPlayer(Graphics g) {
+	public void displayPlayer(Graphics g) { //Switching player animations and displaying player
 		requestFocus();
 		if (screen == "moving") {
 			if (keys[KeyEvent.VK_LEFT]) {
 				g.drawImage(playerLeft[(int) Math.floor(playerFrame)], 382, 276, this);
+				//playerFrame is constantly increasing (and resetting) as user moves
+				//so it flips through frames in the image lists
 			}
 			else if (keys[KeyEvent.VK_RIGHT]) {
 				g.drawImage(playerRight[(int) Math.floor(playerFrame)], 382, 276, this);
@@ -1810,7 +1837,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 				g.drawImage(playerDown[(int) Math.floor(playerFrame)], 382, 276, this);
 			}
 			else { //When player is not moving
-				if (lastDirection.equals("down"))
+				if (lastDirection.equals("down")) //lastDirection = direction that player faced last
 					g.drawImage(playerDown[0], 382, 276, this);
 				else if (lastDirection.equals("up"))
 					g.drawImage(playerUp[0], 382, 276, this);
@@ -1833,33 +1860,37 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 	}
 
 	public void drawMap(Graphics g) {
+		System.out.println(mapx + ", " + mapy);
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, getWidth(), getHeight());
 		g.drawImage(currentMap, mapx, mapy, this);
 		g.setColor(Color.RED);
 
-		//Drawing NPC
+		//Drawing NPCs
 		if (currentMap.equals(map2)) {
 			g.drawImage(npc1, 1408+mapx, 736+mapy, this);
+			g.drawImage(npc2, 1118+mapx, 500+mapy, this);
 		}
-
+		if (currentMap.equals(map3)) {
+			g.drawImage(npc3, 1712+mapx, 1500+mapy, this);
+		}
 		//Drawing collision rectangles (for experimental purposes only)
-		/*
-		for (Rectangle r : currentRects) {
+		
+/*		for (Rectangle r : currentRects) {
 			g.fillRect((int)r.getX(), (int)r.getY(), (int)r.getWidth(), (int)r.getHeight());
-		}
-		*/
+		}*/
+		
 	}
 
-	public void drawShop(Graphics g) {
-		if (shop == false) {
+	public void drawShop(Graphics g) { //Displaying graphics for shop
+		if (shop == false) { //intro screen
 			g.drawImage(shopBack, 0, 0, this);
 			g.drawImage(longPanel, 15, 355, this);
 			g.setFont(bigShopFont);
 			g.drawString("Welcome to the shop!", 30, 400);
 			g.drawString("Here, you can purchase potions to aid you in battles.", 30, 470);
 		}
-		if (shop == true) {
+		if (shop == true) { //player navigating through items
 			g.drawImage(shopBack, 0, 0, this);
 			g.drawImage(panel, 15, 355, this);
 			g.drawImage(panel2, 485, 10, this);
@@ -1893,11 +1924,12 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 				g.drawImage(iconPanel, 380, 250, this);
 				g.drawImage(shopExit, 385, 252, this);
 			}
-			//////////////////
+
 			if (itemSelect == false) {
 				g.drawString("What would you like to purchase?", 30, 400);
 			}
-			if (itemSelect) {
+			if (itemSelect) { //Once player has selected an item, the item description is shown
+							  //and player is asked to confirm their purchase
 				if (itemPos == 0) {
 					g.drawString("A potion that restores 5 HP.", 30, 400);
 				}
@@ -1926,15 +1958,15 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 					g.drawImage(arrow, 200, 498, this);
 
 			}
-			if (notEnoughGold) {
+			if (notEnoughGold) { //Player doesn't have enough gold
 				g.drawImage(panel, 15, 355, this);
 				g.drawString("Sorry, you don't have enough gold to buy", 30, 400);
 				g.drawString("that.", 30, 430);
 			}
 			g.setColor(Color.RED);
-			g.drawRect(495, boxy, 280, 40);
+			g.drawRect(495, boxy, 280, 40); //drawing the navigating box
 			g.setColor(Color.YELLOW);
-			g.drawString("Gold: "+bag.getGold(), 15, 340);
+			g.drawString("Gold: "+bag.getGold(), 15, 340); //showing player's gold
 		}
 	}
 
@@ -1948,7 +1980,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 		}
 	}
 
-	public void storyDialogue(Graphics g) { //displays dialogue of the story
+	public void storyDialogue(Graphics g) { //displays dialogue of the story (at the beginning)
 		if (screen == "story") {
 			g.drawImage(storyPanel, 0, 0, this);
 			g.setFont(dialogueFont);
@@ -1964,24 +1996,28 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 		}
 	}
 
-	public void dialogueControls() {
+	public void dialogueControls() { //keyboard controls for dialogue (just pressing ENTER)
 		if (screen == "dialogue") {
 			requestFocus();
-			if (keys[KeyEvent.VK_ENTER] && keypress && firstPanel) {
+			if (keys[KeyEvent.VK_ENTER] && keypress && firstPanel) { //switching to second panel
 				firstPanel = false;
 				secondPanel = true;
 			}
 			else if (keys[KeyEvent.VK_ENTER] && keypress && secondPanel) {
 				firstPanel = true;
 				secondPanel = false;
-				screen = "moving";
+				if (bossBattle) { //if they were talking to the boss
+					screen = "battle"; //battling the boss
+				}
+				else { //if they were talking to the friendly NPCs
+					screen = "moving";
+				}
 			}
-
 			keypress = false;
 		}
 	}
 
-	public void drawDialogue(Graphics g) {
+	public void drawDialogue(Graphics g) { //Graphics for dialogue
 		if (screen == "dialogue") {
 			g.drawImage(dialoguePanel, 20, 350, this);
 			g.setFont(dialogueFont);
@@ -1999,19 +2035,41 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 					g.drawString("something to do with those hooded men that come", 170, 450);
 					g.drawString("here every so often, I'm sure it is!", 170, 490);
 				}
-//				else if (thirdPanel) {
-//
-//				}
+
 			}
-//			if (npc == 2) {
-//
-//			}
+			if (npc == 2) {
+				g.drawImage(npc2head, 45, 400, this);
+				if (firstPanel) {
+					g.drawString("Mayor: Oh thank goodness you're here! All of", 170, 410);
+					g.drawString("these disappearances are uncontrollable and", 170, 450);
+					g.drawString("we've needed someone to finally stop them.", 170, 490);
+				}
+				if (secondPanel) {
+					g.drawString("My wife told me she saw the hooded figures", 170, 410);
+					g.drawString("leave through the east exit into the forest.", 170, 450);
+					g.drawString("I'll be forever in your debt if you help us!", 170, 490);
+				}
+			}
+			if (npc == 3) {
+				g.drawImage(npc3head, 45, 400, this);
+				if (firstPanel) {
+					g.drawString("Boss Griffin: You eliminated quite a bit of", 170, 410);
+					g.drawString("my goons I see. Whatever, you'll be no match", 170, 450);
+					g.drawString("for me. My fellow goons have acquired enough", 170, 490);
+				}
+				if (secondPanel) {
+					g.drawString("blood from all of those villagers to make me", 170, 410);
+					g.drawString("the strongest human ever. Now face the", 170, 450);
+					g.drawString("consequences of not minding your own business!", 170, 490);
+				}
+			}
 		}
 	}
 
-	public void initItems() {
-		userItems.clear();
-		itemNums.clear();
+	public void initItems() { //This method is used to reset displayed items in inventory / items (battle)
+		userItems.clear(); //userItems only gets one instance of an item that a player has, so that
+						   //items are only blitted once
+		itemNums.clear();  //itemNums are used for blitting how much of each item the player has
 
 		if (bag.getPot() != 0) {
 			userItems.add("Health Potion");
@@ -2034,29 +2092,29 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 			itemNums.add(bag.getIronPot());
 		}
 	}
-	public void inventoryControls() {
+	public void inventoryControls() { //keyboard controls for inventory
 		if (screen == "inventory") {
 			requestFocus();
 			if (keys[KeyEvent.VK_ENTER] && keypress) {
-				if (invPos == userItems.size()) {
+				if (invPos == userItems.size()) { //return to game
 					screen = "moving";
 					this.menuPause = true;
 					return;
 				}
 				else if (invSelect == false){
 					if (cantUse == false && (userItems.get(invPos) == "Iron Potion" || userItems.get(invPos) == "Wrath Potion")) {
-						cantUse = true;
+						cantUse = true; //Players cant use Iron Potion / Wrath Potion outside of battle
 					}
-					else if (cantUse) {
+					else if (cantUse) { //removing "cant use item" panel
 						cantUse = false;
 					}
 					else {
-						invSelect = true;
+						invSelect = true; //user selects an item
 					}
 
 				}
 				else if (invSelect) {
-					if (invChoice == false) {
+					if (invChoice == false) { //user decides they dont want to use the item
 						invSelect = false;
 					}
 					else if (invChoice) { //user uses an item
@@ -2075,7 +2133,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 					}
 				}
 			}
-			else if (keys[KeyEvent.VK_UP] && keypress && cantUse == false) {
+			else if (keys[KeyEvent.VK_UP] && keypress && cantUse == false) { //navigating through items
 				if (invPos == 0) {
 					invPos = userItems.size();
 				}
@@ -2091,7 +2149,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 					invPos++;
 				}
 			}
-			else if (keys[KeyEvent.VK_LEFT] && keypress && invSelect) {
+			else if (keys[KeyEvent.VK_LEFT] && keypress && invSelect) { //confirming if user wants to use item
 				if (invChoice == false)
 					invChoice = true;
 			}
@@ -2103,7 +2161,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 		keypress = false;
 	}
 
-	public void drawInventory(Graphics g) {
+	public void drawInventory(Graphics g) { //Graphics for inventory
 		if (screen == "inventory") {
 			g.setColor(new Color(255,243,199));
 			g.fillRect(0,0,800,600);
@@ -2195,10 +2253,12 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 			}
 			g.setColor(Color.RED);
 			g.drawRect(495, (invPos*80)+45, 275, 50);
+			g.setColor(Color.BLACK);
+			g.drawString("Gold: "+bag.getGold(), 15, 340);
 		}
 	}
 
-	public void drawBattleInv(Graphics g) {
+	public void drawBattleInv(Graphics g) { //Graphics for items (in battle); very similar to Inventory
 		g.setColor(new Color(255,243,199));
 		g.fillRect(0,0,800,600);
 		g.drawImage(scrollPanel1, 15, 355, this);
@@ -2282,69 +2342,66 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 		g.drawRect(495, (bPos*80)+45, 275, 50);
 	}
 
-	public void drawBattle(Graphics g, Enemy goon) {
-		if (screen == "battle") {
-			System.out.println(user.getAtkBoost() + " " + user.getDefBoost());
-			if (user.getAtkBoost()) {
+	public void battleComponent(Graphics g, Enemy goon) {
+		if (screen == "battle") { //if you are battling
+			if (user.getAtkBoost()) { //if you have an attackboost
 				atkModifier = 5;
 			}
-
 			if (user.getDefBoost()) {
 				defModifier = 1;
 			}
-
 	    	g.drawImage(battleBack,0,0,this);
 
 	    	//Enemy Battle Stuff
-	 		if(battleScreen.equals("pipe attack") || battleScreen.equals("laser attack") || battleScreen.equals("goblin attack")){
-		    	g.setColor(dgreen);
+	 		if(battleScreen.equals("pipe attack") || battleScreen.equals("laser attack") || battleScreen.equals("goblin attack")){ //if you are on an enemy attack
+		    	g.setColor(dgreen); 
 		    	g.fillRect(135,347,510,196);
 		    	g.drawImage(backRect,125,340,this);
 		    	g.setColor(Color.white);
 		    	g.fillRect(150,360,480,170);
-				if(user.getHp()<= 0){
+				if(user.getHp()<= 0){ //if you die
 					battleScreen = "end screen";
 				}
 				else{
-
-					if(user.getHp() < user.getMaxHp()/2){
+					if(user.getHp() < user.getMaxHp()/2){ //if you are below half health, change sprite
 						g.drawImage(damaged,(int)pRect.getX(),(int)pRect.getY(),this);
 					}
 					else{
 						g.drawImage(consumer,(int)pRect.getX(),(int)pRect.getY(),this);
 					}
-					if(immune){
+					if(immune){ //if the player gets hit and becomes immune
 						g.drawImage(immune1,(int)pRect.getX(),(int)pRect.getY(),this);
 						timer++;
 					}
 	 			}
-	 			if(timer > 100){
+	 			if(timer > 100){ //after 1 sec of being immune, you are no longer immune
 					immune = false;
 				}
 			}
-			inside();
-			displayHealth(g, goon);
+			inside(); //calls the method to keep the player inside
+			displayHealth(g, goon); //draws the health bars
 
-			if (battleScreen.equals("end screen")) {
+			if (battleScreen.equals("end screen")) { //if you lost
 				endScreen(g);
 			}
 
-			else if (battleScreen.equals("options")) {
+			else if (battleScreen.equals("options")) { //if you finished an attack or started a battle, you can choose what move to do
 				options(g);
 			}
-			else if(battleScreen.equals("player attack")){
-				if (delayTimer == 0) {
+			else if(battleScreen.equals("player attack")){ //if its your attack
+				if (delayTimer == 0) { //deal damage for only one tick
 					goon.damage(attack(g));
 				}
 
-				else {
+				else { //display the attack, but dont deal damage
 					attack(g);
 				}
 
 				if (goon.getHealth() <= 0) { //When enemy dies
 					goon.resetHealth();
 
-					bag.addGold(15);
+					bag.addGold(15); //add gold and exp
+					user.addExp(20);
 
 					//resetting battle variables
 					reverse = false;
@@ -2352,38 +2409,46 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 					delayTimer = 0;
 					linex = 170;
 					battleScreen = "options";
+					
+					//resetting boosts
 					user.setAtkBoost(false);
 					user.setDefBoost(false);
 					atkModifier = 0;
 					defModifier = 0;
-					screen = "moving";
+					//Calculating if player leveled up or not
+					int prevLvl = user.getLvl();
+					user.setLvl();
+					if (user.getLvl() != prevLvl) { //If the player levels up
+						user.hpUp();
+					}
+					screen = "moving"; //bringing back the screen to where you were 
 				}
 
-				if(delayTimer > 50){
-					if(goon.getType().equals("slime")){
+				if(delayTimer > 50){ //after the delay timer is done
+					if(goon.getType().equals("Slime")){ //attacks for each enemy
 						battleScreen = "pipe attack";
 					}
-					else if(goon.getType().equals("goblin")){
+					else if(goon.getType().equals("Goblin")){
 						battleScreen = "goblin attack";
 					}
 
-					else if(goon.getType().equals("boss")){
+					else if(goon.getType().equals("Boss")){
 						battleScreen = "laser attack";
 					}
 
-					reverse = false;
+					reverse = false; //reset variables
 					stop = false;
 					delayTimer = 0;
 					linex = 170;
 				}
 			}
 
-			else if(battleScreen.equals("items")){
+			else if(battleScreen.equals("items")){ //if itmes are chosen
 				initItems();
 				drawBattleInv(g);
 			}
 
-			else if(battleScreen.equals("run")){
+			else if(battleScreen.equals("run")){ //if they try to run away
 				if(goon.run()){
 					goon.resetHealth();
 					battleScreen = "options";
@@ -2395,19 +2460,19 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 				}
 
 				else{
-					if(goon.getType().equals("slime")){
+					if(goon.getType().equals("Slime")){
 						battleScreen = "pipe attack";
 					}
-					else if(goon.getType().equals("goblin")){
-						System.exit(0);
+					else if(goon.getType().equals("Goblin")){
+						battleScreen = "goblin attack";
 					}
-					else if(goon.getType().equals("gerth")){
-						System.exit(0);
+					else if(goon.getType().equals("Boss")){
+						battleScreen = "laser attack";
 					}
 				}
 			}
 
-			else if(battleScreen.equals("pipe attack")){
+			else if(battleScreen.equals("pipe attack")){ //draws the pipes and checks if the player hits the rects
 				pipeAttack(g);
 				if(collision(rects) && !immune){
 					user.setHp(2-defModifier);
@@ -2415,13 +2480,13 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 					timer = 0;
 				}
 
-				if(rects.size() == 0){
+				if(rects.size() == 0){ //when the attack is done
 					battleScreen = "options";
 					displayed = false;
 				}
 			}
 
-			else if(battleScreen.equals("goblin attack")){
+			else if(battleScreen.equals("goblin attack")){ //same code ^ (more damage)
 				goblinAttack(g);
 
 				if(collision(rects) && !immune){
@@ -2436,7 +2501,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 				}
 			}
 
-			else if(battleScreen.equals("laser attack")){
+			else if(battleScreen.equals("laser attack")){ //declares the attack and checking if the player hits the attack rects to deal damage
 				laserAttack(g);
 				if((pRect.intersects(attackRect) && !immune && displaying) ||
 					(pRect.intersects(leftattackRect) && !immune && displaying) ||
@@ -2447,7 +2512,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 					timer = 0;
 				}
 
-				if (attackTimer > 2000) {
+				if (attackTimer > 2000) { //if the attack is done
 					battleScreen = "options";
 					displayed = false;
 				}
@@ -2690,47 +2755,45 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		if (screen == "moving") {
+		//Switching between what 'mode' the game is in
+		if (screen == "moving") { //Player moving
 			drawMap(g);
 			displayPlayer(g);
 		}
 
-		else if (screen == "story") {
+		else if (screen == "story") { //Story at the beginning
 			storyDialogue(g);
 		}
 
-		else if (screen == "dialogue") {
+		else if (screen == "dialogue") { //Player is talking to NPC
 			drawMap(g);
 			displayPlayer(g);
 			drawDialogue(g);
 		}
 
-		else if (screen == "shop") {
+		else if (screen == "shop") { //Player is shopping
 			drawShop(g);
 		}
 
-		else if (screen == "inventory") {
+		else if (screen == "inventory") { //Player inventory
 			drawInventory(g);
 		}
-		else if (screen == "battle") {
+		else if (screen == "battle") { //Player battling
 			if (currentMap.equals(map1)) {
-				drawBattle(g, slime);
+				battleComponent(g, slime);
 			}
 
 			if (currentMap.equals(map3)) {
 				if (bossBattle) {
-					drawBattle(g, boss);
+					battleComponent(g, boss);
 				}
 				else {
-					drawBattle(g, goblin);
+					battleComponent(g, goblin);
 				}
 			}
 		}
 
-		//System.out.println(secondPanel);
-		//System.out.println(mapx + ", " + mapy);
-
-		if(this.menuPause) {
+		if(this.menuPause) { //in game menu
 			displayMenu(g);
 		}
 
@@ -2888,6 +2951,10 @@ class PlayerStats { //class used to keep track of a player's stats
 	//Set the hp after taking dmg
 	public void setHp(int dmg) {
 		hp = hp - dmg;
+	}
+	
+	public void addExp(int xp) {
+		exp += xp;
 	}
 	
 	//Set the atk boost if wrath potion is used
