@@ -1,4 +1,6 @@
-package Gerthtale;
+//Sound.java
+//Jakir Ansari/ Alex Shi/ Jason Wong
+//Sound.java is used to play music in the game
 
 import javax.sound.sampled.*;
 import java.io.File;
@@ -50,8 +52,8 @@ class Sound {
     public void stop() {
     	this.myClip.stop();
     }
-    
-    //This method resets song position 
+
+    //This method resets song position
     public void setPosition() {
     	this.myClip.setFramePosition(0);
     }

@@ -1,14 +1,7 @@
-package Gerthtale;
-/**
- * @(#)Enemy.java
- *
- *
- * @author
- * @version 1.00 2018/5/12
- */
 //Enemy.java
 //Jakir Ansari/ Alex Shi/ Jason Wong
 //Enemy.java is used for accessing variables that are used in the enemy class. Theres also a method to determine if the player could run away or not
+
 import java.util.*;
 public class Enemy {
 	private int health,runChance,maxHealth;
@@ -45,4 +38,6 @@ public class Enemy {
     public void resetHealth() { //resets the enemy health
     	health = maxHealth;
     }
+    
+    public static void main(String[] args) {}
 }

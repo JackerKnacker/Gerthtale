@@ -1,7 +1,6 @@
-//Gerthtale - A Turn-Based Rhythmic RPG inspired by Undertale & Final Fantasy
+//Gerthtale.java
 //By Alex Shi, Jakir Ansari, Jason Wong
-
-package Gerthtale;
+//A Turn-Based Rhythmic RPG inspired by Undertale & Final Fantasy
 
 import javax.swing.*;
 import java.awt.*;
@@ -374,7 +373,7 @@ public class Gerthtale extends JFrame implements ActionListener, KeyListener {
         	menuTheme.stop(); //stops the menu music so it doesnt overlap with game music
 
 			if(this.user != null) { //creates the game screen when character has been selected
-				game = new GameScreen(user, bag, menuTheme.getIsPlaying(), -908, -320, "map1", true);
+				game = new GameScreen(user, bag, menuTheme.getIsPlaying(), -908, -320, "map1", true, false);
 			}
 
         	this.cards.add(game, "game");
@@ -417,7 +416,7 @@ public class Gerthtale extends JFrame implements ActionListener, KeyListener {
 	            	savedStats.add(line);
 	            }
 	            
-	            //System.out.println(savedStats);
+	            //System.out.println(savedStats); //checking the save file list (experimental purposes)
 
 	            if(this.noSave.getParent() == this.sPage) { //if the no save label exists, it will be removed since there will be a save file
 	            	sPage.remove(noSave);
@@ -489,7 +488,7 @@ public class Gerthtale extends JFrame implements ActionListener, KeyListener {
        		this.user = new PlayerStats(Integer.parseInt(savedStats.get(3)), Integer.parseInt(savedStats.get(4)), Integer.parseInt(savedStats.get(5)), Integer.parseInt(savedStats.get(1)), Integer.parseInt(savedStats.get(2)), savedStats.get(0), Integer.parseInt(savedStats.get(6))); //HP, ATK, LVL, EXP, NAME, CHAR-NUM
        		Inventory bag = new Inventory(Integer.parseInt(savedStats.get(10)), Integer.parseInt(savedStats.get(11)), Integer.parseInt(savedStats.get(12)), Integer.parseInt(savedStats.get(13)), Integer.parseInt(savedStats.get(14)), Integer.parseInt(savedStats.get(15)));
 
-       		this.game = new GameScreen(user, bag, menuTheme.getIsPlaying(), Integer.parseInt(savedStats.get(7)), Integer.parseInt(savedStats.get(8)), savedStats.get(9), false);
+       		this.game = new GameScreen(user, bag, menuTheme.getIsPlaying(), Integer.parseInt(savedStats.get(7)), Integer.parseInt(savedStats.get(8)), savedStats.get(9), false, Boolean.valueOf(savedStats.get(16)));
        		this.cards.add(game, "game");
             this.cLayout.show(this.cards,"game");
             menuTheme.stop();
@@ -681,7 +680,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 	//--------|Battle Stuff|--------//
 	private int timer = 0, attackTimer = 0,directionX = 2,directionL = 2,directionR = -2,fire; //variables used in the various attacks throughout our game
 	private String battleScreen = "options"; //changes the screen of the battle
-	private boolean immune= false,displaying = false,displayed = false, bossBattle = false;
+	private boolean immune= false,displaying = false,displayed = false, bossBattle = false, gameFinish;
 	private Rectangle baseRect = new Rectangle(150,360,480,170),topRect,leftRect,rightRect,attackRect,leftattackRect,rightattackRect;
 	private Random rng = new Random();
 	private Enemy slime = new Enemy(30, 2, "Slime"), goblin = new Enemy(50, 4, "Goblin"), boss = new Enemy(80, 0, "Boss");
@@ -745,10 +744,11 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 
 	private Sound gameTheme; //game music
 
-	public GameScreen(PlayerStats user, Inventory bag, boolean songOn, int mapx, int mapy, String current, boolean storyStart) { //constructor for GameScreen
+	public GameScreen(PlayerStats user, Inventory bag, boolean songOn, int mapx, int mapy, String current, boolean storyStart, boolean gameFinish) { //constructor for GameScreen
 		this.user = user;
 		this.songOn = songOn;
 		this.bag = bag;
+		this.gameFinish = gameFinish; //checks if the game has been beaten before (when save file is selected)
 
 		gameTheme = new Sound("Music/BOTW OST - Cave.wav"); //This loads the background music
 
@@ -1420,7 +1420,10 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 				if ((mapy == -1176 && mapx <= -1316 && mapx >= -1344) || (mapx == -1368 && mapy <= -1208 && mapy >= -1228) ||
 						(mapx == -1292 && mapy <= -1208 && mapy <= -1228)) {
 					npc = 3;
-					bossBattle = true; 
+					
+					if(gameFinish != true) { //boss battle will not activate if it has been beaten before
+						bossBattle = true; 
+					}
 					screen = "dialogue";
 				}
 			}
@@ -1860,7 +1863,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 	}
 
 	public void drawMap(Graphics g) {
-		System.out.println(mapx + ", " + mapy);
+		//System.out.println(mapx + ", " + mapy); //checking the max, mapy of game (experimental purposes)
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, getWidth(), getHeight());
 		g.drawImage(currentMap, mapx, mapy, this);
@@ -2006,8 +2009,8 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 			else if (keys[KeyEvent.VK_ENTER] && keypress && secondPanel) {
 				firstPanel = true;
 				secondPanel = false;
-				if (bossBattle) { //if they were talking to the boss
-					screen = "battle"; //battling the boss
+				if (bossBattle && gameFinish != true) { //if they were talking to the boss 
+					screen = "battle"; //battling the boss (will not allow you to battle boss if player beaten him before)
 				}
 				else { //if they were talking to the friendly NPCs
 					screen = "moving";
@@ -2052,15 +2055,25 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 			}
 			if (npc == 3) {
 				g.drawImage(npc3head, 45, 400, this);
-				if (firstPanel) {
+				if(gameFinish) { //different text if player has beaten final boss
+					if (firstPanel) {
+						g.drawString("Boss Griffin: ............", 170, 410);
+					}
+					if (secondPanel) {
+						g.drawString("(A hollow shell remains...)", 170, 410);
+					}
+				}	
+				else {
+					if (firstPanel) {
 					g.drawString("Boss Griffin: You eliminated quite a bit of", 170, 410);
 					g.drawString("my goons I see. Whatever, you'll be no match", 170, 450);
 					g.drawString("for me. My fellow goons have acquired enough", 170, 490);
-				}
-				if (secondPanel) {
+					}
+					if (secondPanel) {
 					g.drawString("blood from all of those villagers to make me", 170, 410);
 					g.drawString("the strongest human ever. Now face the", 170, 450);
 					g.drawString("consequences of not minding your own business!", 170, 490);
+					}
 				}
 			}
 		}
@@ -2399,6 +2412,10 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 
 				if (goon.getHealth() <= 0) { //When enemy dies
 					goon.resetHealth();
+					
+					if(goon.getType() == "Boss") {
+						gameFinish = true; //if the boss is defeated, it will set this boolean to true
+					}
 
 					bag.addGold(15); //add gold and exp
 					user.addExp(20);
@@ -2686,6 +2703,7 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 				recordStats.add(Integer.toString(bag.getIronPot()));
 				recordStats.add(Integer.toString(bag.getWrathPot()));
 				recordStats.add(Integer.toString(bag.getGold()));
+				recordStats.add(String.valueOf(gameFinish));
 
 				//This updates the text
             	try {
@@ -2804,203 +2822,5 @@ class GameScreen extends JPanel implements ActionListener, KeyListener { //Scree
 		if(this.profScreen) {
 			displayProfile(g);
 		}
-	}
-}
-
-class Inventory { //class to keep track of player's inventory
-	private int pot, largePot, gerthPot, ironPot, wrathPot, gold;
-
-	public Inventory(int pot, int largePot, int gerthPot, int ironPot, int wrathPot, int gold) { //Constructor method
-		this.pot = pot;
-		this.largePot = largePot;
-		this.gerthPot = gerthPot;
-		this.ironPot = ironPot;
-		this.wrathPot = wrathPot;
-		this.gold = gold;
-	}
-
-	public void addItem(String item) { //when a user buys an item from the shop, it will be added to here
-		if(item == "pot") {
-			pot ++;
-		}
-
-		if(item == "largePot") {
-			largePot ++;
-		}
-
-		if(item == "gerthPot") {
-			gerthPot ++;
-		}
-
-		else if(item == "ironPot") {
-			ironPot ++;
-		}
-
-		else if(item == "wrathPot") {
-			wrathPot ++;
-		}
-	}
-
-	public void addGold(int amount) { //when a battle is won, gold will be added to here
-		gold += amount;
-	}
-
-	//Accessor methods
-	public int getPot() {
-		return pot;
-	}
-
-	public int getLargePot() {
-		return largePot;
-	}
-
-	public int getGerthPot() {
-		return gerthPot;
-	}
-
-	public int getIronPot() {
-		return wrathPot;
-	}
-
-	public int getWrathPot() {
-		return ironPot;
-	}
-	public int getGold() {
-		return gold;
-	}
-
-	//Removing items if used
-	public void removePot() {
-		pot --;
-	}
-
-	public void removeLargePot() {
-		largePot --;
-	}
-
-	public void removeGerthPot() {
-		gerthPot --;
-	}
-
-	public void removeIronPot() {
-		ironPot --;
-	}
-
-	public void removeWrathPot() {
-		wrathPot --;
-	}
-	public void removeGold(int amount) {
-		gold -= amount;
-	}
-}
-
-class PlayerStats { //class used to keep track of a player's stats
-	private int hp, maxHp, atk, lvl, exp, charNum;
-	private String name;
-	private boolean atkBoost, defBoost;
-
-	public PlayerStats(int hp, int maxHp, int atk, int lvl, int exp, String name, int charNum) { //Constructor class
-		this.maxHp = maxHp;
-		this.hp = hp;
-		this.atk = atk;
-		this.lvl = lvl;
-		this.exp = exp;
-		this.name = name;
-		this.charNum = charNum;
-		this.atkBoost = false;
-		this.defBoost = false;
-	}
-
-	//Accessor methods
-	public String getName() {
-		return name;
-	}
-
-	public int getHp() {
-		return hp;
-	}
-
-	public int getMaxHp() {
-		return maxHp;
-	}
-
-	public int getAtk() {
-		return atk;
-	}
-
-	public int getLvl() {
-		return lvl;
-	}
-
-	public int getExp() {
-		return exp;
-	}
-
-	public int getCharNum() {
-		return charNum;
-	}
-
-	public boolean getAtkBoost() {
-		return atkBoost;
-	}
-
-	public boolean getDefBoost() {
-		return defBoost;
-	}
-
-	//Set the hp after taking dmg
-	public void setHp(int dmg) {
-		hp = hp - dmg;
-	}
-	
-	public void addExp(int xp) {
-		exp += xp;
-	}
-	
-	//Set the atk boost if wrath potion is used
-	public void setAtkBoost(boolean setter) {
-		atkBoost = setter;
-	}
-	
-	//sets the def boost if iron potion is used
-	public void setDefBoost(boolean setter) {
-		defBoost = setter;
-	}
-
-	//Using an item in inventory
-	public void useItem(String item) {
-		if (item == "Health Potion") { //heals the user 5 HP or to the max
-			hp += 5;
-			if (hp > maxHp) {
-				hp = maxHp;
-			}
-		}
-		if (item == "Large Health Potion") { //heals the user 10 HP or to the max
-			hp += 10;
-			if (hp > maxHp) {
-				hp = maxHp;
-			}
-		}
-		if (item == "Gerthy Health Potion") { //heals the user to max
-			hp = maxHp;
-		}
-
-		if (item == "Wrath Potion") { //sets the atk boost
-			atkBoost = true;
-		}
-
-		if (item == "Iron Potion") { //sets the def boost
-			defBoost = true;
-		}
-	}
-
-	//Sets the current lvl
-	public void setLvl() {
-		lvl = 1 + (int)(0.1*Math.sqrt(exp));
-	}
-
-	//Increases hp based on player lvl
-	public void hpUp() {
-		maxHp = maxHp + 2;
 	}
 }
